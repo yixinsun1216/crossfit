@@ -1,5 +1,15 @@
+#' Double Machine Learning Moments
+#'
+#' Moment functions for partial linear model and partial linear poisson model.
+#'
+#' @param theta scalar or vector of the treatment effect parameter(s).
+#' @param Y a vector of the outcome variable.
+#' @param D a vector or data.frame of the treatment variable(s) of interest.
+#' @param gamma a vector of E[Y|X=x], where X is a vector of controls.
+#' @param delta a vector or data.frame of E[D|X=x].
+#'
 
-# DEFINE DML MOMENTS
+
 # partial linear model
 # recall this is (Y - gamma(X) - theta * (D - delta(X))) * (D - delta(X))
 psi_plr <- function(theta, Y, D, gamma, delta) {

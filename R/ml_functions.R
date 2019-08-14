@@ -1,8 +1,24 @@
+#' Machine Learning Functions
+#'
+#' \code{regression_forest2} estimates a regression forest with a formula
+#'   instead of manually passing matrices.
+#' \code{predict_rf2} predicts based on the forest ouputted from
+#'   \code{regression_forest2}.
 
-# estimate a regression forest with a formula instead of manually passing
-# matrices.  the formula y ~ x1 + x2 + x3 means estimate a regression forest
-# for the outcome y, where the splitting variables are x1, x2, and x3
-# to get predicted values, pass the results of this to predict()
+#' @param f an object of class formula representing the model to be fitted.
+#' @param d a dataframe containing the variables in f.
+#' @param ... additional arguments taht can be passed to
+#'   \code{\link[grf:regression_forest]{regression_forest}},such as num.trees,
+#'   honesty,honesty.fraction,seed.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom tibble tibble as_tibble enframe
+#' @importFrom purrr pluck
+#' @importFrom stats update formula model.matrix model.frame predict
+#' @importFrom grf regression_forest
+#' @importFrom Formula Formula
+#'
+#' @export
 regression_forest2 <- function(f, d, ...) {
   f <- Formula(f)
 
@@ -25,7 +41,8 @@ regression_forest2 <- function(f, d, ...) {
   return(ff)
 }
 
-
+#' @export
+#' @rdname regression_forest2
 predict_rf2 <- function(forest, newdata = NULL) {
   f <- forest[["formula"]]
 
