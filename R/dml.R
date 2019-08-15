@@ -33,8 +33,8 @@
 #' @importFrom tibble tibble as_tibble enframe
 #' @importFrom purrr pmap reduce map pluck
 #' @importFrom stats median optim update formula model.matrix model.frame
-#' @importFrom furrr future_map
-#' @importFrom future plan multiprocess future.options
+#' @importFrom furrr future_map future_options
+#' @importFrom future plan multiprocess
 #' @importFrom dplyr rename_all select bind_cols filter
 #' @importFrom stringr str_replace_all regex
 #' @importFrom Formula Formula
