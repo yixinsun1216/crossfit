@@ -17,13 +17,14 @@
 #' }
 #'
 #' @examples
+#' library(crossfit)
 #' library("MASS")
 #' data(Boston)
 #'
 #' crime_dml <-
 #'   "crim ~ zn + indus + nox" %>%
 #'   as.formula() %>%
-#'   dml(Boston, psi_plr, psi_plr_grad, psi_plr_op, n = 101)
+#'   dml(Boston, psi_plr, psi_plr_grad, psi_plr_op, n = 10)
 #'
 #' @references V. Chernozhukov, D. Chetverikov, M. Demirer, E. Duflo, C. Hansen,
 #' W. Newey, and J. Robins. Double/debiased machine learning for treatment and
@@ -31,7 +32,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble as_tibble enframe
-#' @importFrom purrr pmap reduce map pluck
+#' @importFrom purrr pmap reduce map pluck map_dbl
 #' @importFrom stats median optim update formula model.matrix model.frame
 #' @importFrom furrr future_map future_options
 #' @importFrom future plan multiprocess
