@@ -35,7 +35,7 @@
 #' @importFrom stats median optim update formula model.matrix model.frame
 #' @importFrom furrr future_map future_options
 #' @importFrom future plan multiprocess
-#' @importFrom dplyr rename_all select bind_cols filter
+#' @importFrom dplyr rename_all select bind_cols filter if_else
 #' @importFrom stringr str_replace_all regex
 #' @importFrom Formula Formula
 #' @importFrom modelr crossv_kfold
@@ -46,24 +46,27 @@
 
 #' @export
 # main user-facing routine
-dml <- function(f, d, psi, psi_grad, psi_op, n = dml_n, nw = 4, ...) {
+dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
+                dml_seed = NULL, ...) {
   plan(future::multisession, .init = nw)
 
   # to make the median well-defined, add 1 to n if the user requests an even
   # number of splits
   nn <- if_else(n %% 2 == 0, n + 1, n)
 
+  dml_seed <- if_else(is.null(dml_seed), FALSE, dml_seed)
+
   seq(1, nn) %>%
     future_map(~ dml_step(f, d, psi, psi_grad, psi_op),
                .options = future_options(packages = c("splines"),
-                                         seed = as.integer(rfseed))) %>%
+                                         seed = as.integer(123))) %>%
     get_medians(nrow(d))
 }
 
 #' @export
 #' @rdname dml
 ### try implementing a "fast" dml which just uses a single forest
-dml_fast <- function(f, d, psi, psi_grad, psi_op) {
+dml_fast <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL) {
   # step 0: ensure fm has no intercept in the parametric part
   f <-
     Formula(f) %>%
@@ -101,7 +104,7 @@ dml_fast <- function(f, d, psi, psi_grad, psi_op) {
                                     num.trees = 10000,
                                     honesty = TRUE,
                                     honesty.fraction = NULL,
-                                    seed = rfseed)
+                                    seed = dml_seed)
 
   delta_models <-
     fs_delta %>%
@@ -109,7 +112,7 @@ dml_fast <- function(f, d, psi, psi_grad, psi_op) {
                              num.trees = 10000,
                              honesty = TRUE,
                              honesty.fraction = NULL,
-                             seed = rfseed))
+                             seed = dml_seed))
 
   # step 4: estimate OOB values of delta and gamma
   gamma <-
@@ -227,7 +230,7 @@ get_lhs_col <- function(f, d) {
 
 # estimate theta and s2 in a single sample split of the data
 # formula should be y ~ d | x
-dml_step <- function(f, d, psi, psi_grad, psi_op, ...) {
+dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ...) {
   # step 0: ensure fm has no intercept in the parametric part
   f <-
     Formula(f) %>%
@@ -269,7 +272,7 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, ...) {
                        num.trees = 1000,
                        honesty = FALSE,
                        honesty.fraction = NULL,
-                       seed = rfseed)
+                       seed = dml_seed)
   })
 
   delta_models <-
@@ -279,7 +282,7 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, ...) {
                          num.trees = 1000,
                          honesty = FALSE,
                          honesty.fraction = NULL,
-                         seed = rfseed)
+                         seed = dml_seed)
     }))
 
   # step 4: estimate values of delta and gamma in the hold out sample

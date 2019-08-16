@@ -5,9 +5,10 @@
 \alias{dml_fast}
 \title{Double Machine Learning Estimates}
 \usage{
-dml(f, d, psi, psi_grad, psi_op, n = dml_n, nw = 4, ...)
+dml(f, d, psi, psi_grad, psi_op, n = 101, nw = 4, dml_seed = NULL,
+  ...)
 
-dml_fast(f, d, psi, psi_grad, psi_op)
+dml_fast(f, d, psi, psi_grad, psi_op, dml_seed = NULL)
 }
 \arguments{
 \item{f}{an object of class formula representing the model to be fitted.}

@@ -8,8 +8,7 @@
 #' @param gamma a vector of E[Y|X=x], where X is a vector of controls.
 #' @param delta a vector or data.frame of E[D|X=x].
 #'
-
-
+#' @export
 # partial linear model
 # recall this is (Y - gamma(X) - theta * (D - delta(X))) * (D - delta(X))
 psi_plr <- function(theta, Y, D, gamma, delta) {
@@ -18,11 +17,13 @@ psi_plr <- function(theta, Y, D, gamma, delta) {
   return((1 / N) * t(D - delta) %*% (Y - gamma - (D - delta) %*% theta))
 }
 
+#' @export
 psi_plr_grad <- function(theta, Y, D, gamma, delta) {
   N <- nrow(Y)
   return(-1 * (1 / N) * t(D - delta) %*% (D - delta))
 }
 
+#' @export
 psi_plr_op <- function(theta, Y, D, gamma, delta) {
   theta <- matrix(theta, nrow = dim(D)[2])
   N <- nrow(Y)
@@ -30,6 +31,7 @@ psi_plr_op <- function(theta, Y, D, gamma, delta) {
   return((1 / N) * t(op) %*% op)
 }
 
+#' @export
 # partially linear poisson model
 # recall this is:
 # (Y - exp(D*theta) * gamma(X) * z(theta, X)) *
@@ -58,14 +60,17 @@ psi_plpr_with_grad <- function(theta, Y, D, gamma, delta) {
   }
 }
 
+#' @export
 psi_plpr <- function(theta, Y, D, gamma, delta) {
   return(mean(psi_plpr_with_grad(theta, Y, D, gamma, delta)[[1]]))
 }
 
+#' @export
 psi_plpr_grad <- function(theta, Y, D, gamma, delta) {
   return(mean(psi_plpr_with_grad(theta, Y, D, gamma, delta)[[2]]))
 }
 
+#' @export
 psi_plpr_op <- function(theta, Y, D, gamma, delta) {
   vals <- psi_plpr_with_grad(theta, Y, D, gamma, delta)[[1]]
   return(mean(vals^2))
