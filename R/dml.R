@@ -57,9 +57,9 @@ dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
   dml_seed <- if_else(is.null(dml_seed), FALSE, dml_seed)
 
   seq(1, nn) %>%
-    future_map(~ dml_step(f, d, psi, psi_grad, psi_op),
+    future_map(~dml_step(f, d, psi, psi_grad, psi_op),
                .options = future_options(packages = c("splines"),
-                                         seed = as.integer(123))) %>%
+                                         seed = dml_seed)) %>%
     get_medians(nrow(d))
 }
 
