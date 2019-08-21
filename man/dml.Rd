@@ -35,13 +35,14 @@ value of theta.}
 Double Machine Learning Estimates
 }
 \examples{
+library(crossfit)
 library("MASS")
 data(Boston)
 
 crime_dml <-
-  "crim ~ zn + indus + nox" \%>\%
+  "crim ~ indus + nox | zn" \%>\%
   as.formula() \%>\%
-  dml(Boston, psi_plr, psi_plr_grad, psi_plr_op, n = 101)
+  dml(Boston, psi_plr, psi_plr_grad, psi_plr_op, n = 10)
 
 }
 \references{

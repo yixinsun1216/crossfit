@@ -22,7 +22,7 @@
 #' data(Boston)
 #'
 #' crime_dml <-
-#'   "crim ~ zn + indus + nox" %>%
+#'   "crim ~ indus + nox | zn" %>%
 #'   as.formula() %>%
 #'   dml(Boston, psi_plr, psi_plr_grad, psi_plr_op, n = 10)
 #'
@@ -49,6 +49,8 @@
 # main user-facing routine
 dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
                 dml_seed = NULL, ...) {
+  dml_call <- match.call()
+
   plan(future::multisession, .init = nw)
 
   # to make the median well-defined, add 1 to n if the user requests an even
@@ -61,7 +63,7 @@ dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
     future_map(~dml_step(f, d, psi, psi_grad, psi_op),
                .options = future_options(packages = c("splines"),
                                          seed = dml_seed)) %>%
-    get_medians(nrow(d))
+    get_medians(nrow(d), dml_call)
 }
 
 #' @export
@@ -309,17 +311,12 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ...) {
   return(dml_estimate(Y, D, gamma, delta, psi, psi_grad, psi_op, ...))
 }
 
-coef.dml <- function(x) x$coefficients
-vcov.dml <- function(x) x$vcov
-fitted.dml <- function(x) rep(0, x$nobs)
-glance.dml <- function(x) tibble("r.squared" = NA_real_,
-                                 "adj.r.squared" = NA_real_)
 
 # final routine which takes a set of DML sample split estimates and returns the
 # median point estimate and the "median" covariance matrix
 # as suggested in the DML paper, the "median" covariance matrix is selected
 # using the matrix operator norm, which is the highest svd of a matrix
-get_medians <- function(estimates, n) {
+get_medians <- function(estimates, n, dml_call) {
   median_theta <-
     estimates %>%
     map(~ pluck(., 1)) %>%
@@ -343,6 +340,7 @@ get_medians <- function(estimates, n) {
 
   return(structure(list(coefficients = median_theta,
                         vcov = (1 / n) * median_s2,
-                        nobs = n),
+                        nobs = n,
+                        call = dml_call),
                    class = "dml"))
 }
