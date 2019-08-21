@@ -24,12 +24,8 @@ glance.dml <- function(x) tibble("r.squared" = NA_real_,
 #'@method print dml
 #' @export
 print.dml <- function (x, digits = max(3L, getOption("digits") - 3L),
-                       ...)
-{
-  cat("\ncall:\n", paste(deparse(x$call), sep = "\n",
-                         collapse = "\n"), "\n\n", sep = "")
+                       ...){
   if (length(coef(x))) {
-    cat("coefficients:\n")
     print.default(format(coef(x), digits = digits, big.mark = ","),
                   print.gap = 2L, quote = FALSE)
   }
@@ -37,10 +33,6 @@ print.dml <- function (x, digits = max(3L, getOption("digits") - 3L),
   cat("\n")
   invisible(x)
 }
-
-
-# NEED CUSTOM SUMMARY AND PRINT FUNCTIONS
-# just need to figure out the t and pvalues
 
 #'@method summary dml
 #' @export
