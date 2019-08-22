@@ -17,14 +17,12 @@
 #' }
 #'
 #' @examples
-#' library(crossfit)
-#' library("MASS")
-#' data(Boston)
+#' data(corn_yield)
 #'
-#' crime_dml <-
-#'   "crim ~ indus + nox | zn" %>%
+#' yield_dml <-
+#'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
 #'   as.formula() %>%
-#'   dml(Boston, psi_plr, psi_plr_grad, psi_plr_op, n = 10)
+#'   dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5)
 #'
 #' @references V. Chernozhukov, D. Chetverikov, M. Demirer, E. Duflo, C. Hansen,
 #' W. Newey, and J. Robins. Double/debiased machine learning for treatment and
@@ -41,10 +39,7 @@
 #' @importFrom Formula Formula
 #' @importFrom modelr crossv_kfold
 #'
-# dml_estimate(Y, D, gamma, delta, psi, psi_grad, ...))
-# lower = -5000, upper = 5000
-
-
+#'
 #' @export
 # main user-facing routine
 dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,

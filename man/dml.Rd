@@ -35,14 +35,12 @@ value of theta.}
 Double Machine Learning Estimates
 }
 \examples{
-library(crossfit)
-library("MASS")
-data(Boston)
+data(corn_yield)
 
-crime_dml <-
-  "crim ~ indus + nox | zn" \%>\%
+yield_dml <-
+  "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
-  dml(Boston, psi_plr, psi_plr_grad, psi_plr_op, n = 10)
+  dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5)
 
 }
 \references{

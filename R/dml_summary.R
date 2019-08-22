@@ -30,6 +30,7 @@ print.dml <- function (x, digits = max(3L, getOption("digits") - 3L),
                   print.gap = 2L, quote = FALSE)
   }
   else cat("No coefficients\n")
+
   cat("\n")
   invisible(x)
 }
@@ -60,7 +61,8 @@ print.summary.dml <- function(x, digits = max(3L, getOption("digits") - 3L),
     cat("(No coefficients)\n")
   else {
     printCoefmat(x$coefficients, digits = digits, big.mark = ",")
-    cat("\nNumber of Observations:", format(n, big.mark = ","))
+    cat("\nNumber of Observations:", format(x$n, big.mark = ","))
     cat("\n\n")
   }
 }
+

@@ -1,0 +1,19 @@
+#' Effect of Temperature and Precipitation on Corn Yields
+#'
+#' Sample of corn yield, temperature, and precipitation data
+#'
+#' @format A data frame with 2,000 rows and 7 variables
+#' \describe{
+#'   \item{logcornyield}{log corn yields}
+#'   \item{year}{Year of observation}
+#'   \item{fips}{Federal Information Processing Standards (FIPS) codes at the
+#'   county-state level}
+#'   \item{lower}{sum of Growing Degree Days (GDD) between 0-29 degrees Celsius}
+#'   \item{higher}{sum of GDD above 29 degrees}
+#'   \item{prec_lo}{precipitation (in percent) below 42. i.e. if the
+#'   precipitation is 40, then prec_lo is 2}
+#'   \item{prec_hi}{precipitation above 42}
+#'   ...
+#' }
+#' @source \url{https://www.aeaweb.org/articles?id=10.1257/pol.20130025}
+"corn_yield"
