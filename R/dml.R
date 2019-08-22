@@ -14,6 +14,7 @@
 #'    \item{coefficients}{a named vector of coefficients.}
 #'    \item{vcov}{variance-covariance matrix of the main parameters.}
 #'    \item{nobs}{number of observations used}
+#'    \item{call}{original function call with given arguments}
 #' }
 #'
 #' @examples
