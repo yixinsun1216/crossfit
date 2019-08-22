@@ -1,3 +1,3 @@
-# dml
+# crossfit
 
-This code implements the Double Machine Learning approach (Chernozhukov et al., 2018) for multiple treatment effects.
+This code implements the Double/Debiased Machine Learning approach (Chernozhukov et al., 2018) to gain better estimates of treatment effects.
