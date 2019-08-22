@@ -18,6 +18,8 @@
 #' }
 #'
 #' @examples
+#' # Effect of temperature and precipitation on corn yield in the presence of
+#' # time and locational effects
 #' data(corn_yield)
 #'
 #' yield_dml <-
