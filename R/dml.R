@@ -46,7 +46,7 @@
 #' @export
 # main user-facing routine
 dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
-                dml_seed = NULL, ...) {
+                dml_seed = NULL, ml,  ...) {
   dml_call <- match.call()
 
   plan(future::multisession, .init = nw)
@@ -58,7 +58,7 @@ dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
   dml_seed <- if_else(is.null(dml_seed), FALSE, dml_seed)
 
   seq(1, nn) %>%
-    future_map(~dml_step(f, d, psi, psi_grad, psi_op),
+    future_map(~dml_step(f, d, psi, psi_grad, psi_op, ml),
                .options = future_options(packages = c("splines"),
                                          seed = dml_seed)) %>%
     get_medians(nrow(d), dml_call)

@@ -18,8 +18,15 @@
 #' @importFrom grf regression_forest
 #' @importFrom Formula Formula
 #'
+#'
+
+default_forest <- list(num.trees = 1000,
+                       honesty = TRUE,
+                       honesty.fraction = NULL)
+
 #' @export
-regression_forest2 <- function(f, d, ...) {
+regression_forest2 <- function(f, d, num.trees = 1000, honesty = TRUE,
+                               honesty.fraction = NULL) {
   f <- Formula(f)
 
   Y <-
@@ -33,7 +40,7 @@ regression_forest2 <- function(f, d, ...) {
     update(~ 0 + .) %>%
     model.matrix(d)
 
-  ff <- regression_forest(X, Y, ...)
+  ff <- regression_forest(X, Y, default_forest)
 
   ff[["formula"]] <- f
   class(ff) <- c("regression_forest", "grf")
@@ -56,4 +63,10 @@ predict_rf2 <- function(forest, newdata = NULL) {
   } else {
     return(pluck(predict(forest), "predictions"))
   }
+}
+
+cv.glmnet2 <- function(f, d, ...){
+
+  lf <- cv.glmnet(f, data = d)
+
 }
