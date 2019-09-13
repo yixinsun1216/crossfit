@@ -5,7 +5,8 @@
 \alias{predict_rf2}
 \title{Machine Learning Functions}
 \usage{
-regression_forest2(f, d, ...)
+regression_forest2(f, d, num.trees = 1000, honesty = TRUE,
+  honesty.fraction = NULL, ...)
 
 predict_rf2(forest, newdata = NULL)
 }

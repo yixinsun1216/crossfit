@@ -20,13 +20,10 @@
 #'
 #'
 
-default_forest <- list(num.trees = 1000,
-                       honesty = TRUE,
-                       honesty.fraction = NULL)
-
 #' @export
+#' note on passing in arguments https://stackoverflow.com/questions/23922130/default-argument-in-r-function-formal-argument-matched-by-multiple-actual-argum?rq=1
 regression_forest2 <- function(f, d, num.trees = 1000, honesty = TRUE,
-                               honesty.fraction = NULL) {
+                               honesty.fraction = NULL, ...) {
   f <- Formula(f)
 
   Y <-
@@ -40,7 +37,8 @@ regression_forest2 <- function(f, d, num.trees = 1000, honesty = TRUE,
     update(~ 0 + .) %>%
     model.matrix(d)
 
-  ff <- regression_forest(X, Y, default_forest)
+  ff <- regression_forest(X, Y, num.trees = num.trees, honesty = honesty,
+                          honesty.fraction = honesty.fraction, ...)
 
   ff[["formula"]] <- f
   class(ff) <- c("regression_forest", "grf")
@@ -58,7 +56,6 @@ predict_rf2 <- function(forest, newdata = NULL) {
       formula(f, rhs = 1, lhs = 0) %>%
       update(~ 0 + .) %>%
       model.matrix(newdata)
-
     return(pluck(predict(forest, X), "predictions"))
   } else {
     return(pluck(predict(forest), "predictions"))
@@ -69,4 +66,46 @@ cv.glmnet2 <- function(f, d, ...){
 
   lf <- cv.glmnet(f, data = d)
 
+}
+
+
+#' @export
+run_ml <- function(f, folds_test, ml_type, value_type,
+                   dml_seed = NULL, ...){
+  # specify which ml method to use for training and predicting
+  if(ml_type == "regression_forest"){
+    train_ml <- "regression_forest2"
+    predict_ml <- "predict_rf2"
+  }
+
+  if(value_type == "gamma"){
+    print("made it")
+    gamma_models <- map(folds_test, function(y) {
+      get(train_ml)(f, d = y, seed = dml_seed, ...)
+    })
+
+    output <-
+      map2(gamma_models, folds_test, ~ get(predict_ml)(.x, .y)) %>%
+      map(as.matrix)
+
+  }
+
+  if(value_type == "delta"){
+    # step 3: train models for delta and gamma
+    delta_models <-
+      folds_test %>%
+      map(function(x) map(f, function(y) {
+        get(train_ml)(y, d = x, seed = dml_seed, ...)
+      }))
+
+    # step 4: estimate values of delta and gamma in the hold out sample
+    output <-
+      map2(delta_models, folds_test,
+           function(x, y)
+             map2(x, list(y), ~ get(predict_ml)(.x, .y)) %>%
+             unlist %>%
+             matrix(ncol = length(fs_delta)))
+  }
+
+  return(output)
 }
