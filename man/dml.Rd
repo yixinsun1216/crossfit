@@ -17,6 +17,8 @@ given value of theta}
 
 \item{psi_grad}{function that gives the gradient of psi with respect to theta}
 
+\item{ml}{}
+
 \item{psi_plr_op}{function that gives the variance estimator at a given
 value of theta.}
 }
@@ -40,7 +42,7 @@ data(corn_yield)
 yield_dml <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
-  dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5)
+  dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5, ml = "regression_forest")
 
 }
 \references{

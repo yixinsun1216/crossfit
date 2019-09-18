@@ -16,6 +16,7 @@
 #' @importFrom purrr pluck
 #' @importFrom stats update formula model.matrix model.frame predict
 #' @importFrom grf regression_forest
+#' @importFrom glmnetUtils cv.glmnet
 #' @importFrom Formula Formula
 #'
 #'
@@ -62,26 +63,26 @@ predict_rf2 <- function(forest, newdata = NULL) {
   }
 }
 
-cv.glmnet2 <- function(f, d, ...){
-
-  lf <- cv.glmnet(f, data = d)
-
-}
 
 
 #' @export
-run_ml <- function(f, folds_test, ml_type, value_type,
-                   dml_seed = NULL, ...){
+run_ml <- function(f, folds_test, ml_type, value_type, ...){
   # specify which ml method to use for training and predicting
   if(ml_type == "regression_forest"){
     train_ml <- "regression_forest2"
     predict_ml <- "predict_rf2"
   }
 
+  if(ml_type == "lasso"){
+    train_ml <- "cv.glmnet"
+    predict_ml <- "predict"
+    folds_test <- map(folds_test, data.frame)
+  }
+
+  # train and estimate values of delta in hold out sample
   if(value_type == "gamma"){
-    print("made it")
     gamma_models <- map(folds_test, function(y) {
-      get(train_ml)(f, d = y, seed = dml_seed, ...)
+      get(train_ml)(f, d = y, ...)
     })
 
     output <-
@@ -90,15 +91,14 @@ run_ml <- function(f, folds_test, ml_type, value_type,
 
   }
 
+  # train and estimate values of gamma in the hold out sample
   if(value_type == "delta"){
-    # step 3: train models for delta and gamma
     delta_models <-
       folds_test %>%
       map(function(x) map(f, function(y) {
-        get(train_ml)(y, d = x, seed = dml_seed, ...)
+        get(train_ml)(y, d = x, ...)
       }))
 
-    # step 4: estimate values of delta and gamma in the hold out sample
     output <-
       map2(delta_models, folds_test,
            function(x, y)

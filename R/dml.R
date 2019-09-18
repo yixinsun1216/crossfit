@@ -7,6 +7,10 @@
 #' @param psi_grad function that gives the gradient of psi with respect to theta
 #' @param psi_plr_op function that gives the variance estimator at a given
 #'   value of theta.
+#' @param n
+#' @param nw
+#' @param dml_seed
+#' @param ml
 #'
 #' @return
 #' \code{dml} returns an object of class "dml" with the following components:
@@ -25,7 +29,7 @@
 #' yield_dml <-
 #'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
 #'   as.formula() %>%
-#'   dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5)
+#'   dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5, ml = "regression_forest")
 #'
 #' @references V. Chernozhukov, D. Chetverikov, M. Demirer, E. Duflo, C. Hansen,
 #' W. Newey, and J. Robins. Double/debiased machine learning for treatment and
@@ -58,7 +62,7 @@ dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
   dml_seed <- if_else(is.null(dml_seed), FALSE, dml_seed)
 
   seq(1, nn) %>%
-    future_map(~dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml),
+    future_map(~dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml), ...,
                .options = future_options(packages = c("splines"),
                                          seed = dml_seed)) %>%
     get_medians(nrow(d), dml_call)
@@ -135,6 +139,7 @@ get_lhs_col <- function(f, d) {
 # formula should be y ~ d | x
 dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, ...) {
   # step 0: ensure fm has no intercept in the parametric part
+
   f <-
     Formula(f) %>%
     update(. ~ 0 + . | 0 + .)
@@ -172,9 +177,13 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, ...) {
   # Next 2 steps done in the function run_ml()
   # step 3: train models for delta and gamma
   # step 4: estimate values of delta and gamma in the hold out sample
-  gamma <- run_ml(f_gamma, folds$test, ml, "gamma", dml_seed, ...)
-  delta <- run_ml(fs_delta, folds$test, ml, "delta", dml_seed, ...)
-
+  if(is.null(dml_seed) | !dml_seed){
+    gamma <- run_ml(f_gamma, folds$test, ml, "gamma", ...)
+    delta <- run_ml(fs_delta, folds$test, ml, "delta", ...)
+  } else{
+    gamma <- run_ml(f_gamma, folds$test, ml, "gamma", seed = dml_seed, ...)
+    delta <- run_ml(fs_delta, folds$test, ml, "delta", seed = dml_seed, ...)
+  }
 
   # step 5: put together the values of Y and D in the hold out sample, and pass
   # things off to the dml_estimate routine
@@ -184,7 +193,7 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, ...) {
   dnames <- names(td)
   D <- map(folds$test, ~ as.matrix(select(as.data.frame(.), !!dnames)))
 
-  return(dml_estimate(Y, D, gamma, delta, psi, psi_grad, psi_op, ...))
+  return(dml_estimate(Y, D, gamma, delta, psi, psi_grad, psi_op))
 }
 
 
