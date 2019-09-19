@@ -42,7 +42,8 @@ data(corn_yield)
 yield_dml <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
-  dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5, ml = "regression_forest")
+  dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
+  ml = "regression_forest", dml_seed = 123)
 
 }
 \references{

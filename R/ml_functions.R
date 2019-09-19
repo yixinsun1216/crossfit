@@ -22,7 +22,7 @@
 #'
 
 #' @export
-#' note on passing in arguments https://stackoverflow.com/questions/23922130/default-argument-in-r-function-formal-argument-matched-by-multiple-actual-argum?rq=1
+# note on passing in arguments https://stackoverflow.com/questions/23922130/default-argument-in-r-function-formal-argument-matched-by-multiple-actual-argum?rq=1
 regression_forest2 <- function(f, d, num.trees = 1000, honesty = TRUE,
                                honesty.fraction = NULL, ...) {
   f <- Formula(f)
@@ -66,7 +66,7 @@ predict_rf2 <- function(forest, newdata = NULL) {
 
 
 #' @export
-run_ml <- function(f, folds_test, ml_type, value_type, ...){
+run_ml <- function(f, folds_test, ml_type, value_type, dml_seed, ...){
   # specify which ml method to use for training and predicting
   if(ml_type == "regression_forest"){
     train_ml <- "regression_forest2"
@@ -78,6 +78,8 @@ run_ml <- function(f, folds_test, ml_type, value_type, ...){
     predict_ml <- "predict"
     folds_test <- map(folds_test, data.frame)
   }
+
+  set.seed(dml_seed)
 
   # train and estimate values of delta in hold out sample
   if(value_type == "gamma"){
@@ -104,7 +106,7 @@ run_ml <- function(f, folds_test, ml_type, value_type, ...){
            function(x, y)
              map2(x, list(y), ~ get(predict_ml)(.x, .y)) %>%
              unlist %>%
-             matrix(ncol = length(fs_delta)))
+             matrix(ncol = length(f)))
   }
 
   return(output)

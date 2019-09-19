@@ -29,7 +29,8 @@
 #' yield_dml <-
 #'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
 #'   as.formula() %>%
-#'   dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5, ml = "regression_forest")
+#'   dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
+#'   ml = "regression_forest", dml_seed = 123)
 #'
 #' @references V. Chernozhukov, D. Chetverikov, M. Demirer, E. Duflo, C. Hansen,
 #' W. Newey, and J. Robins. Double/debiased machine learning for treatment and
@@ -59,7 +60,7 @@ dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
   # number of splits
   nn <- if_else(n %% 2 == 0, n + 1, n)
 
-  dml_seed <- if_else(is.null(dml_seed), FALSE, dml_seed)
+  dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
 
   seq(1, nn) %>%
     future_map(~dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml), ...,
@@ -177,13 +178,8 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, ...) {
   # Next 2 steps done in the function run_ml()
   # step 3: train models for delta and gamma
   # step 4: estimate values of delta and gamma in the hold out sample
-  if(is.null(dml_seed) | !dml_seed){
-    gamma <- run_ml(f_gamma, folds$test, ml, "gamma", ...)
-    delta <- run_ml(fs_delta, folds$test, ml, "delta", ...)
-  } else{
-    gamma <- run_ml(f_gamma, folds$test, ml, "gamma", seed = dml_seed, ...)
-    delta <- run_ml(fs_delta, folds$test, ml, "delta", seed = dml_seed, ...)
-  }
+  gamma <- run_ml(f_gamma, folds$test, ml, "gamma", dml_seed, ...)
+  delta <- run_ml(fs_delta, folds$test, ml, "delta",dml_seed, ...)
 
   # step 5: put together the values of Y and D in the hold out sample, and pass
   # things off to the dml_estimate routine
@@ -229,3 +225,13 @@ get_medians <- function(estimates, n, dml_call) {
                         call = dml_call),
                    class = "dml"))
 }
+
+
+
+# Coefficients:
+#   Estimate Std. Error
+# lower   -4.267e-05      0.000
+# higher  -1.210e-03      0.000
+# prec_lo -7.104e-03      0.001
+# prec_hi  1.677e-03      0.000
+# 406 seconds, seed 123
