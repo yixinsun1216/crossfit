@@ -63,10 +63,19 @@ predict_rf2 <- function(forest, newdata = NULL) {
   }
 }
 
-
+# expand a formula to all polynomial terms
+poly_formula <- function(f, deg){
+  y <- all.vars(f)[1]
+  f_poly <-
+    labels(terms(f)) %>%
+    paste(collapse = " , ") %>%
+    paste(y, "~ poly(", ., ", degree = ", deg, ")") %>%
+    as.formula
+  return(f_poly)
+}
 
 #' @export
-run_ml <- function(f, folds_test, ml_type, value_type, dml_seed, ...){
+run_ml <- function(f_gamma, fs_delta, folds_test, ml_type, dml_seed, poly_degree = 3, ...){
   # specify which ml method to use for training and predicting
   if(ml_type == "regression_forest"){
     train_ml <- "regression_forest2"
@@ -77,37 +86,38 @@ run_ml <- function(f, folds_test, ml_type, value_type, dml_seed, ...){
     train_ml <- "cv.glmnet"
     predict_ml <- "predict"
     folds_test <- map(folds_test, data.frame)
+
+    # create new formulas that holds all the permutation of polynomials
+    # basis functions for lasso
+    f_gamma <- poly_formula(f_gamma, poly_degree)
+    fs_delta <- map(fs_delta, poly_formula, poly_degree)
+
   }
 
   set.seed(dml_seed)
 
   # train and estimate values of delta in hold out sample
-  if(value_type == "gamma"){
-    gamma_models <- map(folds_test, function(y) {
-      get(train_ml)(f, d = y, ...)
-    })
+  gamma_models <- map(folds_test, function(y) {
+    get(train_ml)(f_gamma, d = y, ...)
+  })
 
-    output <-
-      map2(gamma_models, folds_test, ~ get(predict_ml)(.x, .y)) %>%
-      map(as.matrix)
+  gamma <-
+    map2(gamma_models, folds_test, ~ get(predict_ml)(.x, .y)) %>%
+    map(as.matrix)
 
-  }
+  # train and estimate values of delta in the hold out sample
+  delta_models <-
+    folds_test %>%
+    map(function(x) map(fs_delta, function(y) {
+      get(train_ml)(y, d = x, ...)
+    }))
 
-  # train and estimate values of gamma in the hold out sample
-  if(value_type == "delta"){
-    delta_models <-
-      folds_test %>%
-      map(function(x) map(f, function(y) {
-        get(train_ml)(y, d = x, ...)
-      }))
+  delta <-
+    map2(delta_models, folds_test,
+         function(x, y)
+           map2(x, list(y), ~ get(predict_ml)(.x, .y)) %>%
+           unlist %>%
+           matrix(ncol = length(fs_delta)))
 
-    output <-
-      map2(delta_models, folds_test,
-           function(x, y)
-             map2(x, list(y), ~ get(predict_ml)(.x, .y)) %>%
-             unlist %>%
-             matrix(ncol = length(f)))
-  }
-
-  return(output)
+  return(list(gamma = gamma, delta = delta))
 }

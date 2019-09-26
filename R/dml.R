@@ -178,8 +178,9 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, ...) {
   # Next 2 steps done in the function run_ml()
   # step 3: train models for delta and gamma
   # step 4: estimate values of delta and gamma in the hold out sample
-  gamma <- run_ml(f_gamma, folds$test, ml, "gamma", dml_seed, ...)
-  delta <- run_ml(fs_delta, folds$test, ml, "delta",dml_seed, ...)
+  output <- run_ml(f_gamma, fs_delta, folds$test, ml, dml_seed, ...)
+  gamma <- output$gamma
+  delta <- output$delta
 
   # step 5: put together the values of Y and D in the hold out sample, and pass
   # things off to the dml_estimate routine
