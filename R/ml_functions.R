@@ -75,7 +75,8 @@ poly_formula <- function(f, deg){
 }
 
 #' @export
-run_ml <- function(f_gamma, fs_delta, folds_test, ml_type, dml_seed, poly_degree = 3, ...){
+run_ml <- function(f_gamma, fs_delta, folds_test, ml_type, dml_seed,
+                   poly_degree, ...){
   # specify which ml method to use for training and predicting
   if(ml_type == "regression_forest"){
     train_ml <- "regression_forest2"
@@ -85,13 +86,16 @@ run_ml <- function(f_gamma, fs_delta, folds_test, ml_type, dml_seed, poly_degree
   if(ml_type == "lasso"){
     train_ml <- "cv.glmnet"
     predict_ml <- "predict"
+
+    # shape dataframe so it is usable with glmnet
     folds_test <- map(folds_test, data.frame)
 
     # create new formulas that holds all the permutation of polynomials
     # basis functions for lasso
-    f_gamma <- poly_formula(f_gamma, poly_degree)
-    fs_delta <- map(fs_delta, poly_formula, poly_degree)
-
+    if(as.numeric(poly_degree) > 0){
+      f_gamma <- poly_formula(f_gamma, poly_degree)
+      fs_delta <- map(fs_delta, poly_formula, poly_degree)
+    }
   }
 
   set.seed(dml_seed)

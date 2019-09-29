@@ -5,7 +5,7 @@
 \title{Double Machine Learning Estimates}
 \usage{
 dml(f, d, psi, psi_grad, psi_op, n = 101, nw = 4, dml_seed = NULL,
-  ml, ...)
+  ml, poly_degree = 3, drop_na = FALSE, ...)
 }
 \arguments{
 \item{f}{an object of class formula representing the model to be fitted.}

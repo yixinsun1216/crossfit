@@ -51,19 +51,31 @@
 #' @export
 # main user-facing routine
 dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
-                dml_seed = NULL, ml,  ...) {
+                dml_seed = NULL, ml,  poly_degree = 3, drop_na = FALSE, ...) {
   dml_call <- match.call()
-
-  plan(future::multisession, .init = nw)
+  dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
 
   # to make the median well-defined, add 1 to n if the user requests an even
   # number of splits
   nn <- if_else(n %% 2 == 0, n + 1, n)
 
-  dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
+  # ensure fm has no intercept in the parametric part
+  f <-
+    Formula(f) %>%
+    update(. ~ 0 + . | 0 + .)
 
+  # lasso cannot handle NAs, so first prepare data if user specifies to drop NAs
+  if(drop_na){
+    d <-
+      model.frame(f, d) %>%
+      filter(complete.cases(.)) %>%
+      as_tibble
+  }
+
+  plan(future::multisession, .init = nw)
   seq(1, nn) %>%
-    future_map(~dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml), ...,
+    future_map(~dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml,
+                         poly_degree), ...,
                .options = future_options(packages = c("splines"),
                                          seed = dml_seed)) %>%
     get_medians(nrow(d), dml_call)
@@ -121,8 +133,10 @@ dml_estimate <- function(Y, D, gamma, delta, psi, psi_grad, psi_op,
 }
 
 get_rhs_cols <- function(f, d, part = 1) {
+  options(na.action='na.pass')
+
   f %>%
-    formula(rhs = part, lhs = 0) %>%
+    formula(lhs = 0, rhs = part) %>%
     model.matrix(d) %>%
     as_tibble %>%
     rename_all(~ str_replace_all(., regex("[(, =)]"), "_"))
@@ -131,19 +145,15 @@ get_rhs_cols <- function(f, d, part = 1) {
 get_lhs_col <- function(f, d) {
   f %>%
     formula(lhs = 1, rhs = 0) %>%
-    model.frame(d) %>%
+    model.frame(d, na.action = NULL) %>%
     as_tibble %>%
     rename_all(~ str_replace_all(., regex("[(, =)]"), "_"))
 }
 
 # estimate theta and s2 in a single sample split of the data
 # formula should be y ~ d | x
-dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, ...) {
-  # step 0: ensure fm has no intercept in the parametric part
-
-  f <-
-    Formula(f) %>%
-    update(. ~ 0 + . | 0 + .)
+dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, poly_degree,
+                     ...) {
 
   # step 1: make the estimation dataset
   # (a) expand out any non-linear formula for y and sanitize names
@@ -166,6 +176,7 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, ...) {
   # step 2: save formulae for gamma and delta, based on transformed y and d
   xvars <- paste("0", paste0(names(tx), collapse = " + "), sep = " + ")
 
+
   f_gamma <-
     paste(names(ty), xvars, sep = " ~ ") %>%
     as.formula
@@ -178,7 +189,7 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, ...) {
   # Next 2 steps done in the function run_ml()
   # step 3: train models for delta and gamma
   # step 4: estimate values of delta and gamma in the hold out sample
-  output <- run_ml(f_gamma, fs_delta, folds$test, ml, dml_seed, ...)
+  output <- run_ml(f_gamma, fs_delta, folds$test, ml, dml_seed, poly_degree, ...)
   gamma <- output$gamma
   delta <- output$delta
 
