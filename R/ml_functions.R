@@ -17,6 +17,7 @@
 #' @importFrom stats update formula model.matrix model.frame predict
 #' @importFrom grf regression_forest
 #' @importFrom glmnetUtils cv.glmnet
+#' @importFrom hdm rlasso
 #' @importFrom Formula Formula
 #'
 #'
@@ -48,7 +49,21 @@ regression_forest2 <- function(f, d, num.trees = 1000, honesty = TRUE,
 }
 
 #' @export
-#' @rdname regression_forest2
+#' @rdname predict_rlasso2
+predict_rlasso2 <- function(rl, newdata = NULL) {
+  f <- rl[["model"]]
+
+  if(!is.null(newdata)) {
+    X <-
+      formula(f, rhs = 1, lhs = 0) %>%
+      update(~ 0 + .) %>%
+      model.matrix(newdata)
+    return(pluck(predict(forest, X), "predictions"))
+  } else {
+    return(pluck(predict(forest), "predictions"))
+  }
+}
+
 predict_rf2 <- function(forest, newdata = NULL) {
   f <- forest[["formula"]]
 
@@ -75,7 +90,7 @@ poly_formula <- function(f, deg){
 }
 
 #' @export
-run_ml <- function(f_gamma, fs_delta, folds_test, ml_type, dml_seed,
+run_ml <- function(f_gamma, fs_delta, folds, ml_type, dml_seed,
                    poly_degree, ...){
   # specify which ml method to use for training and predicting
   if(ml_type == "regression_forest"){
@@ -86,38 +101,46 @@ run_ml <- function(f_gamma, fs_delta, folds_test, ml_type, dml_seed,
   if(ml_type == "lasso"){
     train_ml <- "cv.glmnet"
     predict_ml <- "predict"
+  }
 
-    # shape dataframe so it is usable with glmnet
-    folds_test <- map(folds_test, data.frame)
+  if(ml_type == "rlasso"){
+    train_ml <- "rlasso"
+    predict_ml <- "predict"
+  }
 
+  if(ml_type %in% c("rlasso", "lasso")){
     # create new formulas that holds all the permutation of polynomials
     # basis functions for lasso
     if(as.numeric(poly_degree) > 0){
       f_gamma <- poly_formula(f_gamma, poly_degree)
       fs_delta <- map(fs_delta, poly_formula, poly_degree)
     }
+
+    # shape dataframe so it is usable with glmnet
+    folds$test <- map(folds$test, data.frame)
+    folds$train <- map(folds$train, data.frame)
   }
 
   set.seed(dml_seed)
 
   # train and estimate values of delta in hold out sample
-  gamma_models <- map(folds_test, function(y) {
-    get(train_ml)(f_gamma, d = y, ...)
+  gamma_models <- map(folds$train, function(y) {
+    get(train_ml)(f_gamma, y, ...)
   })
 
   gamma <-
-    map2(gamma_models, folds_test, ~ get(predict_ml)(.x, .y)) %>%
+    map2(gamma_models, folds$test, ~ get(predict_ml)(.x, .y)) %>%
     map(as.matrix)
 
   # train and estimate values of delta in the hold out sample
   delta_models <-
-    folds_test %>%
+    folds$train %>%
     map(function(x) map(fs_delta, function(y) {
-      get(train_ml)(y, d = x, ...)
+      get(train_ml)(y, x, ...)
     }))
 
   delta <-
-    map2(delta_models, folds_test,
+    map2(delta_models, folds$test,
          function(x, y)
            map2(x, list(y), ~ get(predict_ml)(.x, .y)) %>%
            unlist %>%

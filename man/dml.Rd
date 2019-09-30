@@ -38,6 +38,7 @@ Double Machine Learning Estimates
 # Effect of temperature and precipitation on corn yield in the presence of
 # time and locational effects
 data(corn_yield)
+library(magrittr)
 
 yield_dml <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%

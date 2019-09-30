@@ -25,6 +25,7 @@
 #' # Effect of temperature and precipitation on corn yield in the presence of
 #' # time and locational effects
 #' data(corn_yield)
+#' library(magrittr)
 #'
 #' yield_dml <-
 #'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
@@ -154,7 +155,6 @@ get_lhs_col <- function(f, d) {
 # formula should be y ~ d | x
 dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, poly_degree,
                      ...) {
-
   # step 1: make the estimation dataset
   # (a) expand out any non-linear formula for y and sanitize names
   ty <- get_lhs_col(f, d)
@@ -189,7 +189,7 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, poly_degr
   # Next 2 steps done in the function run_ml()
   # step 3: train models for delta and gamma
   # step 4: estimate values of delta and gamma in the hold out sample
-  output <- run_ml(f_gamma, fs_delta, folds$test, ml, dml_seed, poly_degree, ...)
+  output <- run_ml(f_gamma, fs_delta, folds, ml, dml_seed, poly_degree, ...)
   gamma <- output$gamma
   delta <- output$delta
 
@@ -247,3 +247,4 @@ get_medians <- function(estimates, n, dml_call) {
 # prec_lo -7.104e-03      0.001
 # prec_hi  1.677e-03      0.000
 # 406 seconds, seed 123
+# 20.2 seconds
