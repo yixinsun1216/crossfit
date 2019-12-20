@@ -73,13 +73,21 @@ dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
       as_tibble
   }
 
+  params <- get.params(...)
+  print(paste("dml parameters", params))
+
   plan(future::multisession, .init = nw)
   seq(1, nn) %>%
-    future_map(~dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml,
-                         poly_degree), ...,
+    future_map(function(.x, ...) dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml,
+                         poly_degree, ...), ...,
                .options = future_options(packages = c("splines"),
                                          seed = dml_seed)) %>%
     get_medians(nrow(d), dml_call)
+
+  # seq(1, nn) %>%
+  #   map(function(.x, ...) dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml,
+  #                      poly_degree, ...), ...) %>%
+  #   get_medians(nrow(d), dml_call)
 }
 
 square <- function(x) 0.5 * t(x) %*% x
@@ -153,8 +161,8 @@ get_lhs_col <- function(f, d) {
 
 # estimate theta and s2 in a single sample split of the data
 # formula should be y ~ d | x
-dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, poly_degree,
-                     ...) {
+dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL,
+                     ml, poly_degree, ...) {
   # step 1: make the estimation dataset
   # (a) expand out any non-linear formula for y and sanitize names
   ty <- get_lhs_col(f, d)
@@ -189,6 +197,9 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL, ml, poly_degr
   # Next 2 steps done in the function run_ml()
   # step 3: train models for delta and gamma
   # step 4: estimate values of delta and gamma in the hold out sample
+  params <- get.params(...)
+  print(paste("dml_step parameters", params))
+
   output <- run_ml(f_gamma, fs_delta, folds, ml, dml_seed, poly_degree, ...)
   gamma <- output$gamma
   delta <- output$delta
@@ -238,13 +249,21 @@ get_medians <- function(estimates, n, dml_call) {
                    class = "dml"))
 }
 
+get.params <- function(...) {
+  params <- c()
+
+  if (length(list(...)) && !is.null(c(...)))
+    params <- c(...)
+
+  return(params)
+}
 
 
-# Coefficients:
+# Coefficients: tune = TRUE
 #   Estimate Std. Error
-# lower   -4.267e-05      0.000
-# higher  -1.210e-03      0.000
-# prec_lo -7.104e-03      0.001
-# prec_hi  1.677e-03      0.000
+# lower    2.927e-05      0.000
+# higher  -2.049e-03      0.000
+# prec_lo -3.912e-03      0.001
+# prec_hi  2.662e-04      0.000
 # 406 seconds, seed 123
 # 20.2 seconds

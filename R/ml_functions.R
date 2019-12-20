@@ -13,7 +13,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble as_tibble enframe
-#' @importFrom purrr pluck
+#' @importFrom purrr pluck map2
 #' @importFrom stats update formula model.matrix model.frame predict
 #' @importFrom grf regression_forest
 #' @importFrom glmnetUtils cv.glmnet
@@ -24,8 +24,8 @@
 
 #' @export
 # note on passing in arguments https://stackoverflow.com/questions/23922130/default-argument-in-r-function-formal-argument-matched-by-multiple-actual-argum?rq=1
-regression_forest2 <- function(f, d, num.trees = 1000, honesty = TRUE,
-                               honesty.fraction = NULL, ...) {
+regression_forest2 <- function(f, d, num.trees = 1000, honesty = FALSE,
+                               honesty.fraction = NULL, tune.parameters = TRUE, ...) {
   f <- Formula(f)
 
   Y <-
@@ -40,7 +40,8 @@ regression_forest2 <- function(f, d, num.trees = 1000, honesty = TRUE,
     model.matrix(d)
 
   ff <- regression_forest(X, Y, num.trees = num.trees, honesty = honesty,
-                          honesty.fraction = honesty.fraction, ...)
+                          honesty.fraction = honesty.fraction,
+                          tune.parameters = tune.parameters,...)
 
   ff[["formula"]] <- f
   class(ff) <- c("regression_forest", "grf")
@@ -146,5 +147,9 @@ run_ml <- function(f_gamma, fs_delta, folds, ml_type, dml_seed,
            unlist %>%
            matrix(ncol = length(fs_delta)))
 
+  params <- get.params(...)
+  print(paste("run_ml parameters", params))
+
   return(list(gamma = gamma, delta = delta))
 }
+
