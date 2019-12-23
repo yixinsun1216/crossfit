@@ -2,13 +2,10 @@
 % Please edit documentation in R/dml.R
 \name{dml}
 \alias{dml}
-\alias{dml_fast}
 \title{Double Machine Learning Estimates}
 \usage{
 dml(f, d, psi, psi_grad, psi_op, n = 101, nw = 4, dml_seed = NULL,
-  ...)
-
-dml_fast(f, d, psi, psi_grad, psi_op, dml_seed = NULL)
+  ml, poly_degree = 3, drop_na = FALSE, ...)
 }
 \arguments{
 \item{f}{an object of class formula representing the model to be fitted.}
@@ -20,6 +17,8 @@ given value of theta}
 
 \item{psi_grad}{function that gives the gradient of psi with respect to theta}
 
+\item{ml}{}
+
 \item{psi_plr_op}{function that gives the variance estimator at a given
 value of theta.}
 }
@@ -29,18 +28,23 @@ value of theta.}
    \item{coefficients}{a named vector of coefficients.}
    \item{vcov}{variance-covariance matrix of the main parameters.}
    \item{nobs}{number of observations used}
+   \item{call}{original function call with given arguments}
 }
 }
 \description{
 Double Machine Learning Estimates
 }
 \examples{
+# Effect of temperature and precipitation on corn yield in the presence of
+# time and locational effects
 data(corn_yield)
+library(magrittr)
 
 yield_dml <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
-  dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5)
+  dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
+  ml = "regression_forest", dml_seed = 123)
 
 }
 \references{

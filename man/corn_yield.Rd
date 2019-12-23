@@ -4,7 +4,7 @@
 \name{corn_yield}
 \alias{corn_yield}
 \title{Effect of Temperature and Precipitation on Corn Yields}
-\format{A data frame with 2,000 rows and 7 variables
+\format{A data frame with 11,480 rows and 7 variables
 \describe{
   \item{logcornyield}{log corn yields}
   \item{year}{Year of observation}

@@ -2,7 +2,7 @@
 #'
 #' Sample of corn yield, temperature, and precipitation data
 #'
-#' @format A data frame with 2,000 rows and 7 variables
+#' @format A data frame with 11,480 rows and 7 variables
 #' \describe{
 #'   \item{logcornyield}{log corn yields}
 #'   \item{year}{Year of observation}
