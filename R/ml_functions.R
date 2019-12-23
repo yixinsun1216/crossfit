@@ -24,8 +24,7 @@
 
 #' @export
 # note on passing in arguments https://stackoverflow.com/questions/23922130/default-argument-in-r-function-formal-argument-matched-by-multiple-actual-argum?rq=1
-regression_forest2 <- function(f, d, num.trees = 1000, honesty = FALSE,
-                               honesty.fraction = NULL, tune.parameters = TRUE, ...) {
+regression_forest2 <- function(f, d, num.trees = 1000, ...) {
   f <- Formula(f)
 
   Y <-
@@ -39,9 +38,7 @@ regression_forest2 <- function(f, d, num.trees = 1000, honesty = FALSE,
     update(~ 0 + .) %>%
     model.matrix(d)
 
-  ff <- regression_forest(X, Y, num.trees = num.trees, honesty = honesty,
-                          honesty.fraction = honesty.fraction,
-                          tune.parameters = tune.parameters,...)
+  ff <- regression_forest(X, Y, num.trees = num.trees,...)
 
   ff[["formula"]] <- f
   class(ff) <- c("regression_forest", "grf")
@@ -146,9 +143,6 @@ run_ml <- function(f_gamma, fs_delta, folds, ml_type, dml_seed,
            map2(x, list(y), ~ get(predict_ml)(.x, .y)) %>%
            unlist %>%
            matrix(ncol = length(fs_delta)))
-
-  params <- get.params(...)
-  print(paste("run_ml parameters", params))
 
   return(list(gamma = gamma, delta = delta))
 }

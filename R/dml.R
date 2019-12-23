@@ -73,9 +73,6 @@ dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
       as_tibble
   }
 
-  params <- get.params(...)
-  print(paste("dml parameters", params))
-
   plan(future::multisession, .init = nw)
   seq(1, nn) %>%
     future_map(function(.x, ...) dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml,
@@ -84,10 +81,6 @@ dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
                                          seed = dml_seed)) %>%
     get_medians(nrow(d), dml_call)
 
-  # seq(1, nn) %>%
-  #   map(function(.x, ...) dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml,
-  #                      poly_degree, ...), ...) %>%
-  #   get_medians(nrow(d), dml_call)
 }
 
 square <- function(x) 0.5 * t(x) %*% x
@@ -197,8 +190,6 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL,
   # Next 2 steps done in the function run_ml()
   # step 3: train models for delta and gamma
   # step 4: estimate values of delta and gamma in the hold out sample
-  params <- get.params(...)
-  print(paste("dml_step parameters", params))
 
   output <- run_ml(f_gamma, fs_delta, folds, ml, dml_seed, poly_degree, ...)
   gamma <- output$gamma
@@ -247,15 +238,6 @@ get_medians <- function(estimates, n, dml_call) {
                         nobs = n,
                         call = dml_call),
                    class = "dml"))
-}
-
-get.params <- function(...) {
-  params <- c()
-
-  if (length(list(...)) && !is.null(c(...)))
-    params <- c(...)
-
-  return(params)
 }
 
 
