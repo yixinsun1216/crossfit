@@ -92,8 +92,7 @@ dml <- function(f, d, model, n = 101, nw = 4,
 square <- function(x) 0.5 * t(x) %*% x
 
 
-dml_estimate <- function(Y, D, gamma, delta, psi, psi_grad, psi_op,
-                         bounds = NULL) {
+dml_estimate <- function(Y, D, gamma, delta, model, bounds = NULL) {
   assign_moment(model)
 
   obj <- function(theta) {

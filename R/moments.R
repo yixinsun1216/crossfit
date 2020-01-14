@@ -12,7 +12,7 @@
 #' function that takes in the model form and assigns a psi, psi_grad,
 #' and psi_op function accordingly
 #' argument can be a list consisting of 3 elements of user generated functions
-assign_moment <- function(m){
+assign_psi <- function(m){
   if(m = "linear"){
     psi <- psi_plr
     psi_grad <- psi_plr_grad
