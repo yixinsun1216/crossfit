@@ -33,6 +33,12 @@
 #'   dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
 #'   ml = "regression_forest", dml_seed = 123)
 #'
+#' yield_dml_lasso <-
+#'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
+#'   as.formula() %>%
+#'   dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
+#'   ml = "lasso", dml_seed = 123, family = "gaussian")
+#'
 #' @references V. Chernozhukov, D. Chetverikov, M. Demirer, E. Duflo, C. Hansen,
 #' W. Newey, and J. Robins. Double/debiased machine learning for treatment and
 #' structural parameters.The Econometrics Journal, 21(1):C1–C68, 2018a.
@@ -51,7 +57,7 @@
 #'
 #' @export
 # main user-facing routine
-dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
+dml <- function(f, d, model, n = 101, nw = 4,
                 dml_seed = NULL, ml,  poly_degree = 3, drop_na = FALSE, ...) {
   dml_call <- match.call()
   dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
@@ -75,7 +81,7 @@ dml <- function(f, d, psi, psi_grad, psi_op, n = 101, nw = 4,
 
   plan(future::multisession, .init = nw)
   seq(1, nn) %>%
-    future_map(function(.x, ...) dml_step(f, d, psi, psi_grad, psi_op, dml_seed, ml,
+    future_map(function(.x, ...) dml_step(f, d, model, dml_seed, ml,
                          poly_degree, ...), ...,
                .options = future_options(packages = c("splines"),
                                          seed = dml_seed)) %>%
@@ -88,10 +94,12 @@ square <- function(x) 0.5 * t(x) %*% x
 
 dml_estimate <- function(Y, D, gamma, delta, psi, psi_grad, psi_op,
                          bounds = NULL) {
+  assign_moment(model)
+
   obj <- function(theta) {
     list(Y, D, gamma, delta) %>%
       pmap(function(Y, D, gamma, delta) {
-        psi(theta, Y, D, gamma, delta)
+        get(psi)(theta, Y, D, gamma, delta)
       }) %>%
       reduce(`+`) / length(D)
   }
@@ -99,7 +107,7 @@ dml_estimate <- function(Y, D, gamma, delta, psi, psi_grad, psi_op,
   grad <- function(theta) {
     list(Y, D, gamma, delta) %>%
       pmap(function(Y, D, gamma, delta) {
-        psi_grad(theta, Y, D, gamma, delta)
+        get(psi_grad)(theta, Y, D, gamma, delta)
       }) %>%
       reduce(`+`) / length(D)
   }
@@ -116,7 +124,7 @@ dml_estimate <- function(Y, D, gamma, delta, psi, psi_grad, psi_op,
   J0 <-
     list(Y, D, gamma, delta) %>%
     pmap(function(Y, D, gamma, delta) {
-      psi_grad(theta$par, Y, D, gamma, delta)
+      get(psi_grad)(theta$par, Y, D, gamma, delta)
     }) %>%
     reduce(`+`) / length(D)
 
@@ -154,7 +162,7 @@ get_lhs_col <- function(f, d) {
 
 # estimate theta and s2 in a single sample split of the data
 # formula should be y ~ d | x
-dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL,
+dml_step <- function(f, d, model, dml_seed = NULL,
                      ml, poly_degree, ...) {
   # step 1: make the estimation dataset
   # (a) expand out any non-linear formula for y and sanitize names
@@ -203,7 +211,7 @@ dml_step <- function(f, d, psi, psi_grad, psi_op, dml_seed = NULL,
   dnames <- names(td)
   D <- map(folds$test, ~ as.matrix(select(as.data.frame(.), !!dnames)))
 
-  return(dml_estimate(Y, D, gamma, delta, psi, psi_grad, psi_op))
+  return(dml_estimate(Y, D, gamma, delta, model))
 }
 
 
@@ -239,13 +247,3 @@ get_medians <- function(estimates, n, dml_call) {
                         call = dml_call),
                    class = "dml"))
 }
-
-
-# Coefficients: tune = TRUE
-#   Estimate Std. Error
-# lower    2.927e-05      0.000
-# higher  -2.049e-03      0.000
-# prec_lo -3.912e-03      0.001
-# prec_hi  2.662e-04      0.000
-# 406 seconds, seed 123
-# 20.2 seconds

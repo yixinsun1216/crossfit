@@ -9,6 +9,32 @@
 #' @param delta a vector or data.frame of E[D|X=x].
 #'
 #' @export
+#' function that takes in the model form and assigns a psi, psi_grad,
+#' and psi_op function accordingly
+#' argument can be a list consisting of 3 elements of user generated functions
+assign_moment <- function(m){
+  if(m = "linear"){
+    psi <- psi_plr
+    psi_grad <- psi_plr_grad
+    psi_op <- psi_plr_grad
+  }
+
+  if(m = "partial"){
+    psi <- psi_plpr
+    psi_grad <- psi_plpr_grad
+    psi_op <- psi_plpr_op
+  }
+
+  if(is.list(m)){
+    psi <- m[[1]]
+    psi_grad <- m[[2]]
+    psi_op <- m[[3]]
+  }
+  invisible(m)
+}
+
+#'
+#' @export
 # partial linear model
 # recall this is (Y - gamma(X) - theta * (D - delta(X))) * (D - delta(X))
 psi_plr <- function(theta, Y, D, gamma, delta) {
