@@ -4,23 +4,15 @@
 \alias{dml}
 \title{Double Machine Learning Estimates}
 \usage{
-dml(f, d, psi, psi_grad, psi_op, n = 101, nw = 4, dml_seed = NULL,
-  ml, poly_degree = 3, drop_na = FALSE, ...)
+dml(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
+  poly_degree = 3, drop_na = FALSE, ...)
 }
 \arguments{
 \item{f}{an object of class formula representing the model to be fitted.}
 
 \item{d}{a dataframe containing the variables in f.}
 
-\item{psi}{function that gives the value of the Neyman-Orthogonal moment at a
-given value of theta}
-
-\item{psi_grad}{function that gives the gradient of psi with respect to theta}
-
 \item{ml}{}
-
-\item{psi_plr_op}{function that gives the variance estimator at a given
-value of theta.}
 }
 \value{
 \code{dml} returns an object of class "dml" with the following components:
@@ -43,8 +35,14 @@ library(magrittr)
 yield_dml <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
-  dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
+  dml(corn_yield, "linear", n = 5,
   ml = "regression_forest", dml_seed = 123)
+
+yield_dml_lasso <-
+  "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
+  as.formula() \%>\%
+  dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
+  ml = "lasso", dml_seed = 123, family = "gaussian")
 
 }
 \references{

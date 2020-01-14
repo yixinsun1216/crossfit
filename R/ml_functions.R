@@ -47,18 +47,26 @@ regression_forest2 <- function(f, d, num.trees = 1000, ...) {
 }
 
 #' @export
-#' @rdname predict_rlasso2
+# returns the original formula as a part of the rlasso object
+rlasso2 <- function(f, d, ...){
+  rlasso_model <- rlasso(f, d, ...)
+  rlasso_model[["formula"]] <- f
+ return(rlasso_model)
+}
+
+#' @export
 predict_rlasso2 <- function(rl, newdata = NULL) {
-  f <- rl[["model"]]
+  f_rl <- rl[["formula"]]
 
   if(!is.null(newdata)) {
     X <-
-      formula(f, rhs = 1, lhs = 0) %>%
+      formula(f_rl, rhs = 1, lhs = 0) %>%
       update(~ 0 + .) %>%
       model.matrix(newdata)
-    return(pluck(predict(forest, X), "predictions"))
+    return(predict(rl, X))
+
   } else {
-    return(pluck(predict(forest), "predictions"))
+    return(predict(rl))
   }
 }
 
@@ -102,8 +110,8 @@ run_ml <- function(f_gamma, fs_delta, folds, ml_type, dml_seed,
   }
 
   if(ml_type == "rlasso"){
-    train_ml <- "rlasso"
-    predict_ml <- "predict"
+    train_ml <- "rlasso2"
+    predict_ml <- "predict_rlasso2"
   }
 
   if(ml_type %in% c("rlasso", "lasso")){
@@ -146,4 +154,3 @@ run_ml <- function(f_gamma, fs_delta, folds, ml_type, dml_seed,
 
   return(list(gamma = gamma, delta = delta))
 }
-

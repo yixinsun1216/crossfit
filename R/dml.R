@@ -2,10 +2,17 @@
 #'
 #' @param f an object of class formula representing the model to be fitted.
 #' @param d a dataframe containing the variables in f.
-#' @param psi function that gives the value of the Neyman-Orthogonal moment at a
+#' @param model model type or list of user created momentfunctions.
+#'   The following model types are implementable: "linear" for partial linear
+#'   model, "poisson" for a partial linear poisson model". If the argument is
+#'   a list, the list must have three functions in order to generate theta,
+#'   the coefficient of interest.
+#' \enumerate{
+#'   \item psi: function that gives the value of the Neyman-Orthogonal moment at a
 #'   given value of theta
-#' @param psi_grad function that gives the gradient of psi with respect to theta
-#' @param psi_plr_op function that gives the variance estimator at a given
+#'   \item psi_grad: function that returns the gradient of psi with respect to
+#'   theta
+#'   \item psi_plr_op: function that gives the variance estimator at a given
 #'   value of theta.
 #' @param n
 #' @param nw
@@ -30,7 +37,7 @@
 #' yield_dml <-
 #'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
 #'   as.formula() %>%
-#'   dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
+#'   dml(corn_yield, "linear", n = 5,
 #'   ml = "regression_forest", dml_seed = 123)
 #'
 #' yield_dml_lasso <-
@@ -93,12 +100,31 @@ square <- function(x) 0.5 * t(x) %*% x
 
 
 dml_estimate <- function(Y, D, gamma, delta, model, bounds = NULL) {
-  assign_moment(model)
+  # assign a psi, psi_grad,and psi_op function based on the model the user
+  # specified
+  # model argument can be a 3 element list of user generated functions
+  if(model == "linear"){
+    psi <- psi_plr
+    psi_grad <- psi_plr_grad
+    psi_op <- psi_plr_op
+  }
+
+  if(model == "partial"){
+    psi <<- psi_plpr
+    psi_grad <<- psi_plpr_grad
+    psi_op <<- psi_plpr_op
+  }
+
+  if(is.list(model)){
+    psi <- model[[1]]
+    psi_grad <- model[[2]]
+    psi_op <- model[[3]]
+  }
 
   obj <- function(theta) {
     list(Y, D, gamma, delta) %>%
       pmap(function(Y, D, gamma, delta) {
-        get(psi)(theta, Y, D, gamma, delta)
+        psi(theta, Y, D, gamma, delta)
       }) %>%
       reduce(`+`) / length(D)
   }
@@ -106,7 +132,7 @@ dml_estimate <- function(Y, D, gamma, delta, model, bounds = NULL) {
   grad <- function(theta) {
     list(Y, D, gamma, delta) %>%
       pmap(function(Y, D, gamma, delta) {
-        get(psi_grad)(theta, Y, D, gamma, delta)
+        psi_grad(theta, Y, D, gamma, delta)
       }) %>%
       reduce(`+`) / length(D)
   }
@@ -123,7 +149,7 @@ dml_estimate <- function(Y, D, gamma, delta, model, bounds = NULL) {
   J0 <-
     list(Y, D, gamma, delta) %>%
     pmap(function(Y, D, gamma, delta) {
-      get(psi_grad)(theta$par, Y, D, gamma, delta)
+      psi_grad(theta$par, Y, D, gamma, delta)
     }) %>%
     reduce(`+`) / length(D)
 
