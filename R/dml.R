@@ -33,6 +33,12 @@
 #'   dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
 #'   ml = "regression_forest", dml_seed = 123)
 #'
+#' yield_dml_lasso <-
+#'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
+#'   as.formula() %>%
+#'   dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
+#'   ml = "lasso", dml_seed = 123, family = "gaussian")
+#'
 #' @references V. Chernozhukov, D. Chetverikov, M. Demirer, E. Duflo, C. Hansen,
 #' W. Newey, and J. Robins. Double/debiased machine learning for treatment and
 #' structural parameters.The Econometrics Journal, 21(1):C1–C68, 2018a.
