@@ -41,7 +41,7 @@ yield_dml <-
 yield_dml_lasso <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
-  dml(corn_yield, psi_plr, psi_plr_grad, psi_plr_op, n = 5,
+  dml(corn_yield, "linear", n = 5,
   ml = "lasso", dml_seed = 123, family = "gaussian")
 
 }
