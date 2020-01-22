@@ -47,7 +47,7 @@ regression_forest2 <- function(f, d, num.trees = 1000, ...) {
 }
 
 #' @export
-# returns the original formula as a part of the rlasso object
+# wrapper to return the original formula as a part of the rlasso object
 rlasso2 <- function(f, d, ...){
   rlasso_model <- rlasso(f, d, ...)
   rlasso_model[["formula"]] <- f
