@@ -8,30 +8,6 @@
 #' @param gamma a vector of E[Y|X=x], where X is a vector of controls.
 #' @param delta a vector or data.frame of E[D|X=x].
 #'
-#' @export
-#' function that takes in the model form and assigns a psi, psi_grad,
-#' and psi_op function accordingly
-assign_moment <- function(m){
-  if(m = "linear"){
-    psi <- psi_plr
-    psi_grad <- psi_plr_grad
-    psi_op <- psi_plr_grad
-  }
-
-  if(m = "partial"){
-    psi <- psi_plpr
-    psi_grad <- psi_plpr_grad
-    psi_op <- psi_plpr_op
-  }
-
-  if(is.list(m)){
-    psi <- m[[1]]
-    psi_grad <- m[[2]]
-    psi_op <- m[[3]]
-  }
-  invisible(m)
-}
-
 #'
 #' @export
 # partial linear model
@@ -100,3 +76,9 @@ psi_plpr_op <- function(theta, Y, D, gamma, delta) {
   vals <- psi_plpr_with_grad(theta, Y, D, gamma, delta)[[1]]
   return(mean(vals^2))
 }
+
+# psi: function that gives the value of the Neyman-Orthogonal moment at a
+  # given value of theta
+# psi_grad: function that returns the gradient of psi with respect to theta
+# psi_plr_op: function that gives the variance estimator at a given
+  # value of theta.

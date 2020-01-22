@@ -4,8 +4,7 @@
 \alias{regression_forest2}
 \title{Machine Learning Functions}
 \usage{
-regression_forest2(f, d, num.trees = 1000, honesty = FALSE,
-  honesty.fraction = NULL, tune.parameters = TRUE, ...)
+regression_forest2(f, d, num.trees = 1000, ...)
 }
 \arguments{
 \item{f}{an object of class formula representing the model to be fitted.}

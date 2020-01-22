@@ -47,7 +47,7 @@ regression_forest2 <- function(f, d, num.trees = 1000, ...) {
 }
 
 #' @export
-# returns the original formula as a part of the rlasso object
+# wrapper to return the original formula as a part of the rlasso object
 rlasso2 <- function(f, d, ...){
   rlasso_model <- rlasso(f, d, ...)
   rlasso_model[["formula"]] <- f
@@ -154,10 +154,3 @@ run_ml <- function(f_gamma, fs_delta, folds, ml_type, dml_seed,
 
   return(list(gamma = gamma, delta = delta))
 }
-
-# maybe I can 1. extract the formula from rlasso.formula
-# 2. Create a predict.rlasso2 that takes in this formula, expands the
-   # test dataset to include the polynomial coefs
-# 3. set predict method to predict.rlasso2
-# pretty hacky...
-check <- model.matrix(fs_delta[[1]], data = folds$train[[1]])
