@@ -81,7 +81,7 @@ dml <- function(f, d, model, n = 101, nw = 4,
   # lasso cannot handle NAs, so first prepare data if user specifies to drop NAs
   if(drop_na){
     d <-
-      model.frame(f, d) %>%
+      get_all_vars(f, d) %>%
       filter(complete.cases(.)) %>%
       as_tibble
   }
@@ -109,7 +109,7 @@ dml_estimate <- function(Y, D, gamma, delta, model, bounds = NULL) {
     psi_op <- psi_plr_op
   }
 
-  if(model == "partial"){
+  if(model == "poisson"){
     psi <<- psi_plpr
     psi_grad <<- psi_plpr_grad
     psi_op <<- psi_plpr_op
