@@ -96,8 +96,7 @@ poly_formula <- function(f, deg){
 }
 
 #' @export
-run_ml <- function(f_gamma, fs_delta, folds, ml_type, dml_seed,
-                   poly_degree, ...){
+run_ml <- function(f_gamma, fs_delta, folds, ml_type, poly_degree, ...){
   # specify which ml method to use for training and predicting
   if(ml_type == "regression_forest"){
     train_ml <- "regression_forest2"
@@ -127,7 +126,8 @@ run_ml <- function(f_gamma, fs_delta, folds, ml_type, dml_seed,
     folds$train <- map(folds$train, data.frame)
   }
 
-  set.seed(dml_seed)
+  print(f_gamma)
+  print(colnames(folds$test[[1]]))
 
   # train and estimate values of delta in hold out sample
   gamma_models <- map(folds$train, function(y) {

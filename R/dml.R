@@ -224,7 +224,7 @@ dml_step <- function(f, d, model, dml_seed = NULL,
   # step 3: train models for delta and gamma
   # step 4: estimate values of delta and gamma in the hold out sample
 
-  output <- run_ml(f_gamma, fs_delta, folds, ml, dml_seed, poly_degree, ...)
+  output <- run_ml(f_gamma, fs_delta, folds, ml, poly_degree, ...)
   gamma <- output$gamma
   delta <- output$delta
 
