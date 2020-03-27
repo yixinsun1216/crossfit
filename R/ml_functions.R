@@ -90,7 +90,7 @@ poly_formula <- function(f, deg){
   f_poly <-
     labels(terms(f)) %>%
     paste(collapse = " , ") %>%
-    paste(y, "~ poly(", ., ", degree = ", deg, ")") %>%
+    paste(y, "~ poly(", ., ", raw = FALSE, degree = ", deg, ")") %>%
     as.formula
   return(f_poly)
 }
@@ -126,9 +126,6 @@ run_ml <- function(f_gamma, fs_delta, folds, ml_type, poly_degree, ...){
     folds$train <- map(folds$train, data.frame)
   }
 
-  print(f_gamma)
-  print(colnames(folds$test[[1]]))
-
   # train and estimate values of delta in hold out sample
   gamma_models <- map(folds$train, function(y) {
     get(train_ml)(f_gamma, y, ...)
@@ -154,3 +151,4 @@ run_ml <- function(f_gamma, fs_delta, folds, ml_type, poly_degree, ...){
 
   return(list(gamma = gamma, delta = delta))
 }
+

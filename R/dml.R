@@ -64,7 +64,8 @@
 #'
 #' @export
 # main user-facing routine
-dml <- function(f, d, model, n = 101, nw = 4,
+dml <- function(f, d, model, n = 101,
+                nw = 4,
                 dml_seed = NULL, ml,  poly_degree = 3, drop_na = FALSE, ...) {
   dml_call <- match.call()
   dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
@@ -93,6 +94,10 @@ dml <- function(f, d, model, n = 101, nw = 4,
                .options = future_options(packages = c("splines"),
                                          seed = dml_seed)) %>%
     get_medians(nrow(d), dml_call)
+
+  # seq(1, nn) %>%
+  #   map(~dml_step(f, d, model, dml_seed, ml, poly_degree, ...), ...) %>%
+  #   get_medians(nrow(d), dml_call)
 
 }
 
@@ -172,7 +177,7 @@ get_rhs_cols <- function(f, d, part = 1) {
 
   f %>%
     formula(lhs = 0, rhs = part) %>%
-    model.matrix(d) %>%
+    get_all_vars(d) %>%
     as_tibble %>%
     rename_all(~ str_replace_all(., regex("[(, =)]"), "_"))
 }
