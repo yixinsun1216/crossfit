@@ -1,5 +1,28 @@
 # https://www.stata.com/manuals/lassoxpopoisson.pdf
 
+# Effect of temperature and precipitation on corn yield in the presence of
+# time and locational effects
+library(dplyr)
+library(crossfit)
+library(splines)
+load("C:/Users/Yixin Sun/Dropbox (Personal)/EPIC/texas/generated_data/final_leases.Rda")
+
+reg_data <-
+  final_leases %>%
+  filter(InSample) %>%
+  mutate(Private = NParcels15 > 0 | Type == "RAL")
+
+base_controls <-
+  "Auction + bs(Acres, df = 7) + Term + RoyaltyRate"
+
+bonus_formula <-
+  paste("BonusPerAcre", base_controls, sep = " ~ ") %>%
+  paste("CentLat + CentLong + EffDate", sep = " | ") %>%
+  as.formula
+
+check <- dml_original(bonus_formula, reg_data, "poisson", n = 4, nw = 1, dml_seed = NULL, ml = "lasso", poly_degree = 1, drop_na = FALSE)
+
+
 #' @export
 dml_original <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
                 poly_degree = 1, drop_na = FALSE, ...) {
@@ -75,7 +98,7 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
     as.formula
 
   # Step 1:
-  ml_coefs <- estimate_ml(f_ml, folds, ml, ...)
+  ml_coefs <- estimate_ml(f_ml, folds, ml, model, ynames, ...)
 
   # Step 2: Use estimated coefficients to find
   # mu = E[X'exp(D*theta + X*beta)X]^{-1}E[X'exp(D*theta - X*beta)D]
@@ -138,27 +161,38 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
 # Use Original DML approach (not the concentrating out approach)
 # ============================================================================
 # estimate theta and beta of Y = D*theta + X*beta using ML
-estimate_ml <- function(f_ml, folds, ml, ...){
-  if(ml == "regression_forest"){
-    train_ml <- "regression_forest2"
+estimate_ml <- function(f_ml, folds, ml, model, ynames, ...){
+  one_ml <- function(y, train_ml, ...){
+    ml_coef <- coef(get(train_ml)(f_ml, y, ...))
+    data.frame(coef = pluck(dimnames(ml_coef), 1), value = matrix(ml_coef)) %>%
+      mutate(coef = as.character(coef)) %>%
+      mutate(coef = if_else(str_detect(coef, regex("Intercept", ignore.case = TRUE)),
+                            "Intercept", coef))
   }
 
+  if(model == "poisson"){ f_ml <- update(f_ml, log(.) ~ .)}
+
   if(ml == "lasso"){
-    train_ml <- "cv.glmnet"
+    ml_coefs <- map(folds$train, function(y) {
+      ml_coef <- coef(cv.glmnet(f_ml, y, family = "gaussian", ...))
+      data.frame(coef = pluck(dimnames(ml_coef), 1), value = matrix(ml_coef)) %>%
+        mutate(coef = as.character(coef)) %>%
+        mutate(coef = if_else(str_detect(coef, regex("Intercept", ignore.case = TRUE)),
+                              "Intercept", coef))
+    })
   }
 
   if(ml == "rlasso"){
-    train_ml <- "rlasso2"
+    ml_coefs <- map(folds$train, function(y) {
+      coef(rlasso2(f_ml, y, ...)) %>%
+        data.frame(coef = names(.), value = .)%>%
+        mutate(coef = as.character(coef)) %>%
+        mutate(coef = if_else(str_detect(coef, regex("Intercept", ignore.case = TRUE)),
+                              "Intercept", coef))
+    })
   }
 
-  # train and estimate coefficients beta_hat and theta_hat for the formula
-  # Y = X*Beta_hat + D*theta_hat
-  map(folds$train, function(y) {
-      ml_coef <- coef(get(train_ml)(f_ml, y, ...))
-      data.frame(coef = pluck(dimnames(ml_coef), 1), value = matrix(ml_coef)) %>%
-        mutate(coef = as.character(coef)) %>%
-        mutate(coef = if_else(str_detect(coef, regex("Intercept", ignore.case = TRUE)), "Intercept", coef))
-  })
+  return(ml_coefs)
 }
 
 # calculate mu from the estimated theta and beta coefficients, where mu is
