@@ -4,8 +4,18 @@
 \alias{dml}
 \title{Double Machine Learning Estimates}
 \usage{
-dml(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
-  poly_degree = 3, drop_na = FALSE, ...)
+dml(
+  f,
+  d,
+  model,
+  n = 101,
+  nw = 4,
+  dml_seed = NULL,
+  ml,
+  poly_degree = 3,
+  drop_na = FALSE,
+  ...
+)
 }
 \arguments{
 \item{f}{an object of class formula representing the model to be fitted.}

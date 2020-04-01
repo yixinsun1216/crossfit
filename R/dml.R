@@ -56,17 +56,16 @@
 #' @importFrom stats median optim update formula model.matrix model.frame
 #' @importFrom furrr future_map future_options
 #' @importFrom future plan multiprocess
-#' @importFrom dplyr rename_all select bind_cols filter if_else
-#' @importFrom stringr str_replace_all regex
+#' @importFrom dplyr rename_all select bind_cols filter if_else mutate arrange pull
+#' @importFrom stringr str_replace_all regex str_detect
 #' @importFrom Formula Formula
 #' @importFrom modelr crossv_kfold
 #'
 #'
 #' @export
 # main user-facing routine
-dml <- function(f, d, model, n = 101,
-                nw = 4,
-                dml_seed = NULL, ml,  poly_degree = 3, drop_na = FALSE, ...) {
+dml <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
+                poly_degree = 3, drop_na = FALSE, ...) {
   dml_call <- match.call()
   dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
 

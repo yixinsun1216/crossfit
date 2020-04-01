@@ -1,15 +1,49 @@
+# https://www.stata.com/manuals/lassoxpopoisson.pdf
+
+#' @export
+dml_original <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
+                poly_degree = 1, drop_na = FALSE, ...) {
+  dml_call <- match.call()
+  dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
+
+  # to make the median well-defined, add 1 to n if the user requests an even
+  # number of splits
+  nn <- if_else(n %% 2 == 0, n + 1, n)
+
+  f <-
+    Formula(f) %>%
+    update(. ~ 0 + . | 0 + .)
+
+  # lasso cannot handle NAs, so first prepare data if user specifies to drop NAs
+  if(drop_na){
+    d <-
+      get_all_vars(f, d) %>%
+      filter(complete.cases(.)) %>%
+      as_tibble
+  }
+
+  # plan(future::multisession, .init = nw)
+  # seq(1, nn) %>%
+  #   future_map(function(.x, ...) dml_step_original(f, d, model, dml_seed, ml,
+  #                                         poly_degree, ...), ...,
+  #              .options = future_options(packages = c("splines"),
+  #                                        seed = dml_seed)) %>%
+  #   get_medians(nrow(d), dml_call)
+
+  seq(1, nn) %>%
+    map(~dml_step_original(f, d, model, dml_seed, ml, poly_degree, ...), ...) %>%
+    get_medians(nrow(d), dml_call)
+}
+
+
+
 dml_step_original <- function(f, d, model, dml_seed = NULL,
-                              ml, poly_degree, ...){
+                              ml, poly_degree = 1, ...){
   if(model == "poisson"){
     psi <<- psi_plpr
     psi_grad <<- psi_plpr_grad
     psi_op <<- psi_plpr_op
   }
-
-   # ensure fm has no intercept in the parametric part
-  f <-
-    Formula(f) %>%
-    update(. ~ 0 + . | 0 + .)
 
   # step 1: make the estimation dataset
   # (a) expand out any non-linear formula for y and sanitize names
@@ -41,7 +75,7 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
     as.formula
 
   # Step 1:
-  ml_coefs <- estimate_ml(f_ml, folds, ml, poly_degree, ...)
+  ml_coefs <- estimate_ml(f_ml, folds, ml, ...)
 
   # Step 2: Use estimated coefficients to find
   # mu = E[X'exp(D*theta + X*beta)X]^{-1}E[X'exp(D*theta - X*beta)D]
@@ -85,31 +119,36 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
           method = "BFGS",
           control = list(maxit = 500))
 
-  return(theta)
+  J0 <- grad(theta$par)
 
+  s2 <-
+    list(Y, D, X, mu_hat, beta_hat) %>%
+    pmap(function(Y, D, X, mu_hat, beta_hat) {
+      psi_op(theta$par, Y, D, X, mu_hat, beta_hat)
+    }) %>%
+    reduce(`+`) / length(D)
+
+  s2 <- solve(t(J0), tol = 1e-20) %*% s2 %*% solve(J0)
+
+  return(list(theta$par, s2))
 }
 
 
 # ============================================================================
 # Use Original DML approach (not the concentrating out approach)
 # ============================================================================
-estimate_ml <- function(f_ml, folds, ml_type, poly_degree, ...){
-  if(ml_type == "regression_forest"){
+# estimate theta and beta of Y = D*theta + X*beta using ML
+estimate_ml <- function(f_ml, folds, ml, ...){
+  if(ml == "regression_forest"){
     train_ml <- "regression_forest2"
   }
 
-  if(ml_type == "lasso"){
+  if(ml == "lasso"){
     train_ml <- "cv.glmnet"
   }
 
-  if(ml_type == "rlasso"){
+  if(ml == "rlasso"){
     train_ml <- "rlasso2"
-  }
-
-  if(ml_type %in% c("rlasso", "lasso") & as.numeric(poly_degree) > 1){
-    # create new formulas that holds all the permutation of polynomials
-    # basis functions for lasso
-    f_ml <- poly_formula(f_ml, poly_degree)
   }
 
   # train and estimate coefficients beta_hat and theta_hat for the formula
@@ -122,6 +161,8 @@ estimate_ml <- function(f_ml, folds, ml_type, poly_degree, ...){
   })
 }
 
+# calculate mu from the estimated theta and beta coefficients, where mu is
+# mu = E[X'exp(D*theta + X*beta)X]^{-1}E[X'exp(D*theta - X*beta)D]
 estimate_mu <- function(coefs, train_fold, d_names, x_names){
   # shape D vars and coefs
   d_vars <- train_fold[, d_names]
@@ -166,26 +207,27 @@ j_calc <- function(X, D, theta, beta, int, type){
   t(as.matrix(V*exp(sum(D*theta) + sum(X*beta) + int))) %*% as.matrix(X)
 }
 
+
 # ============================================================================
 # moment functions for poisson
 # ============================================================================
-psi_plpr <- function(theta, Y, D, X, mu, beta){
-  theta <- matrix(theta, nrow = dim(D)[2])
-  beta <- matrix(beta, nrow = dim(X)[2])
-  N <- nrow(Y)
-  return((1/N) * t(D - X %*% t(mu)) %*% (Y - exp(D %*% theta + X %*% beta)))
-}
-
 # psi_plpr <- function(theta, Y, D, X, mu, beta){
-#   y_list <- split(Y, seq(nrow(Y)))
-#   x_list <- split(X, seq(nrow(X)))
-#   d_list <- split(D, seq(nrow(D)))
-#
-#   list(y_list, x_list, d_list) %>%
-#     pmap(function(y, x, d) {
-#     as.integer(y - exp(d %*% theta + x %*% beta))*t(d - x %*% t(mu))}) %>%
-#     reduce(`+`)/nrow(Y)
+#   theta <- matrix(theta, nrow = dim(D)[2])
+#   beta <- matrix(beta, nrow = dim(X)[2])
+#   N <- nrow(Y)
+#   return((1/N) * t(D - X %*% t(mu)) %*% (Y - exp(D %*% theta + X %*% beta)))
 # }
+
+psi_plpr <- function(theta, Y, D, X, mu, beta){
+  y_list <- split(Y, seq(nrow(Y)))
+  x_list <- split(X, seq(nrow(X)))
+  d_list <- split(D, seq(nrow(D)))
+
+  list(y_list, x_list, d_list) %>%
+    pmap(function(y, x, d) {
+      t(d - x %*% t(mu))%*% (y - exp(d %*% theta + x %*% beta))}) %>%
+    reduce(`+`)/nrow(Y)
+}
 
 
 psi_plpr_grad <- function(theta, D, X, mu, beta){
@@ -195,4 +237,16 @@ psi_plpr_grad <- function(theta, D, X, mu, beta){
   map2(x_list, d_list, function(x, d) {
       (-t(d - x %*% t(mu))) %*% exp(d %*% theta + x %*% beta)%*% d}) %>%
     reduce(`+`)/nrow(X)
+}
+
+psi_plpr_op <- function(theta, Y, D, X, mu, beta){
+  y_list <- split(Y, seq(nrow(Y)))
+  x_list <- split(X, seq(nrow(X)))
+  d_list <- split(D, seq(nrow(D)))
+
+  list(y_list, x_list, d_list) %>%
+    pmap(function(y, x, d) {
+      op <- t(d - x %*% t(mu))%*% (y - exp(d %*% theta + x %*% beta))
+      op %*% t(op)}) %>%
+    reduce(`+`)/nrow(Y)
 }

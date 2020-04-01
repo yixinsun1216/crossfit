@@ -96,24 +96,24 @@ poly_formula <- function(f, deg){
 }
 
 #' @export
-run_ml <- function(f_gamma, fs_delta, folds, ml_type, poly_degree, ...){
+run_ml <- function(f_gamma, fs_delta, folds, ml, poly_degree, ...){
   # specify which ml method to use for training and predicting
-  if(ml_type == "regression_forest"){
+  if(ml == "regression_forest"){
     train_ml <- "regression_forest2"
     predict_ml <- "predict_rf2"
   }
 
-  if(ml_type == "lasso"){
+  if(ml == "lasso"){
     train_ml <- "cv.glmnet"
     predict_ml <- "predict"
   }
 
-  if(ml_type == "rlasso"){
+  if(ml == "rlasso"){
     train_ml <- "rlasso2"
     predict_ml <- "predict_rlasso2"
   }
 
-  if(ml_type %in% c("rlasso", "lasso")){
+  if(ml %in% c("rlasso", "lasso")){
     # create new formulas that holds all the permutation of polynomials
     # basis functions for lasso
     if(as.numeric(poly_degree) > 0){
