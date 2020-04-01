@@ -139,9 +139,6 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
 # ============================================================================
 # estimate theta and beta of Y = D*theta + X*beta using ML
 estimate_ml <- function(f_ml, folds, ml, ...){
-  if(ml == "regression_forest"){
-    train_ml <- "regression_forest2"
-  }
 
   if(ml == "lasso"){
     train_ml <- "cv.glmnet"
