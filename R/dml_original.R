@@ -161,15 +161,7 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
 # Use Original DML approach (not the concentrating out approach)
 # ============================================================================
 # estimate theta and beta of Y = D*theta + X*beta using ML
-estimate_ml <- function(f_ml, folds, ml, model, ynames, ...){
-  one_ml <- function(y, train_ml, ...){
-    ml_coef <- coef(get(train_ml)(f_ml, y, ...))
-    data.frame(coef = pluck(dimnames(ml_coef), 1), value = matrix(ml_coef)) %>%
-      mutate(coef = as.character(coef)) %>%
-      mutate(coef = if_else(str_detect(coef, regex("Intercept", ignore.case = TRUE)),
-                            "Intercept", coef))
-  }
-
+estimate_ml <- function(f_ml, folds, ml, ...){
   if(model == "poisson"){ f_ml <- update(f_ml, log(.) ~ .)}
 
   if(ml == "lasso"){
