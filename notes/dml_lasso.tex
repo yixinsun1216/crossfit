@@ -60,7 +60,7 @@ The Neyman Orthogonal moment for Poisson regression is then:
 	\psi = (Y - \exp(D\theta + X\beta))(D - X\mu)
 \end{equation*}
 
-How would we implement this?
+How would we implement this?  These steps give a single point estimate $\widehat{\theta}$ and an associated covariance matrix for a given split structure.  See below for how we combine point estimates and covariance matrices across many split structures into a single point estimate/covariance matrix that should be less sensitive to the monte carlo nature of splitting.
 \begin{enumerate}
 	\item Make a bunch of splits of the data into training and estimation sets. 
 	\item In a \textbf{training} set $k$, use Poisson LASSO and regular Poisson regression to get initial estimates of $\theta$ and $\beta$ that we'll call $\widetilde{\theta}$ and $\widetilde{\beta}$.
@@ -73,13 +73,27 @@ How would we implement this?
 		\begin{itemize}
 			\item Note, the STATA package for this doesn't do weighted OLS in the second step, they do regular OLS.  I guess we want a flag here to possibly mimic STATA.
 		\end{itemize}
-	\item Finally, in the \textbf{estimation} set $K$, construct the moment i$(Y - \exp(D\theta + s))(D - X\mu_k)$.
+	\item Finally, in the \textbf{estimation} set $K$, construct the moment $(Y - \exp(D\theta + s))(D - X\mu_k)$.
 	\item Since we'll (probably?) focus on the DML2 algorithm, for each $k$, compute the average of that moment, as a function of $\theta$, and then average over each of those averages to get the final objective function we want.
 		\begin{itemize}
 			\item Note, this is \textbf{also} different from what STATA does.  It seems like they compute this moment in one step using all the data, and ignore the hold out structure.
 		\end{itemize}
 	\item If $D$ is univariate, we can just do root-finding.  If $D$ is multivariate, we won't be able to match this exactly, so lets minimize squared deviations from zero.   
 \end{enumerate}
+
+To get a covariance matrix for this estimate of $\theta$, we first compute $J_0$, defined by:
+\begin{align*}
+	J_0 &= \frac{\partial}{\partial \theta} \mathbb{E}_W \psi(Y,D,X,\widehat{\theta},\widetilde{\theta}, \widetilde{\beta}) \\
+	&= -\mathbb{E}_W\left[D'\exp(D\widehat{\theta} + s)(D - X\widetilde{\mu}) \right]
+\end{align*}
+Next we compute $\Psi$:
+\begin{align*}
+	\Psi &= \mathbb{E}_W\left[\psi(W, \widehat{\theta},\widetilde{\theta}, \widetilde{\beta})\psi(W, \widehat{\theta},\widetilde{\theta}, \widetilde{\beta})'\right] \\
+		&= \mathbb{E}_W\left[(Y - \exp(D\widehat{\theta} + s))^2(D - X\widetilde{\mu})(D - X\widetilde{\mu})'\right]
+\end{align*}
+
+In both cases, I think we'd compute each of these as average within 
+
 \subsection{How would the linear version work?}
 Exactly the same way.  Get rid of the $\exp$'s, and wherever the above says ``Poisson'' replace with ``OLS''.  Moment is now $(Y - D\theta - s)(D - X\mu)$.  I \textbf{think} we ignore the weights in the step where we compute $\mu$?
 \end{document}
