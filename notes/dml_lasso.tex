@@ -1,0 +1,72 @@
+\documentclass[11pt]{article}
+\usepackage{setspace}
+\doublespacing
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amsfonts}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\DeclareMathOperator*{\argmax}{argmax}
+\title{LASSO/Poisson DML implementation}
+\author{Thomas R. Covert, Yixin Sun}
+\begin{document}
+\maketitle
+\section{Setup from Chernozhukov et al}
+Let $\theta$ be the thing we care about and $\beta$ be the nuisance parameters (location, time etc).  The data is $W = (Y, D, X)$ where $Y$ is an outcome, $D$ is the vector of stuff we care about and $X$ is the stuff we don't care about.  The true values of $\theta$ and $\beta$, denoted as $\theta_0$ and $\beta_0$, fit the data best, in the sense that
+\begin{equation*}
+	(\theta_0, \beta_0) = \arg \underset{\theta, \beta} \max \mathbb{E}_W\left[l(W, \theta, \beta)\right] 
+\end{equation*}
+where $l(W, \theta, \beta)$ is some criterion (squared deviation, log likelihood etc).
+
+The \textit{Neyman Orthogonal Score} $\psi$ is defined by:
+\begin{equation*}
+	\psi(W, \theta, \beta, \mu) = \frac{\partial}{\partial \theta}l(W, \theta, \beta) - \mu \frac{\partial}{\partial \beta}l(W, \theta, \beta) 
+\end{equation*}
+The vector $\mu$ above is defined by the hessian of this criterion function.  Let $J$ be:
+\begin{equation*}
+	J = 
+	\begin{pmatrix}
+		J_{\theta, \theta} & J_{\theta, \beta} \\
+		J_{\beta, \theta} & J_{\beta, \beta}	
+	\end{pmatrix}
+	= \frac{\partial}{\partial \theta \partial \beta} \mathbb{E}_W\left[\frac{\partial}{\partial \theta \partial \beta} l(W, \theta, \beta)\right]
+\end{equation*}
+Then we define $\mu$ as $\mu = J_{\theta, \beta} J_{\beta, \beta}^{-1}$.  
+
+\section{The Poisson Setting}
+In Poisson regression, the function $l$ is
+\begin{equation*}
+	l(Y, D, X, \theta, \beta) = Y(D\theta + X\beta) - \exp(D\theta + X\beta)
+\end{equation*}
+and its associated gradients needed for the definition of $\psi$ are
+\begin{align*}
+	\frac{\partial}{\partial \theta}l(W, \theta, \beta) &= (Y - \exp(D\theta + X\beta)) D \\
+	\frac{\partial}{\partial \beta}l(W, \theta, \beta) &= (Y - \exp(D\theta + X\beta)) X
+\end{align*}
+The entries in the Hessian matrix that we need to compute $\mu$ are:
+\begin{align*}
+	J_{\theta, \theta} &= -\mathbb{E}\left[D'D\exp(D\theta + X\beta)\right] \\
+	J_{\theta, \beta} &= -\mathbb{E}\left[D'X\exp(D\theta + X\beta)\right] \\
+	J_{\beta, \beta} &= -\mathbb{E}\left[X'X\exp(D\theta + X\beta)\right]
+\end{align*} 
+yielding this expression for $\mu$:
+\begin{equation*}
+	\mu = \mathbb{E}\left[D'X\exp(D\theta + X\beta)\right]\left(\mathbb{E}\left[X'X\exp(D\theta + X\beta)\right]\right)^{-1}
+\end{equation*}
+I \textit{think} this constructing is revealing, since it looks like weighted least squares, with $D$ as the outcome, $X$ as the covariates, and weights equal to $\exp(D\theta + X\beta)$. 
+
+The Neyman Orthogonal moment for Poisson regression is then:
+\begin{equation*}
+	\psi = (Y - \exp(D\theta + X\beta))(D - X\mu)
+\end{equation*}
+
+How would we implement this?
+\begin{enumerate}
+	\item In the fitting sample, do a full poisson LASSO of $Y$ on $D$ and $X$, but only LASSO over the $X$ terms, to pick which ones count.  Then, in the fitting sample, do a regular poisson regression to get initial estimates for $\beta$ and $\theta$ using the subset of $X$ picked out in LASSO.  For the estimation sample, use $\beta$ to construct $s = X\beta$.
+	\item Compute weights $w = \exp(D\theta + X\beta)$ in the fitting sample, and then.  Compute a linear LASSO of $D$ on $X$ using those weights, and then do weighted OLS, again with those weights, on the selected covariates.  The coefficients of this are $\mu$.
+	\item Finally, the moment is $(Y - \exp(D\theta + s))(D - X\mu)$, and we only evaluate/fit this in the \textbf{hold out sample}.
+	\item If $D$ is univariate, we can just do root-finding.  If $D$ is multivariate, we won't be able to match this exactly, so lets minimize squared deviations from zero.  In the optimization routine, the  
+\end{enumerate}
+\subsection{How would the linear version work?}
+Exactly the same way.  Get rid of the $\exp$'s, and wherever the above says ``Poisson'' replace with ``OLS''.  Moment is now $(Y - D\theta - s)(D - X\mu)$.
+\end{document}
