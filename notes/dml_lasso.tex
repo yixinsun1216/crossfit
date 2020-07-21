@@ -73,7 +73,7 @@ How would we implement this?  These steps give a single point estimate $\widehat
 		\begin{itemize}
 			\item Note, the STATA package for this doesn't do weighted OLS in the second step, they do regular OLS.  I guess we want a flag here to possibly mimic STATA.
 		\end{itemize}
-	\item Finally, in the \textbf{estimation} set $K$, construct the moment $(Y - \exp(D\theta + s))(D - X\mu_k)$.
+	\item Finally, in the \textbf{estimation} set $K$, construct the moment $(Y - \exp(D\theta + s_k))(D - X\mu_k)$.
 	\item Since we'll (probably?) focus on the DML2 algorithm, for each $k$, compute the average of that moment, as a function of $\theta$, and then average over each of those averages to get the final objective function we want.
 		\begin{itemize}
 			\item Note, this is \textbf{also} different from what STATA does.  It seems like they compute this moment in one step using all the data, and ignore the hold out structure.
@@ -92,7 +92,9 @@ Next we compute $\Psi$:
 		&= \mathbb{E}_W\left[(Y - \exp(D\widehat{\theta} + s))^2(D - X\widetilde{\mu})(D - X\widetilde{\mu})'\right]
 \end{align*}
 
-In both cases, I think we'd compute each of these as average within 
+In both cases, I think we'd compute each of these as the average over points in the estimation set $k$, and then average over each of the estimation sets within a split structure.\footnote{For an example of this averaging, see the formula for $\widehat{J}_0$ on page C27 of the original DML paper.} 
+
+Then the covariance matrix is $J_0^{-1} \Psi J_0^{-1}$.
 
 \subsection{How would the linear version work?}
 Exactly the same way.  Get rid of the $\exp$'s, and wherever the above says ``Poisson'' replace with ``OLS''.  Moment is now $(Y - D\theta - s)(D - X\mu)$.  I \textbf{think} we ignore the weights in the step where we compute $\mu$?
