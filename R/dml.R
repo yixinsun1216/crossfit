@@ -52,7 +52,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble as_tibble enframe
-#' @importFrom purrr pmap reduce map pluck map_dbl
+#' @importFrom purrr pmap reduce map pluck map_dbl map2_dfr
 #' @importFrom stats median optim update formula model.matrix model.frame
 #' @importFrom furrr future_map future_options
 #' @importFrom future plan multiprocess
@@ -60,6 +60,7 @@
 #' @importFrom stringr str_replace_all regex str_detect
 #' @importFrom Formula Formula
 #' @importFrom modelr crossv_kfold
+#' @importFrom broom tidy
 #'
 #'
 #' @export
