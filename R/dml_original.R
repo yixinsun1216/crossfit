@@ -88,9 +88,7 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
     # used in the next step
   coefs <- estimate_weights(xnames, dnames, ynames, folds, ml, model, family)
 
-
-  beta_hat <-
-    map(coefs, function(x) x[[1]])
+  s <- map(coefs, function(x) x[[1]])
 
   # Step 2 ----------------------------
   # Use estimated coefficients to find mu, and calculate Z = D - X*mu_hat
@@ -102,20 +100,19 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
   # Step 3  ----------------------------
   Y <- map(folds$test, ~ as.matrix(select(., !!ynames)))
   D <- map(folds$test, ~ as.matrix(select(., !!dnames)))
-  X <- map2(folds$test, beta_hat, function(x, y) as.matrix(select(x, y$term)))
 
   obj <- function(theta) {
-    list(Y, D, X, Z, beta_hat) %>%
-      pmap(function(Y, D, X, Z, beta_hat) {
-        psi(theta, Y, D, X, Z, beta_hat)
+    list(Y, D, Z, s) %>%
+      pmap(function(Y, D, Z, s) {
+        psi(theta, Y, D, Z, s)
       }) %>%
       reduce(`+`) / length(D)
   }
 
   grad <- function(theta) {
-    list(D, X, Z, beta_hat) %>%
-      pmap(function(D, X, Z, beta_hat) {
-        psi_grad(theta, D, X, Z, beta_hat)
+    list(D, Z, s) %>%
+      pmap(function(D, Z, s) {
+        psi_grad(theta, D, Z, s)
       }) %>%
       reduce(`+`) / length(D)
   }
@@ -132,9 +129,9 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
   # calculate covariance matrix
   J0 <- grad(theta$par)
   s2 <-
-    list(Y, D, X, Z, beta_hat) %>%
-    pmap(function(Y, D, X, Z, beta_hat) {
-      psi_op(theta$par, Y, D, X, Z, beta_hat)
+    list(Y, D, Z, s) %>%
+    pmap(function(Y, D,Z, s) {
+      psi_op(theta$par, Y, D, Z, s)
     }) %>%
     reduce(`+`) / length(D)
 
@@ -202,10 +199,16 @@ estimate_weights <- function(xnames, dnames, ynames, folds, ml, model, family, .
       exp(cbind(1, as.matrix(x[vars])) %*% as.matrix(y["estimate"]))
     })
 
-    beta_hat <- map(coef_hat, function(x) filter(x, term %in% xnames))
+    beta_hat <- map(coef_hat, function(x)
+      filter(x, term %in% xnames | str_detect(term, regex("intercept", ignore_case = TRUE))))
   }
 
-  output <- map2(beta_hat, weights, list)
+  s <- map2(folds$test, beta_hat, function(x, y) {
+    vars <- y$term[-1]
+    cbind(1, as.matrix(x[vars])) %*% as.matrix(y$estimate)
+  })
+
+  output <- map2(s, weights, list)
   return(output)
 }
 
@@ -213,7 +216,7 @@ estimate_weights <- function(xnames, dnames, ynames, folds, ml, model, family, .
 # Step 1: perform linear lasso of d on x using weights from last step
 # Step 2: fit a weighted OLS using of d on x, and return Z = D - X*mu
 estimate_z <- function(w, train_fold, test_fold, dnames, xnames, ml, model){
-  # Pull out all x covariates
+  # Pull out all x covariates and d variables
   x_train <- as.matrix(train_fold[, xnames])
   d_train <- as.list(train_fold[, dnames])
 
@@ -262,43 +265,28 @@ estimate_z <- function(w, train_fold, test_fold, dnames, xnames, ml, model){
 # ============================================================================
 # moment functions for poisson
 # ============================================================================
-psi_plpr <- function(theta, Y, D, X, Z, beta){
+psi_plpr <- function(theta, Y, D, Z, s){
   theta <- matrix(theta, nrow = dim(D)[2])
 
-  beta <-
-    arrange(beta, match(term, colnames(X))) %>%
-    pull(estimate) %>%
-    as.matrix()
-
   N <- nrow(Y)
-  return((1/N) * t(Z) %*% (Y - exp(D %*% theta + X %*% beta)))
+  return((1/N) * t(Z) %*% (Y - exp(D %*% theta + s)))
 }
 
-psi_plpr_grad <- function(theta, D, X, Z, beta){
-  x_list <- split(X, seq(nrow(X)))
+psi_plpr_grad <- function(theta, D, Z, s){
+  s_list <- split(s, seq(nrow(s)))
   d_list <- split(D, seq(nrow(D)))
   z_list <- split(Z, seq(nrow(Z)))
 
-  beta <-
-    arrange(beta, match(term, colnames(X))) %>%
-    pull(estimate) %>%
-    as.matrix()
-
-  pmap(list(x_list, d_list, z_list), function(x, d, z, ...) {
-    -as.matrix(d) %*% exp(d %*% theta + x %*% beta) %*% z}) %>%
-    reduce(`+`)/nrow(X)
+  pmap(list(s_list, d_list, z_list), function(s1, d, z, ...) {
+    -as.matrix(d) %*% exp(d %*% theta + s1) %*% z}) %>%
+    reduce(`+`)/nrow(Z)
 }
 
-psi_plpr_op <- function(theta, Y, D, X, Z, beta){
+psi_plpr_op <- function(theta, Y, D, Z, s){
   theta <- matrix(theta, nrow = dim(D)[2])
 
-  beta <-
-    arrange(beta, match(term, colnames(X))) %>%
-    pull(estimate) %>%
-    as.matrix()
-
   z_list <- split(Z, seq(nrow(Z)))
-  op_list <- split((Y - exp(D %*% theta + X %*% beta)), seq(nrow(Y)))
+  op_list <- split((Y - exp(D %*% theta + s)), seq(nrow(Y)))
 
   N <- nrow(Y)
   op <- as.matrix(map2_dfr(z_list, op_list, function(x, y) x*y))
