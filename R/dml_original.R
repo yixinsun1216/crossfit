@@ -1,8 +1,9 @@
-# https://www.stata.com/manuals/lassoxpopoisson.pdf
+# Stata Poisson lasso  https://www.stata.com/manuals/lassoxpopoisson.pdf
+# Stata Linear lasso https://www.stata.com/manuals/lassoxporegress.pdf
 
 #' @export
 dml_original <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
-                poly_degree = 1, drop_na = FALSE, family = "gaussian", ...) {
+                poly_degree = 3, drop_na = FALSE, family = "gaussian", ...) {
   dml_call <- match.call()
   dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
 
@@ -22,35 +23,24 @@ dml_original <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
       as_tibble
   }
 
-  # plan(future::multisession, .init = nw)
-  # seq(1, nn) %>%
-  #   future_map(function(.x, ...) dml_step_original(f, d, model, dml_seed, ml,
-  #                                         poly_degree, ...), ...,
-  #              .options = future_options(packages = c("splines"),
-  #                                        seed = dml_seed)) %>%
-  #   get_medians(nrow(d), dml_call)
-
   seq(1, nn) %>%
     map(~dml_step_original(f, d, model, dml_seed, ml, poly_degree, family, ...), ...) %>%
     get_medians(nrow(d), dml_call)
 }
 
-
-
-dml_step_original <- function(f, d, model, dml_seed = NULL,
-                              ml, poly_degree = 1, family, ...){
+dml_original_step <- function(f, d, model, ml, poly_degree, family){
   if(model == "poisson"){
     psi <<- psi_plpr
     psi_grad <<- psi_plpr_grad
     psi_op <<- psi_plpr_op
   }
+  if(model == "linear"){
+    psi <<- psi_plr
+    psi_grad <<- psi_plr_grad
+    psi_op <<- psi_plr_op
+  }
 
-  # step 0: make the estimation dataset
-  # step 1. Calculate theta and beta using training data
-  # step 2. Use training data and estimates from 1 to find mu
-  # step 3. Optimize over psi using hold out data
-
-  # step 0 ----------------------------
+  # make the estimation dataset -----------------------------------------------
   # (a) expand out any non-linear formula for y and sanitize names
   ty <- get_lhs_col(f, d)
   ynames <- names(ty)
@@ -61,8 +51,6 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
 
   # (c) expand out any non-linear formula for x and sanitize names
   # expand out to polynomial depending on the user-inputted poly_degree
-  # NOTE: no real reason to have nonlinear formulae here but might as well
-  # be robust to it
   tx <-
     as.matrix(get_rhs_cols(f, d, 2)) %>%
     poly(degree = poly_degree, raw = TRUE) %>%
@@ -75,29 +63,19 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
 
   # (e) finally, generate cross validation folds of this. Default is 5 folds
   folds <- crossv_kfold(newdata)
-  folds$train <- map(folds$train, data.frame)
-  folds$test <- map(folds$test, data.frame)
+  folds$train <- map(folds$train, as_tibble)
+  folds$test <- map(folds$test, as_tibble)
 
-  # Step 1  ----------------------------
-  # 2 things we want to do:
-  # i) Y = f(D*theta + X*beta, noise): Run poisson lasso of Y on X and D (
-    # lasso only on X's) to pick out important X's
-  # ii) D = g(X*gamma, noise): run normal poisson to estimate theta_hat and
-    # beta_hat with all of D and the chosen subset of X from (i)
-  # estimate_weights() returns beta_hat, as well as weights to be
-    # used in the next step
-  coefs <- estimate_weights(xnames, dnames, ynames, folds, ml, model, family)
+  # Calculate instruments -----------------------------------------------------
+  # For each fold, calculate the partial outcome, s = x*beta, and the instrument,
+  # z = d - x*theta
+  instruments <-
+    map2(folds$train, folds$test,
+         function(x, y) dml_fold(x, y, xnames, ynames, dnames, model, ml, family))
+  s <- map(instruments, pluck(1))
+  Z <- map(instruments, pluck(2))
 
-  s <- map(coefs, function(x) x[[1]])
-
-  # Step 2 ----------------------------
-  # Use estimated coefficients to find mu, and calculate Z = D - X*mu_hat
-  Z <-
-    pmap(list(coefs, folds$train, folds$test),
-          function(x, y, z, ...) estimate_z(x[[2]], y, z, dnames, xnames, ml, model)) %>%
-    map(as.matrix)
-
-  # Step 3  ----------------------------
+  # Optimize over sample moment to find theta ---------------------------------
   Y <- map(folds$test, ~ as.matrix(select(., !!ynames)))
   D <- map(folds$test, ~ as.matrix(select(., !!dnames)))
 
@@ -110,15 +88,16 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
   }
 
   grad <- function(theta) {
-    list(D, Z, s) %>%
-      pmap(function(D, Z, s) {
-        psi_grad(theta, D, Z, s)
+    list(D, Z) %>%
+      pmap(function(D, Z) {
+        psi_grad(D, Z)
       }) %>%
       reduce(`+`) / length(D)
   }
 
   theta0 <- rep(0, dim(D[[1]])[2])
   names(theta0) <- colnames(D[[1]])
+
   theta <-
     optim(theta0,
           function(x) square(obj(x)),
@@ -126,140 +105,95 @@ dml_step_original <- function(f, d, model, dml_seed = NULL,
           method = "BFGS",
           control = list(maxit = 500))
 
-  # calculate covariance matrix
-  J0 <- grad(theta$par)
-  s2 <-
-    list(Y, D, Z, s) %>%
-    pmap(function(Y, D,Z, s) {
-      psi_op(theta$par, Y, D, Z, s)
-    }) %>%
-    reduce(`+`) / length(D)
-
-  #s2 <- solve(t(J0), tol = 1e-20) %*% s2 %*% solve(J0)
-
-  return(list(theta$par, s2))
+  return(theta)
 }
 
+# =============================================================================
+# Fill in components of moment conditions within each fold
+# =============================================================================
+# step 1. In training sample, perform linear lasso of y on x to select x_hat.
+# Fit linear regression of y on x_hat and call these coefficients beta_hat
+# step 2. Using test sample, calculate s = x_hat*beta_hat
+# step 3. Using training data, perform linear lasso of d on x to select x_tilde.
+# fit linear regressoin of d on x_tilde to get theta_tilde
+# step 4. Calculate z = d - x_tilde*theta_tilde
 
-# estimate theta and beta of Y = D*theta + X*beta using ML ---------------------
-# Step 1: Poisson lasso of Y on D and X to select controls, x_hat
-# Step 2: Fit Poisson regression of y on D and X_hat
-# Step 3: use the beta_hat and X's from estimation sample to calculate s = X*beta_hat
-estimate_weights <- function(xnames, dnames, ynames, folds, ml, model, family, ...){
-  f1 <-  paste(c(xnames, dnames), collapse = " + ") %>%
+dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, family){
+
+  # step 1 --------------------------------------------------------
+  # formula for y on x
+  f1 <-  paste(c(xnames), collapse = " + ") %>%
     paste0(ynames, " ~ ", .) %>%
     as.formula
 
   if(ml == "lasso"){
-    x_hat <- map(folds$train, function(y) {
-      # include all D in lasso
-      include <- names(y) %in% dnames
-
-      ml_coef <- coef(cv.glmnet(f1, y, family = family,  penalty.factor = include))
-      data.frame(coef = pluck(dimnames(ml_coef), 1), value = matrix(ml_coef)) %>%
-        mutate(coef = as.character(coef)) %>%
-        filter(value != 0,
-               coef %in% xnames) %>%
-        pull(coef)
-    })
+    # use linear lasso of y on x to select x variables
+    x_hat <-
+      coef(cv.glmnet(f1, fold_train, family = family)) %>%
+      tidy() %>%
+      filter(row %in% xnames) %>%
+      pull(row)
   }
 
+  # fit linear regression of y on x_hat to find beta_hat
+  f2 <-  paste(x_hat, collapse = " + ") %>%
+    paste0(ynames, " ~ ", .) %>%
+    as.formula
+  beta_hat <- tidy(lm(f2, fold_train))
 
-  # FIGURE OUT HOW TO FIX SO THAT D IS ALWAYS INCLUDED IN LASS0 ================
-  if(ml == "rlasso"){
-    x_hat <- map(folds$train, function(y) {
-      # include all D in lasso
-      include <- names(y) %in% dnames
+  # step 2: s = x_hat*beta_hat -----------------------------
+  s <- as.matrix(cbind(1, fold_test[x_hat])) %*% beta_hat$estimate
 
-      # find coefficients on lasso and return as dataframe
-      coef(rlasso2(f1, y, penalty = include)) %>%
-        data.frame(coef = names(.), value = .)%>%
-        mutate(coef = as.character(coef)) %>%
-        filter(value != 0,
-               !str_detect(coef, regex("Intercept", ignore_case = TRUE)),
-               !(coef %in% dnames)) %>%
-        pull(coef)
-    })
-  }
+  # step 3 + 4 find theta_tilde & calculate z = d - x_tilde*theta_tilde ------
+  # loop over each d to find theta_tilde
+  z_k <- map_dfc(dnames, estimate_z, xnames, fold_train, fold_test, family)
 
-  # run regression of y on d and x
-  if(model == "poisson"){
-    coef_hat <- map2(folds$train, x_hat, function(x, y){
-       f2 <-  paste(c(dnames, y), collapse = " + ") %>%
-         paste0(ynames, " ~ ", .) %>%
-         as.formula
-       glm(f2, data = x) %>%
-         tidy() %>%
-         select(term, estimate)
-     })
-
-    # calculate weights using the training sample
-    weights <- map2(folds$train, coef_hat, function(x, y){
-      vars <- y$term[-1]
-      exp(cbind(1, as.matrix(x[vars])) %*% as.matrix(y["estimate"]))
-    })
-
-    beta_hat <- map(coef_hat, function(x)
-      filter(x, term %in% xnames | str_detect(term, regex("intercept", ignore_case = TRUE))))
-  }
-
-  s <- map2(folds$test, beta_hat, function(x, y) {
-    vars <- y$term[-1]
-    cbind(1, as.matrix(x[vars])) %*% as.matrix(y$estimate)
-  })
-
-  output <- map2(s, weights, list)
-  return(output)
+  return(list(s = s, Z = z_k))
 }
 
-# For each component of D -------------------------------------------------
-# Step 1: perform linear lasso of d on x using weights from last step
-# Step 2: fit a weighted OLS using of d on x, and return Z = D - X*mu
-estimate_z <- function(w, train_fold, test_fold, dnames, xnames, ml, model){
-  # Pull out all x covariates and d variables
-  x_train <- as.matrix(train_fold[, xnames])
-  d_train <- as.list(train_fold[, dnames])
+# Implement steps 3 & 4 -> calculate instrument z ------------------------------
+estimate_z <- function(dvar, xnames, fold_train, fold_test, family){
+  # formula for running d on x
+  f_select <- paste(xnames, collapse = " + ") %>%
+    paste0(dvar, " ~ ", .) %>%
+    as.formula()
 
-  x_test <- as.matrix(test_fold[, xnames])
-  d_test <- as.list(test_fold[, dnames])
+  # linear lasso of d on x to select x_tilde
+  x_tilde <-
+    coef(cv.glmnet(f_select, fold_train, family = family)) %>%
+    tidy() %>%
+    filter(row %in% xnames) %>%
+    pull(row)
 
-
-  z_k <- tibble(.rows = nrow(test_fold))
-  if(ml == "lasso"){
-    for(i in 1:length(dnames)){
-      # Step 1: perform linear lasso of d on x using weights
-      est <- coef(cv.glmnet(x_train, d_train[[i]], weights = w))
-
-      # extract covariates selected using the linear lasso
-      covs <-
-        data.frame(coef = pluck(dimnames(est), 1), value = matrix(est)) %>%
-        mutate(coef = as.character(coef)) %>%
-        filter(value != 0, coef %in% xnames) %>%
-        pull(coef)
-
-      # Step 2: fit a weighted OLS using of d on x
-      if(length(covs) == 0){
-        f_mu <- as.formula(paste(eval(dnames[i]), "1", sep = "~"))
-      } else{
-         f_mu <- paste(covs, collapse = " + ") %>%
-        paste0(dnames[[i]], " ~ ", .) %>%
-        as.formula
-      }
-
-      df <-
-        as_tibble(x_train) %>%
-        mutate(!!dnames[i] := d_train[[i]])
-
-      mu <- as.matrix(tidy(lm(f_mu, data = df, weights = w))$estimate)
-
-      # return Z = D - X*mu
-      z_calc <- as.matrix(d_test[[i]]) - as.matrix(cbind(1, x_test[,covs])) %*% mu
-      z_k <- mutate(z_k, !!dnames[i] := as.vector(z_calc))
-    }
+  # fit linear regression of d on x_tilde to find theta_tilde
+  if(length(x_tilde) == 0){
+    f_reg <- as.formula(paste(eval(dvar), "1", sep = "~"))
+  } else{
+    f_reg <- paste(x_tilde, collapse = " + ") %>%
+      paste0(dvar, " ~ ", .) %>%
+      as.formula
   }
+
+  theta_tilde <- tidy(lm(f_reg, data = fold_train))$estimate
+
+  # return z = d - x_tilde*theta_tilde
+  d_test <- as.matrix(fold_test[[dvar]])
+  x_test <- as.matrix(cbind(1, fold_test[x_tilde]))
+  z_k <- tibble(!!dvar := as.vector(d_test - x_test %*% theta_tilde))
   return(z_k)
 }
 
+
+# ============================================================================
+# moment functions for linear
+# ============================================================================
+psi_plr <- function(theta, Y, D, Z, s){
+  return(1/length(Y) * t(Z) %*% (Y - s - D %*% theta))
+}
+
+psi_plr_grad <- function(D, Z){
+  return(1/length(D)*t(Z) %*% D)
+}
 
 
 # ============================================================================
@@ -272,6 +206,7 @@ psi_plpr <- function(theta, Y, D, Z, s){
   return((1/N) * t(Z) %*% (Y - exp(D %*% theta + s)))
 }
 
+# SIMPLIFY THIS FUNCTION
 psi_plpr_grad <- function(theta, D, Z, s){
   s_list <- split(s, seq(nrow(s)))
   d_list <- split(D, seq(nrow(D)))

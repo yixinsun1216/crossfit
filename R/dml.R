@@ -177,8 +177,8 @@ get_rhs_cols <- function(f, d, part = 1) {
 
   f %>%
     formula(lhs = 0, rhs = part) %>%
-    get_all_vars(d) %>%
-    as_tibble %>%
+    model.matrix(d) %>%
+    as_tibble() %>%
     rename_all(~ str_replace_all(., regex("[(, =)]"), "_"))
 }
 
