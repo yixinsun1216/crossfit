@@ -24,20 +24,21 @@ dml_original <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
   }
 
   seq(1, nn) %>%
-    map(~dml_step_original(f, d, model, dml_seed, ml, poly_degree, family, ...), ...) %>%
-    get_medians(nrow(d), dml_call)
+    map(~dml_step_original(f, d, model, ml, poly_degree, family, ...), ...)# %>%
+   # get_medians(nrow(d), dml_call)
 }
 
-dml_original_step <- function(f, d, model, ml, poly_degree, family){
+#' @export
+dml_step_original <- function(f, d, model, ml, poly_degree, family, ...){
   if(model == "poisson"){
-    psi <<- psi_plpr
-    psi_grad <<- psi_plpr_grad
-    psi_op <<- psi_plpr_op
+    psi <- psi_plpr
+    psi_grad <- psi_plpr_grad
+    psi_op <- psi_plpr_op
   }
   if(model == "linear"){
-    psi <<- psi_plr
-    psi_grad <<- psi_plr_grad
-    psi_op <<- psi_plr_op
+    psi <- psi_plr
+    psi_grad <- psi_plr_grad
+    #psi_op <<- psi_plr_op
   }
 
   # make the estimation dataset -----------------------------------------------
@@ -101,7 +102,7 @@ dml_original_step <- function(f, d, model, ml, poly_degree, family){
   theta <-
     optim(theta0,
           function(x) square(obj(x)),
-          function(x) 2 * grad(x) %*% obj(x),
+          function(x) grad(x) %*% obj(x),
           method = "BFGS",
           control = list(maxit = 500))
 
@@ -139,10 +140,10 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
   f2 <-  paste(x_hat, collapse = " + ") %>%
     paste0(ynames, " ~ ", .) %>%
     as.formula
-  beta_hat <- tidy(lm(f2, fold_train))
+  beta_hat <- lm(f2, fold_train)
 
   # step 2: s = x_hat*beta_hat -----------------------------
-  s <- as.matrix(cbind(1, fold_test[x_hat])) %*% beta_hat$estimate
+  s <- predict(beta_hat, fold_test)
 
   # step 3 + 4 find theta_tilde & calculate z = d - x_tilde*theta_tilde ------
   # loop over each d to find theta_tilde
@@ -174,12 +175,13 @@ estimate_z <- function(dvar, xnames, fold_train, fold_test, family){
       as.formula
   }
 
-  theta_tilde <- tidy(lm(f_reg, data = fold_train))$estimate
+  theta_tilde <- lm(f_reg, data = fold_train)
+
 
   # return z = d - x_tilde*theta_tilde
-  d_test <- as.matrix(fold_test[[dvar]])
-  x_test <- as.matrix(cbind(1, fold_test[x_tilde]))
-  z_k <- tibble(!!dvar := as.vector(d_test - x_test %*% theta_tilde))
+  x_theta <- predict(theta_tilde, fold_test)
+  d_test <- fold_test[,dvar]
+  z_k <- setNames(tibble(as.vector(d_test - x_theta)), dvar)
   return(z_k)
 }
 
@@ -187,12 +189,16 @@ estimate_z <- function(dvar, xnames, fold_train, fold_test, family){
 # ============================================================================
 # moment functions for linear
 # ============================================================================
+#' @export
 psi_plr <- function(theta, Y, D, Z, s){
-  return(1/length(Y) * t(Z) %*% (Y - s - D %*% theta))
+  Z <- as.matrix(Z)
+  return(1/nrow(D) * t(Z) %*% (Y - s - D %*% theta))
 }
 
+#' @export
 psi_plr_grad <- function(D, Z){
-  return(1/length(D)*t(Z) %*% D)
+  Z <- as.matrix(Z)
+  return(1/nrow(D) * t(Z) %*% D)
 }
 
 

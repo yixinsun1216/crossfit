@@ -10,27 +10,26 @@
 #'
 #'
 #' @export
-# partial linear model
-# recall this is (Y - gamma(X) - theta * (D - delta(X))) * (D - delta(X))
-psi_plr <- function(theta, Y, D, gamma, delta) {
-  theta <- matrix(theta, nrow = dim(D)[2])
-  N <- nrow(Y)
-  return((1 / N) * t(D - delta) %*% (Y - gamma - (D - delta) %*% theta))
-}
-
-#' @export
-psi_plr_grad <- function(theta, Y, D, gamma, delta) {
-  N <- nrow(Y)
-  return(-1 * (1 / N) * t(D - delta) %*% (D - delta))
-}
-
-#' @export
-psi_plr_op <- function(theta, Y, D, gamma, delta) {
-  theta <- matrix(theta, nrow = dim(D)[2])
-  N <- nrow(Y)
-  op <- (D - delta) * as.vector(Y - gamma - (D - delta) %*% theta)
-  return((1 / N) * t(op) %*% op)
-}
+# partial linear model# recall this is (Y - gamma(X) - theta * (D - delta(X))) * (D - delta(X))
+#' psi_plr <- function(theta, Y, D, gamma, delta) {
+#'   theta <- matrix(theta, nrow = dim(D)[2])
+#'   N <- nrow(Y)
+#'   return((1 / N) * t(D - delta) %*% (Y - gamma - (D - delta) %*% theta))
+#' }
+#'
+#' #' @export
+#' psi_plr_grad <- function(theta, Y, D, gamma, delta) {
+#'   N <- nrow(Y)
+#'   return(-1 * (1 / N) * t(D - delta) %*% (D - delta))
+#' }
+#'
+#' #' @export
+#' psi_plr_op <- function(theta, Y, D, gamma, delta) {
+#'   theta <- matrix(theta, nrow = dim(D)[2])
+#'   N <- nrow(Y)
+#'   op <- (D - delta) * as.vector(Y - gamma - (D - delta) %*% theta)
+#'   return((1 / N) * t(op) %*% op)
+#' }
 
 #' #' @export
 #' # partially linear poisson model
