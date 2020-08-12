@@ -24,8 +24,8 @@ dml_original <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
   }
 
   seq(1, nn) %>%
-    map(~dml_step_original(f, d, model, ml, poly_degree, family, ...), ...)# %>%
-   # get_medians(nrow(d), dml_call)
+    map(~dml_step_original(f, d, model, ml, poly_degree, family, ...), ...) %>%
+    get_medians(nrow(d), dml_call)
 }
 
 #' @export
@@ -38,7 +38,7 @@ dml_step_original <- function(f, d, model, ml, poly_degree, family, ...){
   if(model == "linear"){
     psi <- psi_plr
     psi_grad <- psi_plr_grad
-    #psi_op <<- psi_plr_op
+    psi_op <<- psi_plr_op
   }
 
   # make the estimation dataset -----------------------------------------------
@@ -66,6 +66,7 @@ dml_step_original <- function(f, d, model, ml, poly_degree, family, ...){
   folds <- crossv_kfold(newdata)
   folds$train <- map(folds$train, as_tibble)
   folds$test <- map(folds$test, as_tibble)
+
 
   # Calculate instruments -----------------------------------------------------
   # For each fold, calculate the partial outcome, s = x*beta, and the instrument,
@@ -106,7 +107,18 @@ dml_step_original <- function(f, d, model, ml, poly_degree, family, ...){
           method = "BFGS",
           control = list(maxit = 500))
 
-  return(theta)
+  # Calculate covariance matrix -----------------------------------------------
+  J0 <- grad(theta$par)
+  s2 <-
+    list(Y, D, Z, s) %>%
+    pmap(function(Y, D,Z, s) {
+      psi_op(theta$par, Y, D, Z, s)
+    }) %>%
+    reduce(`+`) / length(D)
+
+  s2 <- solve(t(J0), tol = 1e-20) %*% s2 %*% solve(J0)
+
+  return(list(theta$par, s2))
 }
 
 # =============================================================================
@@ -120,6 +132,19 @@ dml_step_original <- function(f, d, model, ml, poly_degree, family, ...){
 # step 4. Calculate z = d - x_tilde*theta_tilde
 
 dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, family){
+  # if using glmnet, make sure family is properly assigned
+  if(is.null(family) & ml == "lasso"){
+    # want gaussian for quantitative Y variable - otherwise default is binomial
+    # for factor variables
+    if(model == "linear" & class(fold_train[,ynames]) == "numeric"){
+      family <- "gaussian"
+    }
+
+    if(model == "poisson"){
+      family <- "poisson"
+    }
+  }
+
 
   # step 1 --------------------------------------------------------
   # formula for y on x
@@ -136,11 +161,17 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
       pull(row)
   }
 
-  # fit linear regression of y on x_hat to find beta_hat
+  # fit regression of y on x_hat to find beta_hat
   f2 <-  paste(x_hat, collapse = " + ") %>%
     paste0(ynames, " ~ ", .) %>%
     as.formula
-  beta_hat <- lm(f2, fold_train)
+
+  if(model == "linear"){
+    beta_hat <- lm(f2, fold_train)
+  }if(model == "poisson"){
+    beta_hat <- glm(f2, fold_train)
+  }
+
 
   # step 2: s = x_hat*beta_hat -----------------------------
   s <- predict(beta_hat, fold_test)
@@ -198,7 +229,16 @@ psi_plr <- function(theta, Y, D, Z, s){
 #' @export
 psi_plr_grad <- function(D, Z){
   Z <- as.matrix(Z)
-  return(1/nrow(D) * t(Z) %*% D)
+  return(-1/nrow(D) * t(Z) %*% D)
+}
+
+#' @export
+psi_plr_op <- function(theta, Y, D, Z, s) {
+  Z <- as.matrix(Z)
+  theta <- matrix(theta, nrow = dim(D)[2])
+  N <- nrow(D)
+  op <- Z * as.vector(Y - s - D %*% theta)
+  return((1 / N) * t(op) %*% op)
 }
 
 
