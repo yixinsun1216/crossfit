@@ -1,6 +1,6 @@
 #' # https://www.stata.com/manuals/lassoxpopoisson.pdf
 #'
-#' #' @export
+#' @export
 #' dml_original <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
 #'                 poly_degree = 1, drop_na = FALSE, family = "gaussian", ...) {
 #'   dml_call <- match.call()

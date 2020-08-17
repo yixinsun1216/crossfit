@@ -156,9 +156,22 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
         pull(row)
     }
 
-    f2 <-  paste(x_hat, collapse = " + ") %>%
-      paste0(ynames, " ~ ", .) %>%
-      as.formula
+    if(ml == "rlasso"){
+      x_hat <-
+        coef(rlasso(f1, fold_train)) %>%
+        tidy() %>%
+        filter(names %in% xnames, x != 0) %>%
+        pull(names)
+    }
+
+    # if no x's are chosen, run regression of y on 1
+    if(length(x_hat) == 0){
+      f2 <- as.formula(paste(ynames, "1", sep = "~"))
+    } else{
+      f2 <-  paste(x_hat, collapse = " + ") %>%
+        paste0(ynames, " ~ ", .) %>%
+        as.formula
+    }
 
     # fit regression of y on selected x
     beta_hat <- lm(f2, fold_train)
@@ -186,17 +199,29 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
         filter(row %in% xnames) %>%
         pull(row)
     }
+    print(ml)
+    if(ml == "rlasso"){
+      x_hat <-
+        coef(rlasso(f1, fold_train)) %>%
+        tidy() %>%
+        filter(names %in% xnames, x != 0) %>%
+        pull(names)
+    }
 
-    f2 <-  paste(c(x_hat, dnames), collapse = " + ") %>%
-      paste0(ynames, " ~ ", .) %>%
-      as.formula
+    # if no x's are chosen, run regression of y on 1
+    if(length(x_hat) == 0){
+      f2 <- as.formula(paste(ynames, "1", sep = "~"))
+    } else{
+      f2 <-  paste(x_hat, collapse = " + ") %>%
+        paste0(ynames, " ~ ", .) %>%
+        as.formula
+    }
 
     # fit regression of y on selected x
     beta_hat <- glm(f2, "poisson", fold_train)
     coefs <-
       tidy(beta_hat) %>%
       filter(term %in% c("(Intercept)", x_hat))
-
 
     # Find s = x_hat*beta_hat
     s <- cbind(1, as.matrix(fold_test[,x_hat])) %*% as.matrix(coefs$estimate)
@@ -220,11 +245,21 @@ estimate_z <- function(dvar, xnames, w, fold_train, fold_test){
     as.formula()
 
   # linear lasso of d on x to select x_tilde
-  x_tilde <-
-    coef(cv.glmnet(f_select, fold_train, weights = w)) %>%
-    tidy() %>%
-    filter(row %in% xnames) %>%
-    pull(row)
+  if(ml == "lasso"){
+    x_tilde <-
+      coef(cv.glmnet(f_select, fold_train, weights = w)) %>%
+      tidy() %>%
+      filter(row %in% xnames) %>%
+      pull(row)
+  }
+
+  if(ml == "rlasso"){
+    x_tilde <-
+      coef(rlasso(f_select, fold_train)) %>%
+      tidy() %>%
+      filter(names %in% xnames, x != 0) %>%
+      pull(names)
+  }
 
   # fit linear regression of d on x_tilde to find mu
   if(length(x_tilde) == 0){
