@@ -31,15 +31,16 @@ dml_original <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
 #' @export
 dml_step_original <- function(f, d, model, ml, poly_degree, family, ...){
   if(model == "poisson"){
-    psi <- psi_plpr
-    psi_grad <- psi_plpr_grad
-    psi_op <- psi_plpr_op
+    psi <<- psi_plpr
+    psi_grad <<- psi_plpr_grad
+    psi_op <<- psi_plpr_op
   }
   if(model == "linear"){
-    psi <- psi_plr
-    psi_grad <- psi_plr_grad
-    psi_op <- psi_plr_op
+    psi <<- psi_plr
+    psi_grad <<- psi_plr_grad
+    psi_op <<- psi_plr_op
   }
+
 
   # make the estimation dataset -----------------------------------------------
   # (a) expand out any non-linear formula for y and sanitize names
@@ -124,12 +125,12 @@ dml_step_original <- function(f, d, model, ml, poly_degree, family, ...){
 # =============================================================================
 # Fill in components of moment conditions within each fold
 # =============================================================================
-# step 1. In training sample, perform lasso of y on x to select x_hat.
-  # Fit regression of y on x_hat and call these coefficients beta_hat
+# step 1. In training sample, run ml of y on x to select x_hat.
+  # for lasso, fit regression of y on x_hat and call these coefficients beta_hat
 # step 2. Using test sample, calculate s = x_hat*beta_hat.
   # calculate weights to be used for next round of lasso
-# step 3. Using training data, perform linear lasso of d on x to select x_tilde.
-# fit linear regression of d on x_tilde to get mu
+# step 3. Using training data, perform linear lasso/RF of d on x to select x_tilde.
+  # For lasso, fit linear regression of d on x_tilde to get mu
 # step 4. Calculate z = d - x_tilde*mu
 
 dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, family){
@@ -142,7 +143,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
   # step 1 + 2 Linear --------------------------------------------------------
   # 1. use lasso of y on x to select x variables for linear model
   # 2. Calculate s = x_hat*beta_hat
-  if(model == "linear"){
+  if(model == "linear" & ml %in% c("lasso", "rlasso")){
     f1 <-  paste(xnames, collapse = " + ") %>%
       paste0(ynames, " ~ ", .) %>%
       as.formula
@@ -177,7 +178,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
     beta_hat <- lm(f2, fold_train)
 
     # Find s = x_hat*beta_hat
-    s <- predict(beta_hat, data = fold_test)
+    s <- predict(beta_hat, newdata = fold_test)
 
     # weights for OLS is just 1s
     weights <- rep(1, nrow(fold_train))
@@ -185,7 +186,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
 
   # Steps 1 & 2 Poisson --------------------------------------------------------
   # use lasso of y on d and x to select x variables for poisson model
-  if(model == "poisson"){
+  if(model == "poisson" & ml %in% c("lasso", "rlasso")){
     f1 <-  paste(c(xnames, dnames), collapse = " + ") %>%
       paste0(ynames, " ~ ", .) %>%
       as.formula
@@ -199,7 +200,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
         filter(row %in% xnames) %>%
         pull(row)
     }
-    print(ml)
+
     if(ml == "rlasso"){
       x_hat <-
         coef(rlasso(f1, fold_train)) %>%
@@ -230,15 +231,25 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
     weights <- exp(predict(beta_hat, data = fold_test))
   }
 
+  if(ml == "regression_forest"){
+    f1 <-  paste(xnames, collapse = " + ") %>%
+      paste0(ynames, " ~ ", .) %>%
+      as.formula
+
+    x_hat <- regression_forest2(f1, fold_train)
+    s <- as.matrix(predict_rf2(x_hat, fold_test))
+    weights <- NULL
+  }
+
   # step 3 + 4 find mu & calculate z = d - x_tilde*mu ------
   # loop over each d to find mu
-  z_k <- map_dfc(dnames, estimate_z, xnames, weights, fold_train, fold_test)
+  z_k <- map_dfc(dnames, estimate_z, xnames, weights, fold_train, fold_test, ml)
 
   return(list(s = s, Z = as.matrix(z_k)))
 }
 
 # Implement steps 3 & 4 -> calculate instrument z ------------------------------
-estimate_z <- function(dvar, xnames, w, fold_train, fold_test){
+estimate_z <- function(dvar, xnames, w, fold_train, fold_test, ml){
   # formula for running d on x
   f_select <- paste(xnames, collapse = " + ") %>%
     paste0(dvar, " ~ ", .) %>%
@@ -261,19 +272,25 @@ estimate_z <- function(dvar, xnames, w, fold_train, fold_test){
       pull(names)
   }
 
-  # fit linear regression of d on x_tilde to find mu
-  if(length(x_tilde) == 0){
-    f_reg <- as.formula(paste(eval(dvar), "1", sep = "~"))
-  } else{
-    f_reg <- paste(x_tilde, collapse = " + ") %>%
-      paste0(dvar, " ~ ", .) %>%
-      as.formula
+  if(ml %in% c("lasso", "rlasso")){
+    # fit linear regression of d on x_tilde to find mu
+    if(length(x_tilde) == 0){
+      f_reg <- as.formula(paste(eval(dvar), "1", sep = "~"))
+    } else{
+      f_reg <- paste(x_tilde, collapse = " + ") %>%
+        paste0(dvar, " ~ ", .) %>%
+        as.formula
+    }
+    mu <- lm(f_reg, data = fold_train)
+    x_theta <- predict(mu, fold_test)
   }
 
-  mu <- lm(f_reg, data = fold_train)
+  if(ml == "regression_forest"){
+    mu <- regression_forest2(f_select, fold_train)
+    x_theta <- predict_rf2(mu, fold_test)
+  }
 
   # return z = d - x_tilde*mu
-  x_theta <- predict(mu, fold_test)
   d_test <- fold_test[,dvar]
   z_k <- setNames(tibble(as.vector(d_test - x_theta)), dvar)
   return(z_k)
@@ -334,3 +351,20 @@ psi_plpr_op <- function(theta, Y, D, Z, s){
   op <- as.matrix(map2_dfr(z_list, op_list, function(x, y) x*y))
   return((1 / N) *  op %*% t(op))
 }
+
+
+#
+# # house this here for now as a dup from ml_functions.R - make sure to get rid of this once we combine the two methods
+# predict_rf2 <- function(forest, newdata = NULL) {
+#   f <- forest[["formula"]]
+#
+#   if(!is.null(newdata)) {
+#     X <-
+#       formula(f, rhs = 1, lhs = 0) %>%
+#       update(~ 0 + .) %>%
+#       model.matrix(newdata)
+#     return(pluck(predict(forest, X), "predictions"))
+#   } else {
+#     return(pluck(predict(forest), "predictions"))
+#   }
+# }
