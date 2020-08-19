@@ -72,9 +72,11 @@ dml_step_original <- function(f, d, model, ml, poly_degree, family, ...){
   # Calculate instruments -----------------------------------------------------
   # For each fold, calculate the partial outcome, s = x*beta, and the instrument,
   # z = d - x*theta
+  tic("instruments")
   instruments <-
     map2(folds$train, folds$test,
          function(x, y) dml_fold(x, y, xnames, ynames, dnames, model, ml, family))
+  toc()
   s <- map(instruments, pluck(1))
   Z <- map(instruments, pluck(2))
 
@@ -101,12 +103,14 @@ dml_step_original <- function(f, d, model, ml, poly_degree, family, ...){
   theta0 <- rep(0, dim(D[[1]])[2])
   names(theta0) <- colnames(D[[1]])
 
+  tic("optimization")
   theta <-
     optim(theta0,
           function(x) square(obj(x)),
           function(x) grad(x) %*% obj(x),
           method = "BFGS",
-          control = list(maxit = 50000))
+          control = list(maxit = 500000))
+  toc()
 
   # Calculate covariance matrix -----------------------------------------------
   J0 <- grad(theta$par)
@@ -186,27 +190,19 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
 
   # Steps 1 & 2 Poisson --------------------------------------------------------
   # use lasso of y on d and x to select x variables for poisson model
-  if(model == "poisson" & ml %in% c("lasso", "rlasso")){
-    f1 <-  paste(c(xnames, dnames), collapse = " + ") %>%
+  if(model == "poisson" & ml == "lasso"){
+    f1 <-  paste(c(dnames, xnames), collapse = " + ") %>%
       paste0(ynames, " ~ ", .) %>%
       as.formula
 
     if(ml == "lasso"){
-      include <- names(fold_train) %in% dnames
+      include <- as.numeric(names(fold_train) %in% dnames)
 
       x_hat <-
         coef(cv.glmnet(f1, fold_train, family = family, penalty.factor = include)) %>%
         tidy() %>%
         filter(row %in% xnames) %>%
         pull(row)
-    }
-
-    if(ml == "rlasso"){
-      x_hat <-
-        coef(rlasso(f1, fold_train)) %>%
-        tidy() %>%
-        filter(names %in% xnames, x != 0) %>%
-        pull(names)
     }
 
     # if no x's are chosen, run regression of y on 1
@@ -302,7 +298,7 @@ estimate_z <- function(dvar, xnames, w, fold_train, fold_test, ml){
 # ============================================================================
 #' @export
 psi_plr <- function(theta, Y, D, Z, s){
-  return(1/nrow(D) * t(Z) %*% (Y - s - D %*% theta))
+  return(1/nrow(D) * t(Z) %*% (Y - s - D  %*% theta))
 }
 
 #' @export
