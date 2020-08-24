@@ -3,7 +3,8 @@
 
 #' @export
 dml_original <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
-                poly_degree = 3, drop_na = FALSE, family = "gaussian", ...) {
+                poly_degree = 3, drop_na = FALSE, family = NULL, score = "finite",
+                ...) {
   dml_call <- match.call()
   dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
 
@@ -35,10 +36,15 @@ dml_step_original <- function(f, d, model, ml, poly_degree, family, ...){
     psi_grad <<- psi_plpr_grad
     psi_op <<- psi_plpr_op
   }
-  if(model == "linear"){
+  if(model == "linear" & score == "finite"){
     psi <<- psi_plr
     psi_grad <<- psi_plr_grad
     psi_op <<- psi_plr_op
+  }
+  if(model == "linear" & score == "concentrate"){
+    psi <<- psi_plr_conc
+    psi_grad <<- psi_plr_grad_conc
+    psi_op <<- psi_plr_op_conc
   }
 
 
@@ -292,75 +298,3 @@ estimate_z <- function(dvar, xnames, w, fold_train, fold_test, ml){
   return(z_k)
 }
 
-
-# ============================================================================
-# moment functions for linear
-# ============================================================================
-#' @export
-psi_plr <- function(theta, Y, D, Z, s){
-  return(1/nrow(D) * t(Z) %*% (Y - s - D  %*% theta))
-}
-
-#' @export
-psi_plr_grad <- function(theta, D, Z, s){
-  return(-1/nrow(D) * t(Z) %*% D)
-}
-
-#' @export
-psi_plr_op <- function(theta, Y, D, Z, s) {
-  theta <- matrix(theta, nrow = dim(D)[2])
-  N <- nrow(D)
-  op <- Z * as.vector(Y - s - D %*% theta)
-  return((1 / N) * t(op) %*% op)
-}
-
-
-# ============================================================================
-# moment functions for poisson
-# ============================================================================
-#' @export
-psi_plpr <- function(theta, Y, D, Z, s){
-  theta <- matrix(theta, nrow = dim(D)[2])
-
-  N <- nrow(D)
-  return((1/N) * t(Z) %*% (Y - exp(D %*% theta + s)))
-}
-
-#' @export
-psi_plpr_grad <- function(theta, D, Z, s){
-  s_list <- split(s, seq(nrow(s)))
-  d_list <- split(D, seq(nrow(D)))
-  N <- nrow(D)
-
-  row_mult <- map2_dfr(d_list, s_list, function(d, s1) as.matrix(d) %*% exp(d %*% theta + s1))
-  return(-1/N * t(Z) %*% t(row_mult))
-}
-
-#' @export
-psi_plpr_op <- function(theta, Y, D, Z, s){
-  theta <- matrix(theta, nrow = dim(D)[2])
-
-  z_list <- split(Z, seq(nrow(Z)))
-  op_list <- split((Y - exp(D %*% theta + s)), seq(nrow(Y)))
-
-  N <- nrow(D)
-  op <- as.matrix(map2_dfr(z_list, op_list, function(x, y) x*y))
-  return((1 / N) *  op %*% t(op))
-}
-
-
-#
-# # house this here for now as a dup from ml_functions.R - make sure to get rid of this once we combine the two methods
-# predict_rf2 <- function(forest, newdata = NULL) {
-#   f <- forest[["formula"]]
-#
-#   if(!is.null(newdata)) {
-#     X <-
-#       formula(f, rhs = 1, lhs = 0) %>%
-#       update(~ 0 + .) %>%
-#       model.matrix(newdata)
-#     return(pluck(predict(forest, X), "predictions"))
-#   } else {
-#     return(pluck(predict(forest), "predictions"))
-#   }
-# }

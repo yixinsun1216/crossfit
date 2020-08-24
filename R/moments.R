@@ -9,28 +9,86 @@
 #' @param delta a vector or data.frame of E[D|X=x].
 #'
 #'
-#' @export
-# partial linear model# recall this is (Y - gamma(X) - theta * (D - delta(X))) * (D - delta(X))
-#' psi_plr <- function(theta, Y, D, gamma, delta) {
-#'   theta <- matrix(theta, nrow = dim(D)[2])
-#'   N <- nrow(Y)
-#'   return((1 / N) * t(D - delta) %*% (Y - gamma - (D - delta) %*% theta))
-#' }
 #'
-#' #' @export
-#' psi_plr_grad <- function(theta, Y, D, gamma, delta) {
-#'   N <- nrow(Y)
-#'   return(-1 * (1 / N) * t(D - delta) %*% (D - delta))
-#' }
-#'
-#' #' @export
-#' psi_plr_op <- function(theta, Y, D, gamma, delta) {
-#'   theta <- matrix(theta, nrow = dim(D)[2])
-#'   N <- nrow(Y)
-#'   op <- (D - delta) * as.vector(Y - gamma - (D - delta) %*% theta)
-#'   return((1 / N) * t(op) %*% op)
-#' }
 
+
+# ============================================================================
+# moment functions for linear model
+# ============================================================================
+# finite nuisance parameter approach
+#' @export
+psi_plr <- function(theta, Y, D, Z, s){
+  return(1/nrow(D) * t(Z) %*% (Y - s - D  %*% theta))
+}
+
+#' @export
+psi_plr_grad <- function(theta, D, Z, s){
+  return(-1/nrow(D) * t(Z) %*% D)
+}
+
+#' @export
+psi_plr_op <- function(theta, Y, D, Z, s) {
+  theta <- matrix(theta, nrow = dim(D)[2])
+  N <- nrow(D)
+  op <- Z * as.vector(Y - s - D %*% theta)
+  return((1 / N) * t(op) %*% op)
+}
+
+# concentrating out approach -------------------------------------
+#' @export
+psi_plr_conc <- function(theta, Y, D, Z, s){
+  return(1/nrow(D) * t(Z) %*% (Y - s - Z  %*% theta))
+}
+
+#' @export
+psi_plr_grad_conc <- function(theta, D, Z, s){
+  return(-1/nrow(D) * t(Z) %*% Z)
+}
+
+#' @export
+psi_plr_op_conc <- function(theta, Y, D, Z, s) {
+  theta <- matrix(theta, nrow = dim(D)[2])
+  N <- nrow(D)
+  op <- Z * as.vector(Y - s - Z %*% theta)
+  return((1 / N) * t(op) %*% op)
+}
+
+# ============================================================================
+# moment functions for poisson
+# ============================================================================
+#' @export
+psi_plpr <- function(theta, Y, D, Z, s){
+  theta <- matrix(theta, nrow = dim(D)[2])
+
+  N <- nrow(D)
+  return((1/N) * t(Z) %*% (Y - exp(D %*% theta + s)))
+}
+
+#' @export
+psi_plpr_grad <- function(theta, D, Z, s){
+  s_list <- split(s, seq(nrow(s)))
+  d_list <- split(D, seq(nrow(D)))
+  N <- nrow(D)
+
+  row_mult <- map2_dfr(d_list, s_list, function(d, s1) as.matrix(d) %*% exp(d %*% theta + s1))
+  return(-1/N * t(Z) %*% t(row_mult))
+}
+
+#' @export
+psi_plpr_op <- function(theta, Y, D, Z, s){
+  theta <- matrix(theta, nrow = dim(D)[2])
+
+  z_list <- split(Z, seq(nrow(Z)))
+  op_list <- split((Y - exp(D %*% theta + s)), seq(nrow(Y)))
+
+  N <- nrow(D)
+  op <- as.matrix(map2_dfr(z_list, op_list, function(x, y) x*y))
+  return((1 / N) *  op %*% t(op))
+}
+
+# Concentrating out approach for poisson
+#'
+#'
 #' #' @export
 #' # partially linear poisson model
 #' # recall this is:
@@ -75,9 +133,9 @@
 #'   vals <- psi_plpr_with_grad(theta, Y, D, gamma, delta)[[1]]
 #'   return(mean(vals^2))
 #' }
-#'
-#' # psi: function that gives the value of the Neyman-Orthogonal moment at a
-#'   # given value of theta
-#' # psi_grad: function that returns the gradient of psi with respect to theta
-#' # psi_plr_op: function that gives the variance estimator at a given
-#'   # value of theta.
+
+# psi: function that gives the value of the Neyman-Orthogonal moment at a
+  # given value of theta
+# psi_grad: function that returns the gradient of psi with respect to theta
+# psi_plr_op: function that gives the variance estimator at a given
+  # value of theta.
