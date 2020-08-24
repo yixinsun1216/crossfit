@@ -5,11 +5,8 @@
 #' @param theta scalar or vector of the treatment effect parameter(s).
 #' @param Y a vector of the outcome variable.
 #' @param D a vector or data.frame of the treatment variable(s) of interest.
-#' @param gamma a vector of E[Y|X=x], where X is a vector of controls.
-#' @param delta a vector or data.frame of E[D|X=x].
-#'
-#'
-#'
+#' @param s a vector of E[Y|X=x], where X is a vector of controls.
+#' @param Z a vector or data.frame of D - E[D|X=x].
 
 
 # ============================================================================

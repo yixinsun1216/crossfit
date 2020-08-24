@@ -2,7 +2,7 @@
 #'
 #' @param f an object of class formula representing the model to be fitted.
 #' @param d a dataframe containing the variables in f.
-#' @param model model type or list of user created momentfunctions.
+#' @param model model type or list of user created moment functions.
 #'   The following model types are implementable: "linear" for partial linear
 #'   model, "poisson" for a partial linear poisson model". If the argument is
 #'   a list, the list must have three functions in order to generate theta,
@@ -14,10 +14,26 @@
 #'   theta
 #'   \item psi_plr_op: function that gives the variance estimator at a given
 #'   value of theta.
-#' @param n
-#' @param nw
-#' @param dml_seed
-#' @param ml
+#'   The default is `model = "linear"`.
+#' @param ml Machine learning method to be used for estimating nuisance parameters.
+#'   Currently it takes in `lasso`, `rlasso` (from the `hdm` package), and `rf`
+#'   for regression forest. Note `rlasso` is not available for `model = "poisson"`.
+#'   Default is `ml = "lasso"`.
+#' @param n Number of times to repeat the sample splitting and take median of
+#'   results over the n samples. Default is `n = 100`.
+#' @param nfolds Number of folds for cross-fitting
+#' @param score Takes either value `finite` or `concentrate`. `finite` refers to
+#'   using the finite nuisance parameter orthogonal score construction, and
+#'   `concentrate` refers to using the concentrating out approach.
+#'   Default is `score = "finite"`
+#' @param workers Number of workers to use in running the n dml calculations in
+#'   parallel. Default is `workers = 1`, in which case the process is sequential.
+#' @param drop_na if `TRUE`, then any row with an `NA` value is dropped. Default
+#'   is `false`
+#' @param family if `ml = lasso`, this is passed onto `cv.glmnet` to describe
+#'    the response variable type.
+#' @param poly_degree degree of polynomial for the nuisance parameters.
+#'   Default is `poly_degree = 1`.
 #'
 #' @return
 #' \code{dml} returns an object of class "dml" with the following components:
@@ -38,13 +54,13 @@
 #'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
 #'   as.formula() %>%
 #'   dml(corn_yield, "linear", n = 5,
-#'   ml = "regression_forest", dml_seed = 123)
+#'   ml = "regression_forest")
 #'
 #' yield_dml_lasso <-
 #'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
 #'   as.formula() %>%
 #'   dml(corn_yield, "linear", n = 5,
-#'   ml = "lasso", dml_seed = 123, family = "gaussian")
+#'   ml = "lasso", family = "gaussian")
 #'
 #' @references V. Chernozhukov, D. Chetverikov, M. Demirer, E. Duflo, C. Hansen,
 #' W. Newey, and J. Robins. Double/debiased machine learning for treatment and
@@ -68,11 +84,11 @@
 #' @export
 # main user-facing routine
 #' @export
-dml <- function(f, d, model, n = 101, nw = 1, dml_seed = NULL, ml,
-                poly_degree = 3, drop_na = FALSE, family = NULL, score = "finite",
+dml <- function(f, d, model = "linear", ml = "lasso", n = 101, nfolds = 5,
+                score = "finite", workers = 1, drop_na = FALSE, family = NULL,
+                poly_degree = 3,
                 ...) {
   dml_call <- match.call()
-  dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
 
   # to make the median well-defined, add 1 to n if the user requests an even
   # number of splits
@@ -90,27 +106,23 @@ dml <- function(f, d, model, n = 101, nw = 1, dml_seed = NULL, ml,
       as_tibble
   }
 
-  # parallelise the process if nw > 1
-  if(nw > 1){
-    plan(future::multisession, .init = nw)
-    seq(1, nn) %>%
-    future_map(function(.x, ...) dml_step(f, d, model, ml, poly_degree, family,
-                                          score, ...), ...,
-               .options = future_options(packages = c("splines"),
-                                         seed = dml_seed)) %>%
-    get_medians(nrow(d), dml_call)
-  }else{
-    seq(1, nn) %>%
-    map(~dml_step(f, d, model, ml, poly_degree, family, score, ...), ...) %>%
-    get_medians(nrow(d), dml_call)
+  # parallelise the process if number of workers is > 1. Otherwise, future_map
+  # defaults to sequential
+  if(workers > 1){
+    plan(future::multisession, workers = workers)
   }
 
+  seq(1, nn) %>%
+    future_map(function(.x, ...) dml_step(f, d, model, ml, poly_degree, family,
+                                          score, nfolds, ...), ...,
+               .options = future_options(packages = c("splines"))) %>%
+    get_medians(nrow(d), dml_call)
 
 
 }
 
 #' @export
-dml_step <- function(f, d, model, ml, poly_degree, family, score, ...){
+dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
   if(model == "poisson"){
     psi <<- psi_plpr
     psi_grad <<- psi_plpr_grad
@@ -125,6 +137,11 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, ...){
     psi <<- psi_plr_conc
     psi_grad <<- psi_plr_grad_conc
     psi_op <<- psi_plr_op_conc
+  }
+  if(is.list(model)){
+    psi <- model[[1]]
+    psi_grad <- model[[2]]
+    psi_op <- model[[3]]
   }
 
 
@@ -150,7 +167,7 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, ...){
   newdata <- bind_cols(ty, td, tx)
 
   # (e) finally, generate cross validation folds of this. Default is 5 folds
-  folds <- crossv_kfold(newdata)
+  folds <- crossv_kfold(newdata, nfolds)
   folds$train <- map(folds$train, as_tibble)
   folds$test <- map(folds$test, as_tibble)
 
@@ -328,6 +345,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
 
 # Implement steps 3 & 4 -> calculate instrument z ------------------------------
 estimate_z <- function(dvar, xnames, w, fold_train, fold_test, ml){
+
   # formula for running d on x
   f_select <- paste(xnames, collapse = " + ") %>%
     paste0(dvar, " ~ ", .) %>%

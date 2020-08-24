@@ -7,15 +7,15 @@
 dml(
   f,
   d,
-  model,
+  model = "linear",
+  ml = "lasso",
   n = 101,
-  nw = 4,
-  dml_seed = NULL,
-  ml,
-  poly_degree = 3,
+  nfolds = 5,
+  score = "finite",
+  workers = 1,
   drop_na = FALSE,
   family = NULL,
-  score = "finite",
+  poly_degree = 3,
   ...
 )
 }
@@ -24,7 +24,32 @@ dml(
 
 \item{d}{a dataframe containing the variables in f.}
 
-\item{ml}{}
+\item{ml}{Machine learning method to be used for estimating nuisance parameters.
+Currently it takes in `lasso`, `rlasso` (from the `hdm` package), and `rf`
+for regression forest. Note `rlasso` is not available for `model = "poisson"`.
+Default is `ml = "lasso"`.}
+
+\item{n}{Number of times to repeat the sample splitting and take median of
+results over the n samples. Default is `n = 100`.}
+
+\item{nfolds}{Number of folds for cross-fitting}
+
+\item{score}{Takes either value `finite` or `concentrate`. `finite` refers to
+using the finite nuisance parameter orthogonal score construction, and
+`concentrate` refers to using the concentrating out approach.
+Default is `score = "finite"`}
+
+\item{workers}{Number of workers to use in running the n dml calculations in
+parallel. Default is `workers = 1`, in which case the process is sequential.}
+
+\item{drop_na}{if `TRUE`, then any row with an `NA` value is dropped. Default
+is `false`}
+
+\item{family}{if `ml = lasso`, this is passed onto `cv.glmnet` to describe
+the response variable type.}
+
+\item{poly_degree}{degree of polynomial for the nuisance parameters.
+Default is `poly_degree = 1`.}
 }
 \value{
 \code{dml} returns an object of class "dml" with the following components:
@@ -48,13 +73,13 @@ yield_dml <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
   dml(corn_yield, "linear", n = 5,
-  ml = "regression_forest", dml_seed = 123)
+  ml = "regression_forest")
 
 yield_dml_lasso <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
   dml(corn_yield, "linear", n = 5,
-  ml = "lasso", dml_seed = 123, family = "gaussian")
+  ml = "lasso", family = "gaussian")
 
 }
 \references{
