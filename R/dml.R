@@ -143,6 +143,9 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
     psi_grad <- model[[2]]
     psi_op <- model[[3]]
   }
+  if(model == "poisson" & ml == "rlasso"){
+    stop("rlasso currently only availalbe for linear model")
+  }
 
 
   # make the estimation dataset -----------------------------------------------
