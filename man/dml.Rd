@@ -14,6 +14,8 @@ dml(
   ml,
   poly_degree = 3,
   drop_na = FALSE,
+  family = NULL,
+  score = "finite",
   ...
 )
 }

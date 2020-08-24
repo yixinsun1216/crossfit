@@ -68,9 +68,9 @@
 #' @export
 # main user-facing routine
 #' @export
-dml <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
-                         poly_degree = 3, drop_na = FALSE, family = NULL, score = "finite",
-                         ...) {
+dml <- function(f, d, model, n = 101, nw = 1, dml_seed = NULL, ml,
+                poly_degree = 3, drop_na = FALSE, family = NULL, score = "finite",
+                ...) {
   dml_call <- match.call()
   dml_seed <- ifelse(is.null(dml_seed), FALSE, as.integer(dml_seed))
 
@@ -90,13 +90,27 @@ dml <- function(f, d, model, n = 101, nw = 4, dml_seed = NULL, ml,
       as_tibble
   }
 
-  seq(1, nn) %>%
-    map(~dml_step_original(f, d, model, ml, poly_degree, family, ...), ...) %>%
+  # parallelise the process if nw > 1
+  if(nw > 1){
+    plan(future::multisession, .init = nw)
+    seq(1, nn) %>%
+    future_map(function(.x, ...) dml_step(f, d, model, ml, poly_degree, family,
+                                          score, ...), ...,
+               .options = future_options(packages = c("splines"),
+                                         seed = dml_seed)) %>%
     get_medians(nrow(d), dml_call)
+  }else{
+    seq(1, nn) %>%
+    map(~dml_step(f, d, model, ml, poly_degree, family, score, ...), ...) %>%
+    get_medians(nrow(d), dml_call)
+  }
+
+
+
 }
 
 #' @export
-dml_step <- function(f, d, model, ml, poly_degree, family, ...){
+dml_step <- function(f, d, model, ml, poly_degree, family, score, ...){
   if(model == "poisson"){
     psi <<- psi_plpr
     psi_grad <<- psi_plpr_grad
@@ -144,11 +158,9 @@ dml_step <- function(f, d, model, ml, poly_degree, family, ...){
   # Calculate instruments -----------------------------------------------------
   # For each fold, calculate the partial outcome, s = x*beta, and the instrument,
   # z = d - x*theta
-  tic("instruments")
   instruments <-
     map2(folds$train, folds$test,
          function(x, y) dml_fold(x, y, xnames, ynames, dnames, model, ml, family))
-  toc()
   s <- map(instruments, pluck(1))
   Z <- map(instruments, pluck(2))
 
@@ -175,14 +187,12 @@ dml_step <- function(f, d, model, ml, poly_degree, family, ...){
   theta0 <- rep(0, dim(D[[1]])[2])
   names(theta0) <- colnames(D[[1]])
 
-  tic("optimization")
   theta <-
     optim(theta0,
           function(x) square(obj(x)),
           function(x) grad(x) %*% obj(x),
           method = "BFGS",
           control = list(maxit = 500000))
-  toc()
 
   # Calculate covariance matrix -----------------------------------------------
   J0 <- grad(theta$par)
@@ -299,7 +309,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
     weights <- exp(predict(beta_hat, data = fold_test))
   }
 
-  if(ml == "regression_forest"){
+  if(ml == "rf"){
     f1 <-  paste(xnames, collapse = " + ") %>%
       paste0(ynames, " ~ ", .) %>%
       as.formula
@@ -353,7 +363,7 @@ estimate_z <- function(dvar, xnames, w, fold_train, fold_test, ml){
     x_theta <- predict(mu, fold_test)
   }
 
-  if(ml == "regression_forest"){
+  if(ml == "rf"){
     mu <- regression_forest2(f_select, fold_train)
     x_theta <- predict_rf2(mu, fold_test)
   }
