@@ -9,7 +9,7 @@
 
 
 # allows formulas to be passsed to grf::regression_forest instead of matrices
-regression_forest2 <- function(f, d, num.trees = 1000, ...) {
+regression_forest2 <- function(f, d, ...) {
   f <- Formula(f)
 
   Y <-
@@ -23,7 +23,7 @@ regression_forest2 <- function(f, d, num.trees = 1000, ...) {
     update(~ 0 + .) %>%
     model.matrix(d)
 
-  ff <- regression_forest(X, Y, num.trees = num.trees,...)
+  ff <- regression_forest(X, Y, num.trees = 1000, ...)
 
   ff[["formula"]] <- f
   class(ff) <- c("regression_forest", "grf")

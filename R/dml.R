@@ -123,10 +123,15 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, nfolds = 5,
 
 #' @export
 dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
-  if(model == "poisson"){
+  if(model == "poisson" & score == "finite"){
     psi <<- psi_plpr
     psi_grad <<- psi_plpr_grad
     psi_op <<- psi_plpr_op
+  }
+  if(model == "poisson" & score == "concentrate"){
+    psi <<- psi_plpr_conc
+    psi_grad <<- psi_plpr_grad_conc
+    psi_op <<- psi_plpr_op_conc
   }
   if(model == "linear" & score == "finite"){
     psi <<- psi_plr
@@ -146,7 +151,6 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
   if(model == "poisson" & ml == "rlasso"){
     stop("rlasso currently only availalbe for linear model")
   }
-
 
   # make the estimation dataset -----------------------------------------------
   # (a) expand out any non-linear formula for y and sanitize names
@@ -178,28 +182,36 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
   # Calculate instruments -----------------------------------------------------
   # For each fold, calculate the partial outcome, s = x*beta, and the instrument,
   # z = d - x*theta
-  instruments <-
-    map2(folds$train, folds$test,
-         function(x, y) dml_fold(x, y, xnames, ynames, dnames, model, ml, family))
+  if(score == "finite"){
+    instruments <-
+      map2(folds$train, folds$test,
+           function(x, y) dml_fold(x, y, xnames, ynames, dnames, model, ml, family))
+  }
+  if(score == "concentrate"){
+    instruments <-
+      map2(folds$train, folds$test, function(x, y)
+        dml_fold_concentrate(x, y, xnames, ynames, dnames, model, ml, family))
+  }
+
   s <- map(instruments, pluck(1))
-  Z <- map(instruments, pluck(2))
+  m <- map(instruments, pluck(2))
 
   # Optimize over sample moment to find theta ---------------------------------
   Y <- map(folds$test, ~ as.matrix(select(., !!ynames)))
   D <- map(folds$test, ~ as.matrix(select(., !!dnames)))
 
   obj <- function(theta) {
-    list(Y, D, Z, s) %>%
-      pmap(function(Y, D, Z, s) {
-        psi(theta, Y, D, Z, s)
+    list(Y, D, m, s) %>%
+      pmap(function(Y, D, m, s) {
+        psi(theta, Y, D, m, s)
       }) %>%
       reduce(`+`) / length(D)
   }
 
   grad <- function(theta) {
-    list(D, Z, s) %>%
-      pmap(function(D, Z, s) {
-        psi_grad(theta, D, Z, s)
+    list(Y, D, m, s) %>%
+      pmap(function(Y, D, m, s) {
+        psi_grad(theta, Y, D, m, s)
       }) %>%
       reduce(`+`) / length(D)
   }
@@ -217,9 +229,9 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
   # Calculate covariance matrix -----------------------------------------------
   J0 <- grad(theta$par)
   s2 <-
-    list(Y, D, Z, s) %>%
-    pmap(function(Y, D,Z, s) {
-      psi_op(theta$par, Y, D, Z, s)
+    list(Y, D, m, s) %>%
+    pmap(function(Y, D, m, s) {
+      psi_op(theta$par, Y, D, m, s)
     }) %>%
     reduce(`+`) / length(D)
 
@@ -239,85 +251,63 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
 # For lasso, fit linear regression of d on x_tilde to get mu
 # step 4. Calculate z = d - x_tilde*mu
 
-dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, family){
+dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml,
+                     family, score){
   # if using glmnet, make sure family is properly assigned
-  # if model is not poisson, let family default to binomial/gaussian
-  if(model == "poisson" & is.null(family)){
-    family <- "poisson"
+  # if model is linear, then use binomial for binary variable, and gaussian
+  # otherwise
+  if(is.null(family)){
+    if(model == "poisson"){
+      family <- "poisson"
+    }
+    if(model == "linear" & length(unique(fold_train[,ynames])) == 2){
+      family <- "binomial"
+    }
+    else{
+      family <- "gaussian"
+    }
   }
 
   # step 1 + 2 Linear --------------------------------------------------------
   # 1. use lasso of y on x to select x variables for linear model
   # 2. Calculate s = x_hat*beta_hat
-  if(model == "linear" & ml %in% c("lasso", "rlasso")){
-    f1 <-  paste(xnames, collapse = " + ") %>%
-      paste0(ynames, " ~ ", .) %>%
-      as.formula
+  f1 <-
+    paste0(c(dnames, xnames), collapse = " + ") %>%
+    paste0(ynames, " ~ ", .) %>%
+    as.formula
 
-    if(ml == "lasso"){
-      # use linear lasso of y on x to select x variables
-      x_hat <-
-        coef(cv.glmnet(f1, fold_train, family = family)) %>%
-        tidy() %>%
-        filter(row %in% xnames) %>%
-        pull(row)
-    }
+  if(ml == "lasso"){
+    include <- as.numeric(names(fold_train) %in% dnames)
 
-    if(ml == "rlasso"){
-      x_hat <-
-        coef(rlasso(f1, fold_train)) %>%
-        tidy() %>%
-        filter(names %in% xnames, x != 0) %>%
-        pull(names)
-    }
-
-    # if no x's are chosen, run regression of y on 1
-    if(length(x_hat) == 0){
-      f2 <- as.formula(paste(ynames, "1", sep = "~"))
-    } else{
-      f2 <-  paste(x_hat, collapse = " + ") %>%
-        paste0(ynames, " ~ ", .) %>%
-        as.formula
-    }
-
-    # fit regression of y on selected x
-    beta_hat <- lm(f2, fold_train)
-
-    # Find s = x_hat*beta_hat
-    s <- predict(beta_hat, newdata = fold_test)
-
-    # weights for OLS is just 1s
-    weights <- rep(1, nrow(fold_train))
+    x_hat <-
+      coef(cv.glmnet(f1, fold_train, family = family, penalty.factor = include)) %>%
+      tidy() %>%
+      filter(row %in% xnames) %>%
+      pull(row)
   }
 
-  # Steps 1 & 2 Poisson --------------------------------------------------------
-  # use lasso of y on d and x to select x variables for poisson model
-  if(model == "poisson" & ml == "lasso"){
-    f1 <-  paste(c(dnames, xnames), collapse = " + ") %>%
-      paste0(ynames, " ~ ", .) %>%
-      as.formula
+  if(ml == "rlasso"){
+    x_hat <-
+      coef(rlasso(f1, fold_train)) %>%
+      tidy() %>%
+      filter(names %in% xnames, x != 0) %>%
+      pull(names)
+  }
 
-    if(ml == "lasso"){
-      include <- as.numeric(names(fold_train) %in% dnames)
-
-      x_hat <-
-        coef(cv.glmnet(f1, fold_train, family = family, penalty.factor = include)) %>%
-        tidy() %>%
-        filter(row %in% xnames) %>%
-        pull(row)
-    }
-
+  if( ml %in% c("lasso", "rlasso")){
     # if no x's are chosen, run regression of y on 1
     if(length(x_hat) == 0){
-      f2 <- as.formula(paste(ynames, "1", sep = "~"))
+      f2 <-  paste(dnames, collapse = " + ") %>%
+        paste0(ynames, " ~ ", .) %>%
+        as.formula
     } else{
-      f2 <-  paste(x_hat, collapse = " + ") %>%
+      f2 <-  paste(c(dnames, x_hat), collapse = " + ") %>%
         paste0(ynames, " ~ ", .) %>%
         as.formula
     }
 
     # fit regression of y on selected x
-    beta_hat <- glm(f2, "poisson", fold_train)
+    beta_hat <- glm(f2, family, fold_train)
     coefs <-
       tidy(beta_hat) %>%
       filter(term %in% c("(Intercept)", x_hat))
@@ -325,8 +315,14 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
     # Find s = x_hat*beta_hat
     s <- cbind(1, as.matrix(fold_test[,x_hat])) %*% as.matrix(coefs$estimate)
 
-    # calculate weights w = exp(x_hat*beta_hat + d*theta_hat)
-    weights <- exp(predict(beta_hat, data = fold_test))
+    if(model == "linear"){
+      # weights for OLS is just 1s
+      weights <- rep(1, nrow(fold_train))
+    }
+    if(model == "poisson"){
+      # calculate weights w = exp(x_hat*beta_hat + d*theta_hat)
+      weights <- exp(predict(beta_hat, data = fold_test, type = "response"))
+    }
   }
 
   if(ml == "rf"){
@@ -341,13 +337,96 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml, f
 
   # step 3 + 4 find mu & calculate z = d - x_tilde*mu ------
   # loop over each d to find mu
-  z_k <- map_dfc(dnames, estimate_z, xnames, weights, fold_train, fold_test, ml)
+  m_k <- map_dfc(dnames, estimate_m, xnames, weights, fold_train, fold_test, ml)
 
-  return(list(s = s, Z = as.matrix(z_k)))
+  return(list(s = s, m = as.matrix(m_k)))
 }
 
-# Implement steps 3 & 4 -> calculate instrument z ------------------------------
-estimate_z <- function(dvar, xnames, w, fold_train, fold_test, ml){
+# =======================================================================
+# Using concentrating out approach
+# =======================================================================
+dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
+                                 model, ml, family, score){
+  # if using glmnet, make sure family is properly assigned
+  # if model is not poisson, let family default to binomial/gaussian
+  if(is.null(family)){
+    if(model == "poisson"){
+      family <- "poisson"
+    }
+    if(model == "linear" & length(unique(fold_train[,ynames])) == 2){
+      family <- "binomial"
+    }
+    else{
+      family <- "gaussian"
+    }
+  }
+
+  f1 <-  paste(xnames, collapse = " + ") %>%
+    paste0(ynames, " ~ ", .) %>%
+    as.formula
+
+  if(ml == "lasso"){
+    include <- as.numeric(names(fold_train) %in% dnames)
+
+    x_hat <-
+      coef(cv.glmnet(f1, fold_train, family = family, penalty.factor = include)) %>%
+      tidy() %>%
+      filter(row %in% xnames) %>%
+      pull(row)
+  }
+
+  if(ml == "rlasso"){
+    x_hat <-
+      coef(rlasso(f1, fold_train)) %>%
+      tidy() %>%
+      filter(names %in% xnames, x != 0) %>%
+      pull(names)
+  }
+
+  if(ml %in% c("lasso", "rlasso")){
+    # if no x's are chosen, run regression of y on 1
+    if(length(x_hat) == 0){
+      f2 <- paste0(ynames, "1", sep = " ~ ") %>%
+        as.formula
+    } else{
+      f2 <-  paste("0", paste(x_hat, collapse = " + "), sep = "+") %>%
+        paste0(ynames, " ~ ", .) %>%
+        as.formula
+    }
+
+    # fit regression of y on selected x
+    beta_hat <- glm(f2, family, fold_train)
+
+    # Find s = x_hat*beta_hat
+    s <- predict(beta_hat, fold_test, type = "response")
+
+    if(model == "linear"){
+      # weights for OLS is just 1s
+      weights <- rep(1, nrow(fold_train))
+    }
+    if(model == "poisson"){
+      # calculate weights w = exp(x_hat*beta_hat + d*theta_hat)
+      weights <- exp(predict(beta_hat, data = fold_test, type = "response"))
+    }
+  }
+
+  if(ml == "rf"){
+    x_hat <- regression_forest2(f1, fold_train)
+    s <- as.matrix(predict_rf2(x_hat, fold_test))
+    weights <- NULL
+  }
+
+  # step 3 + 4 find mu & calculate z = d - x_tilde*mu ------
+  # loop over each d to find mu
+  m_k <- map_dfc(dnames, estimate_m, xnames, weights, fold_train, fold_test, ml)
+
+  return(list(s = s, m = as.matrix(m_k)))
+}
+
+# =======================================================================
+# Steps 3 & 4: Calculate m = x_tilde*mu
+# =======================================================================
+estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml){
 
   # formula for running d on x
   f_select <- paste(xnames, collapse = " + ") %>%
@@ -381,18 +460,17 @@ estimate_z <- function(dvar, xnames, w, fold_train, fold_test, ml){
         as.formula
     }
     mu <- lm(f_reg, data = fold_train)
-    x_theta <- predict(mu, fold_test)
+    x_mu <- predict(mu, fold_test)
   }
 
   if(ml == "rf"){
     mu <- regression_forest2(f_select, fold_train)
-    x_theta <- predict_rf2(mu, fold_test)
+    x_mu <- predict_rf2(mu, fold_test)
   }
 
-  # return z = d - x_tilde*mu
-  d_test <- fold_test[,dvar]
-  z_k <- setNames(tibble(as.vector(d_test - x_theta)), dvar)
-  return(z_k)
+  # return m = x_tilde*mu
+  m_k <- setNames(tibble(as.vector(x_mu)), dvar)
+  return(m_k)
 }
 
 
