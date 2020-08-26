@@ -92,7 +92,7 @@ psi_plpr_op <- function(theta, Y, D, m, s){
 # (Y - exp(D*theta) * s(X) * z(theta, X)) *
 # (D - exp(theta) * m(X) * z(theta, X))
 # where z(theta, X) = 1 / (exp(theta) * m(X) + 1 - m(X))
-psi_plpr_with_grad <- function(theta, Y, D, s, m) {
+psi_plpr_with_grad <- function(theta, Y, D, m, s) {
   # first verify that D is univariate and 0/1 valued
   K <- ncol(D)
   nvals <- length(unique(D))
@@ -116,18 +116,18 @@ psi_plpr_with_grad <- function(theta, Y, D, s, m) {
 }
 
 #' @export
-psi_plpr_conc <- function(theta, Y, D, s, m) {
-  return(mean(psi_plpr_with_grad(theta, Y, D, s, m)[[1]]))
+psi_plpr_conc <- function(theta, Y, D, m, s) {
+  return(mean(psi_plpr_with_grad(theta, Y, D, m, s)[[1]]))
 }
 
 #' @export
-psi_plpr_grad_conc <- function(theta, Y, D, s, m) {
-  return(mean(psi_plpr_with_grad(theta, Y, D, s, m)[[2]]))
+psi_plpr_grad_conc <- function(theta, Y, D, m, s) {
+  return(mean(psi_plpr_with_grad(theta, Y, D, m, s)[[2]]))
 }
 
 #' @export
-psi_plpr_op_conc <- function(theta, Y, D, s, m) {
-  vals <- psi_plpr_with_grad(theta, Y, D, s, m)[[1]]
+psi_plpr_op_conc <- function(theta, Y, D, m, s) {
+  vals <- psi_plpr_with_grad(theta, Y, D, m, s)[[1]]
   return(mean(vals^2))
 }
 
