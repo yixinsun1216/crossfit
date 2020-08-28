@@ -83,9 +83,7 @@ psi_plpr_op <- function(theta, Y, D, m, s){
   return((1 / N) *  op %*% t(op))
 }
 
-# Concentrating out approach for poisson
-
-
+# Concentrating out approach for poisson -------------------------------------
 #' @export
 # partially linear poisson model
 # recall this is:

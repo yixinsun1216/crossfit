@@ -123,24 +123,24 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, nfolds = 5,
 #' @export
 dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
   if(model == "poisson" & score == "finite"){
-    psi <<- psi_plpr
-    psi_grad <<- psi_plpr_grad
-    psi_op <<- psi_plpr_op
+    psi <- psi_plpr
+    psi_grad <- psi_plpr_grad
+    psi_op <- psi_plpr_op
   }
   if(model == "poisson" & score == "concentrate"){
-    psi <<- psi_plpr_conc
-    psi_grad <<- psi_plpr_grad_conc
-    psi_op <<- psi_plpr_op_conc
+    psi <- psi_plpr_conc
+    psi_grad <- psi_plpr_grad_conc
+    psi_op <- psi_plpr_op_conc
   }
   if(model == "linear" & score == "finite"){
-    psi <<- psi_plr
-    psi_grad <<- psi_plr_grad
-    psi_op <<- psi_plr_op
+    psi <- psi_plr
+    psi_grad <- psi_plr_grad
+    psi_op <- psi_plr_op
   }
   if(model == "linear" & score == "concentrate"){
-    psi <<- psi_plr_conc
-    psi_grad <<- psi_plr_grad_conc
-    psi_op <<- psi_plr_op_conc
+    psi <- psi_plr_conc
+    psi_grad <- psi_plr_grad_conc
+    psi_op <- psi_plr_op_conc
   }
   if(model == "poisson" & ml == "rlasso"){
     stop("rlasso currently only availalbe for linear model")
@@ -186,7 +186,7 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
   if(score == "concentrate"){
     instruments <-
       map2(folds$train, folds$test, function(x, y)
-        dml_fold_concentrate(x, y, xnames, ynames, dnames, model, ml))
+        dml_fold_concentrate(x, y, xnames, ynames, dnames, ml))
   }
 
   s <- map(instruments, pluck(1))
@@ -255,11 +255,9 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml,
   if(is.null(family)){
     if(model == "poisson"){
       family <- "poisson"
-    }
-    if(model == "linear" & length(unique(fold_train[,ynames])) == 2){
+    }else if(model == "linear" & length(unique(fold_train[,ynames])) == 2){
       family <- "binomial"
-    }
-    else{
+    } else{
       family <- "gaussian"
     }
   }
@@ -317,18 +315,20 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml,
     }
     if(model == "poisson"){
       # calculate weights w = exp(x_hat*beta_hat + d*theta_hat)
-      weights <- exp(predict(beta_hat, data = fold_test, type = "response"))
+      weights <- exp(predict(beta_hat, data = fold_train))
     }
   }
 
   if(ml == "rf"){
-    f1 <-  paste(xnames, collapse = " + ") %>%
-      paste0(ynames, " ~ ", .) %>%
-      as.formula
+    beta_hat <- glm(f1, family, fold_train)
+    coefs <-
+      tidy(beta_hat) %>%
+      filter(term %in% c("(Intercept)", xnames))
+
+    s <- cbind(1, as.matrix(fold_test[,xnames])) %*% as.matrix(coefs$estimate)
 
     x_hat <- regression_forest2(f1, fold_train)
-    s <- as.matrix(predict_rf2(x_hat, fold_test))
-    weights <- NULL
+    weights <- as.matrix(exp(predict_rf2(x_hat)))
   }
 
   # step 3 + 4 find mu & calculate z = d - x_tilde*mu ------
@@ -341,8 +341,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model, ml,
 # =======================================================================
 # Using concentrating out approach
 # =======================================================================
-dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
-                                 model, ml){
+dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames, ml){
   f1 <-  paste(xnames, collapse = " + ") %>%
     paste0(ynames, " ~ ", .) %>%
     as.formula
@@ -432,16 +431,16 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml){
         as.formula
     }
     mu <- lm(f_reg, data = fold_train)
-    x_mu <- predict(mu, fold_test)
+    m_k <- predict(mu, fold_test)
   }
 
   if(ml == "rf"){
-    mu <- regression_forest2(f_select, fold_train)
-    x_mu <- predict_rf2(mu, fold_test)
+    mu <- regression_forest2(f_select, fold_train, sample.weights = weights)
+    m_k <- predict_rf2(mu, fold_test)
   }
 
   # return m = x_tilde*mu
-  m_k <- setNames(tibble(as.vector(x_mu)), dvar)
+  m_k <- setNames(tibble(as.vector(m_k)), dvar)
   return(m_k)
 }
 

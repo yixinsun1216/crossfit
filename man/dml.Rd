@@ -15,7 +15,7 @@ dml(
   workers = 1,
   drop_na = FALSE,
   family = NULL,
-  poly_degree = 3,
+  poly_degree = 1,
   ...
 )
 }

@@ -4,7 +4,7 @@
 \alias{regression_forest2}
 \title{Auxilary functions to main dml process}
 \usage{
-regression_forest2(f, d, num.trees = 1000, ...)
+regression_forest2(f, d, ...)
 }
 \description{
 Auxilary functions to main dml process
