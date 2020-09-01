@@ -73,7 +73,7 @@ options:
     2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
 files:
   dicy-instance.yaml-ParsedYAML:
-    timeStamp: 2020-08-27T22:24:57.985Z
+    timeStamp: 2020-09-01T19:52:51.472Z
     jobNames: []
     value:
       severity: info
@@ -134,20 +134,20 @@ files:
         2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
     type: ParsedYAML
   dml_lasso.tex:
-    timeStamp: 2020-08-28T15:16:45.027Z
+    timeStamp: 2020-09-01T19:52:51.411Z
     jobNames: []
-    hash: hjBGTtlndxYCyIZ9jytd7oh/IslK82FX6fg9mROd4lA=
+    hash: fpPrptKRCCoF93BJrwox80p6DpYNPdnHdumXuIfMnF4=
     type: LaTeX
     subType: article
   'C:\Users\Yixin Sun\AppData\Roaming\dicy\config.yaml':
-    timeStamp: 2020-08-27T17:09:52.790Z
+    timeStamp: 2020-08-30T13:53:10.797Z
     jobNames: []
     type: YAML
   x.y-Nil:
     jobNames: []
     type: Nil
   dml_lasso.fls-ParsedFileListing:
-    timeStamp: 2020-08-28T15:16:49.475Z
+    timeStamp: 2020-08-28T17:54:24.227Z
     jobNames: []
     value:
       messages: []
@@ -429,7 +429,7 @@ files:
       calls: []
     type: ParsedFileListing
   dml_lasso.log-ParsedLaTeXLog:
-    timeStamp: 2020-08-28T15:16:49.558Z
+    timeStamp: 2020-08-28T17:56:33.281Z
     jobNames: []
     value:
       messages:
@@ -2025,17 +2025,32 @@ files:
             range:
               start: 605
               end: 605
-        - severity: warning
+        - severity: error
           name: pdfTeX
-          category: Package hyperref
-          text: 'old toc file detected, not used; run LaTeX again.'
-          source:
-            file: dml_lasso.tex
+          text: Undefined control sequence
           log:
             file: dml_lasso.log
             range:
-              start: 610
-              end: 610
+              start: 615
+              end: 616
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 63
+              end: 63
+        - severity: error
+          name: pdfTeX
+          text: Undefined control sequence
+          log:
+            file: dml_lasso.log
+            range:
+              start: 624
+              end: 625
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 117
+              end: 117
         - severity: info
           name: pdfTeX
           category: LaTeX Font
@@ -2048,8 +2063,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 618
-              end: 618
+              start: 633
+              end: 633
         - severity: info
           name: pdfTeX
           category: LaTeX Font
@@ -2064,8 +2079,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 623
-              end: 624
+              start: 638
+              end: 639
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2078,8 +2093,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 626
-              end: 626
+              start: 641
+              end: 641
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2092,8 +2107,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 627
-              end: 627
+              start: 642
+              end: 642
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2106,8 +2121,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 629
-              end: 629
+              start: 645
+              end: 645
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2120,8 +2135,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 630
-              end: 630
+              start: 646
+              end: 646
         - severity: info
           name: pdfTeX
           category: Package rerunfilecheck
@@ -2133,8 +2148,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 631
-              end: 632
+              start: 647
+              end: 648
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2147,31 +2162,31 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 633
-              end: 633
+              start: 649
+              end: 649
       inputs: []
       outputs:
         - dml_lasso.pdf
       calls: []
     type: ParsedLaTeXLog
   dml_lasso.log:
-    timeStamp: 2020-08-28T15:16:48.579Z
+    timeStamp: 2020-09-01T19:52:57.523Z
     jobNames: []
-    hash: rpxJ36y2a67ulo3PXStRUe8jiQMr8IfEkgR7F7G1N0g=
+    hash: YUsDFDm+30PM4gdjWZEJjXsalMShVbYJJcaMy4PbYTk=
     type: LaTeXLog
     subType: pdfTeX
   dml_lasso.aux:
-    timeStamp: 2020-08-28T15:16:48.350Z
+    timeStamp: 2020-09-01T19:52:57.289Z
     jobNames: []
-    hash: N1jxeikYs/q0/Q8Zx3WsNKzVjxnT7SPJGbLDOWSqqrI=
+    hash: VeRuUFkRVzoIguAM3TjI4uPxuOI0wgzAYcollaqf7NE=
     type: LaTeXAuxilary
   dml_lasso.fls:
-    timeStamp: 2020-08-28T15:16:48.584Z
+    timeStamp: 2020-09-01T19:52:57.530Z
     jobNames: []
-    hash: V9TOkVDVU0FC4TyfKdKZywIQX4dU3lt4+KyqT3YOJu8=
+    hash: mm9AKr6RazW/IsbjjrkExHUmdCnktX/EZTsNmH2Lz+M=
     type: FileListing
   dml_lasso.aux-ParsedLaTeXAuxilary:
-    timeStamp: 2020-08-28T15:16:49.408Z
+    timeStamp: 2020-08-28T17:54:24.203Z
     jobNames: []
     value:
       commands:
@@ -2738,7 +2753,7 @@ files:
     timeStamp: 2017-04-10T02:58:41.639Z
     jobNames: []
   dml_lasso.out:
-    timeStamp: 2020-08-28T15:16:48.352Z
+    timeStamp: 2020-09-01T19:52:57.310Z
     jobNames: []
     hash: P+NLSW+7xh/dhBejL85Z9oGwAa4t680t6VfXlb7I4GA=
     type: OUT
@@ -2770,9 +2785,9 @@ files:
     timeStamp: 2009-07-14T18:37:46.000Z
     jobNames: []
   dml_lasso.toc:
-    timeStamp: 2020-08-28T15:16:48.376Z
+    timeStamp: 2020-09-01T19:52:57.340Z
     jobNames: []
-    hash: bRzaXioGwmgVOrbq53g4N5eiRJcbLxANTxe4QMrwGn8=
+    hash: qBr+5he2byw+CcQ9GerPaEsmz5VmudpA3nnEE1BDFFs=
     type: TableOfContents
   'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty':
     timeStamp: 2016-06-09T18:36:18.000Z
@@ -2790,14 +2805,14 @@ files:
     timeStamp: 2009-07-14T18:37:46.000Z
     jobNames: []
   dml_lasso.pdf:
-    timeStamp: 2020-08-28T15:16:48.576Z
+    timeStamp: 2020-09-01T19:52:57.519Z
     jobNames: []
-    hash: PYW13PybZAYAvbnJpQbuSqDzG8j6A4iyJolkSzVzazs=
+    hash: 9wpSdwcnj3NEEthGR/DU5zJX5Ozg8CqqnHxS1+A0ce8=
     type: PortableDocumentFormat
   dml_lasso.synctex.gz:
-    timeStamp: 2020-08-28T15:16:48.577Z
+    timeStamp: 2020-09-01T19:52:57.521Z
     jobNames: []
-    hash: QckVR0wNtqO1hiFfJvRyzEz6oeW2suDNU+Bt5iiU+nk=
+    hash: vXzC9WBPyPp81kDwZKuxzu0tV73zBb4cbjusBPsxD3c=
     type: SyncTeX
 rules:
   - name: ApplyOptions

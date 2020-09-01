@@ -1,6 +1,6 @@
 PWD C:/Users/Yixin Sun/Documents/Github/crossfit/notes
 INPUT C:/Users/Yixin Sun/AppData/Local/MiKTeX/2.9/miktex/data/le/pdftex/pdflatex.fmt
-INPUT dml_lasso.tex
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.tex
 OUTPUT dml_lasso.log
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/base/article.cls
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/base/article.cls
@@ -165,8 +165,8 @@ INPUT C:/Program Files/MiKTeX 2.9/tex/generic/pgf/frontendlayer/tikz/libraries/t
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex
-INPUT dml_lasso.aux
-INPUT dml_lasso.aux
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.aux
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.aux
 OUTPUT dml_lasso.aux
 INPUT C:/Program Files/MiKTeX 2.9/tex/context/base/supp-pdf.mkii
 INPUT C:/Program Files/MiKTeX 2.9/tex/context/base/supp-pdf.mkii
@@ -178,13 +178,13 @@ INPUT C:/Program Files/MiKTeX 2.9/tex/latex/hyperref/nameref.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/hyperref/nameref.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/oberdiek/gettitlestring.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/oberdiek/gettitlestring.sty
-INPUT dml_lasso.out
-INPUT dml_lasso.out
-INPUT dml_lasso.out
-INPUT dml_lasso.out
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
 OUTPUT dml_lasso.pdf
-INPUT ./dml_lasso.out
-INPUT ./dml_lasso.out
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
 OUTPUT dml_lasso.out
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmr17.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmr12.tfm
@@ -211,8 +211,8 @@ INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmr12.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmbx12.tfm
-INPUT dml_lasso.toc
-INPUT dml_lasso.toc
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.toc
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.toc
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmbx10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmmi10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmsy10.tfm
@@ -234,9 +234,9 @@ INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam5.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
-INPUT dml_lasso.aux
-INPUT ./dml_lasso.out
-INPUT ./dml_lasso.out
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.aux
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
 INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb

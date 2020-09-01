@@ -435,7 +435,7 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml){
   }
 
   if(ml == "rf"){
-    mu <- regression_forest2(f_select, fold_train, sample.weights = weights)
+    mu <- regression_forest2(f_select, fold_train, sample.weights = w)
     m_k <- predict_rf2(mu, fold_test)
   }
 
