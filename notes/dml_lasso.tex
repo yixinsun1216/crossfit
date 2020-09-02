@@ -60,7 +60,7 @@ The entries in the Hessian matrix that we need to compute $\mu$ are:
 	J_{\theta \beta}=-E\left[D X^{\prime}\right] \\
   J_{\beta \beta}=-E\left[X X^{\prime}\right]
 \end{gather*}
-yielding this \expression for $\mu$:
+yielding this expression for $\mu$:
 $$	\mu = E\left[D X^{\prime}\right]\left(E\left[X X^{\prime}\right]\right)^{-1}$$
 The Neyman orthogonal score is then given by:
 $$ \psi(W ; \theta, \eta)=\left(Y-D \theta-X^{\prime} \beta\right)(D-\mu X) $$
@@ -70,13 +70,14 @@ These steps give a single point estimate, $\hat{\theta}$ and an associated covar
 
 \begin{enumerate}
 	\item Make $k$  splits of the data into training and estimation sets. Default is $k = 5$ folds in our implementation
-
-	For each $k = 1, ... K$, implement the following steps:
-	\item In a \textbf{training} set $k$, use a linear LASSO of $Y$ on $D$ and $X$ to select the covariates (making sure $D$ is always included), $\hat{X}_k$. Then fit a linear regression of $Y$ on $\hat{X}_k$ and $D$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
-	\item In the \textbf{estimation} set $k$, compute $s_k = X\hat{\beta}_k$.
-	\item In the \textbf{training} set $k$, compute a linear LASSO of $D_j$ on $X$ to select covariates $\tilde{X}_{k, j}$, for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k, j}$, and denote this $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu}_k$.
-	\item In the \textbf{estimation} set, construct
-  $$m_k = X\tilde{\mu}_k$$
+	\item For each $k = 1, ... K$, implement the following steps:
+  \begin{enumerate}
+    \item In a \textbf{training} set $k$, use a linear LASSO of $Y$ on $D$ and $X$ to select the covariates (making sure $D$ is always included), $\hat{X}_k$. Then fit a linear regression of $Y$ on $\hat{X}_k$ and $D$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
+  	\item In the \textbf{estimation} set $k$, compute $s_k = \hat{X}_k\hat{\beta}_k$.
+  	\item In the \textbf{training} set $k$, compute a linear LASSO of $D_j$ on $X$ to select covariates $\tilde{X}_{k, j}$, for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k, j}$, and denote this $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu}_k$.
+  	\item In the \textbf{estimation} set, construct
+    $$m_k = \tilde{X}_k\tilde{\mu}_k$$
+  \end{enumerate}
 	\item Using the DML2 algorithm, for each $k$, construct the average of the moment:
 	$$\frac{1}{n} \sum_{i=1}^{n}(D_i - m_{i})^{\prime}\left({Y}_{i}- s_i -D_{i} \theta^{\prime}\right) $$
 	Then average over each of these folds to get the final objective function, which we use to compute $\hat{\theta}$ by minimizing squared deviations from zero (if $D$ is univariate, we can just do root-finding).
@@ -95,7 +96,7 @@ These steps give a single point estimate, $\hat{\theta}$ and an associated covar
 	\end{aligned}
 	$$
 	And we can compute:
-	$$\widehat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}$$
+	$$\hat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}$$
 \end{enumerate}
 
 \subsection{The Poisson Setting - LASSO Implementation}
@@ -114,11 +115,11 @@ The entries in the Hessian matrix that we need to compute $\mu$ are:
 	J_{\theta, \beta} &= -E\left[D'X\exp(D\theta + X\beta)\right] \\
 	J_{\beta, \beta} &= -E\left[X'X\exp(D\theta + X\beta)\right]
 \end{align*}
-yielding this \expression for $\mu$:
+yielding this expression for $\mu$:
 \begin{equation*}
 	\mu = E\left[D'X\exp(D\theta + X\beta)\right]\left(E\left[X'X\exp(D\theta + X\beta)\right]\right)^{-1}
 \end{equation*}
-I \textit{think} this constructing is revealing, since it looks like weighted least squares, with $D$ as the outcome, $X$ as the covariates, and weights equal to $\exp(D\theta + X\beta)$.
+This construction is revealing, since it looks like weighted least squares, with $D$ as the outcome, $X$ as the covariates, and weights equal to $\exp(D\theta + X\beta)$.
 
 The Neyman Orthogonal moment for Poisson regression is then:
 \begin{equation*}
@@ -127,17 +128,17 @@ The Neyman Orthogonal moment for Poisson regression is then:
 
 \noindent \underline{Implementation}:
 \begin{enumerate}
-	\item Make a bunch of splits of the data into training and estimation sets.
-	\item In a \textbf{training} set $k$, use Poisson LASSO of $Y$ on $D$ and $X$ to select the covariates, $\hat{X}_k$ (making sure $D$ is always included). Then fit a Poisson regression of $Y$ on $\hat{X}_k$ and $D$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
-	\item In the corresponding \textbf{estimation} set $k$, compute $s_k = X \hat{\beta}_k$.
-	\item Back in the \textbf{training} set $k$, compute weights $w_k = \exp(D\hat{\theta}_k + X\hat{\beta}_k)$ using the results from step 2.  Compute a linear LASSO of $D_j$ on $X$ using those weights to select covariates $\tilde{X}_{k,j}$ for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k,j}$, and denote this $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu}_k$.
-		\begin{itemize}
-			\item Should we be using weights in the linear regression too?
-		\end{itemize}
-	\item In \textbf{estimation} set, construct
-	\begin{gather*}
-		m_k = X\tilde{\mu_k}
-	\end{gather*}
+	\item Make $k$ splits of the data into training and estimation sets. Default is $k=5$ in our implementation.
+  \item For each $k = 1, ..., K$, implement the following steps:
+  \begin{enumerate}
+    \item In a \textbf{training} set $k$, use Poisson LASSO of $Y$ on $D$ and $X$ to select the covariates, $\hat{X}_k$ (making sure $D$ is always included). Then fit a Poisson regression of $Y$ on $\hat{X}_k$ and $D$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
+  	\item In the corresponding \textbf{estimation} set $k$, compute $s_k = \hat{X}_k \hat{\beta}_k$.
+  	\item Back in the \textbf{training} set $k$, compute weights $w_k = \exp(D\hat{\theta}_k + X\hat{\beta}_k)$ using the results from step 2.  Compute a linear LASSO of $D_j$ on $X$ using those weights to select covariates $\tilde{X}_{k,j}$ for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k,j}$, and denote this $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu}_k$.
+  	\item In \textbf{estimation} set, construct
+  	\begin{gather*}
+  		m_k = \tilde{X}_k\tilde{\mu}_k
+  	\end{gather*}
+  \end{enumerate}
 	\item Using the DML2 algorithm, for each $k$, construct the average of the moment:
 	$$
 	\frac{1}{n} \sum_{i=1}^{n}\left(D_{i}-m_{i}\right)^{\prime}\left(Y_{i}-\exp(s_{i}-D_{i} \theta^{\prime})\right)
@@ -146,16 +147,16 @@ The Neyman Orthogonal moment for Poisson regression is then:
 	$\hat{\theta}$ by minimizing squared deviations from zero (if $D$ is univariate, we can just do root-finding).
 	\item To get a covariance matrix for this estimate of $\theta$, we first compute $J_0$, defined by:
 	\begin{align*}
-		J_0 &= \frac{\partial}{\partial \theta} E_W \left[\psi(Y,D,X,\widehat{\theta},\widetilde{\theta}, \widetilde{\beta}) \right]\\
-		&= -E_W\left[D'\exp(D\widehat{\theta} + s)(D - X\widetilde{\mu}) \right]
+		J_0 &= \frac{\partial}{\partial \theta} E_W \left[\psi(Y,D,X,\hat{\theta},\tilde{\theta}, \tilde{\beta}) \right]\\
+		&= -E_W\left[D'\exp(D\hat{\theta} + s)(D - X\hat{\mu}) \right]
 	\end{align*}
 	Next we compute $\Psi$:
 	\begin{align*}
-		\Psi &= E_W\left[\psi(W, \widehat{\theta},\widetilde{\theta}, \widetilde{\beta})\psi(W, \widehat{\theta},\widetilde{\theta}, \widetilde{\beta})'\right] \\
-			&= E_W\left[(Y - \exp(D\widehat{\theta} + s))^2(D - X\widetilde{\mu})(D - X\widetilde{\mu})'\right]
+		\Psi &= E_W\left[\psi(W, \hat{\theta},\tilde{\theta}, \tilde{\beta})\psi(W, \hat{\theta},\tilde{\theta}, \tilde{\beta})'\right] \\
+			&= E_W\left[(Y - \exp(D\hat{\theta} + s))^2(D - X\tilde{\mu})(D - X\tilde{\mu})'\right]
 	\end{align*}
-	In both cases, I think we'd compute each of these as the average over points in the estimation set $k$, and then average over each of the estimation sets within a split structure.\footnote{For an example of this averaging, see the formula for $\widehat{J}_0$ on page C27 of the original DML paper.} We then get:
-	$$\widehat{Var}(\hat{\theta}) = \frac{1}{n} J_0^{-1} \Psi J_0^{-1}$$
+	In both cases, we compute each of these as the average over points in the estimation set $k$, and then average over each of the estimation sets within a split structure.\footnote{For an example of this averaging, see the formula for $\hat{J}_0$ on page C27 of the original DML paper.} We then get:
+	$$\hat{Var}(\hat{\theta}) = \frac{1}{n} J_0^{-1} \Psi J_0^{-1}$$
 
 \end{enumerate}
 
@@ -183,27 +184,30 @@ $$\ell(W ; \theta, \beta)=-\frac{(Y-D \theta-\beta(X))^{2}}{2}$$
 Taking FOC with respect to $\beta$, we get:
 \begin{align*}
 	0 = E[Y - D\theta - \beta(X)| X] \\
+  0 = E[Y- D\theta|X] - \beta(X) \\
 	\Rightarrow \beta(X) = E[Y - D\theta |X]
 \end{align*}
-So we get the following Neyman orthogonal score
+Letting $g(x) = E[Y|X]$ and $m(x) = E[D|X]$, we get the following Neyman orthogonal score
 \begin{align*}
 	\psi\left(W ; \theta, \beta_{\theta}\right) &=-\frac{1}{2} \frac{d\left\{Y-D \theta-E[Y-D \theta | X]\right\}^{2}}{d \theta} \\
 	&=\left(D-E[D | X]\right) \times\left(Y-E[Y | X]-\left(D-E[D | X]\right) \theta\right) \\
-	&=\left(D-m(X)\right) \times\left(Y- s(x) - (D - m(x) )\theta\right)
+	&=\left(D-m(X)\right) \times\left(Y- g(x) - (D - m(x) )\theta\right)
 \end{align*}
+
+Note that we now use ML methods to calculate $E[D|X]$ and $E[Y|X]$, which we plug into the score function we derived above. This is different from the finite-nuisance parameter approach, which uses ML to calculate the finite-nuisance parameter component, $s = X\beta$. The implication of this is that the ML steps for the concentrating-out approach are fairly uniform across ML methods and model types; as you can see below, what changes is just the score function that we are optimizing over.
 
 \noindent \underline{Implementation}:
 \begin{enumerate}
-	\item Make $k$  splits of the data into training and estimation sets. Default is $k = 5$ folds in our implementation
-
-	For each $k = 1, ... K$, implement the following steps:
-	\item In a \textbf{training} set $k$, use a linear LASSO to generate a model of  $Y$ on and $X$ to select the covariates, $\hat{X}_k$. Then fit a linear regression of $Y$ on $\hat{X}_k$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
-	\item In the \textbf{estimation} set $k$, compute $s_k = \hat{X}_k\hat{\beta}_k$
-	\item In the \textbf{training} set $k$, compute a linear LASSO of $D_j$ on $X$ to select covariates $\tilde{X}_{k,j}$ for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k,j}$, and denote the estimated coefficients as $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu_k}$.
-	\item In the \textbf{estimation} set, construct
-  $$m_k = X\tilde{\mu}_k$$
+	\item Make $k$  splits of the data into training and estimation sets. Default is $k = 5$ folds in our implementation.
+	\item For each $k = 1, ... K$, implement the following steps:
+  \begin{enumerate}
+    \item In a \textbf{training} set $k$, use a linear LASSO to generate a model of  $Y$ on and $X$ to select the covariates, $\hat{X}_k$. Then fit a linear regression of $Y$ on $\hat{X}_k$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
+  	\item In the \textbf{estimation} set $k$, compute $g_k = E[Y|X]$ using the model generated in the previous step.
+  	\item In the \textbf{training} set $k$, compute a linear LASSO of $D_j$ on $X$ to select covariates $\tilde{X}_{k,j}$ for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k,j}$, and denote the estimated coefficients as $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu_k}$.
+  	\item In the \textbf{estimation} set, compute $m_k = E[D|X]$, using the model generated from the previous step.
+  \end{enumerate}
 	\item Using the DML2 algorithm, for each $k$, construct the average of the moment:
-	$$\frac{1}{n} \sum_{i=1}^{n} (D_i - m_{i})^\prime\left({Y}_{i}- s_i -(D_{i} - m_i) \theta^{\prime}\right)$$
+	$$\frac{1}{n} \sum_{i=1}^{n} (D_i - m_{i})^\prime\left({Y}_{i}- g_i -(D_{i} - m_i) \theta^{\prime}\right)$$
 	Then average over each of these folds to get the final objective function, which we use to compute $\hat{\theta}$ by minimizing squared deviations from zero.
 	\item To get a covariance matrix for this estimate of $\theta$, we first compute $J_0$ defined by:
 	$$
@@ -215,45 +219,45 @@ So we get the following Neyman orthogonal score
 	$$
 	\begin{aligned}
 	\Psi &=E_{W}\left[\psi(W, \theta, \tilde{\theta}, \hat{\beta}) \psi(W, \theta, \tilde{\theta}, \hat{\beta})^{\prime}\right] \\
-	\psi(W, \hat{\theta}, \tilde{\theta}, \hat{\beta}) &= (Y_{i}- s_i - (D_{i} - m_i)\hat{\theta}^{\prime}) (D_i - m_i)
+	\psi(W, \hat{\theta}, \tilde{\theta}, \hat{\beta}) &= (Y_{i}- g_i - (D_{i} - m_i)\hat{\theta}^{\prime}) (D_i - m_i)
 	\end{aligned}
 	$$
 	And we can compute:
-	$$\widehat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}$$
+	$$\hat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}$$
 \end{enumerate}
 
 \subsection{The Poisson Setting - LASSO implementation}
 We have only solved the orthogonal score for the case when $D$ is a univariate binary variable. Consider again for the regression case, the function $l$ is
 \begin{equation*}
-	l(W; \theta, \beta) = Y(D\theta + X\beta) - \exp(D\theta + \beta(X))
+	l(W; \theta, \beta) = Y(D\theta + X\beta(X)) - \exp(D\theta + \beta(X))
 \end{equation*}
 
-Taking FOC with respect to $\beta$, we get:
+\noindent Taking FOC with respect to $\beta$, we get:
 \begin{align*}
 	\beta_\theta(X) &= E[\exp(D\theta + \beta(X)) | X] \\
   &= \exp(\beta(X)) E[\exp(D\theta)|X] \\
   &= \exp(\beta(x)) \left(Pr(D = 1 | X)\exp(\theta) + (1 - Pr(D = 1 | X))\right) \\
 	&= \exp(\beta(x)) \left(E[D | X]\exp(D\theta) + (1-E[D|X]))\right)
 \end{align*}
-Let $s(X) = E[Y|X]$ and $m(X) = E[D|X]$ and rearrange to get:
-$$\exp \left(\beta_{\theta}(X)\right)=\frac{s(X)}{\exp (\theta) m(X)+1-m(X)}$$
+As before, let $g(X) = E[Y|X]$ and $m(X) = E[D|X]$ and rearrange to get:
+$$\exp \left(\beta_{\theta}(X)\right)=\frac{g(X)}{\exp (\theta) m(X)+1-m(X)}$$
 
 From this, we have the following:
 \begin{gather*}
-	\beta_\theta(X) = \log\left(\frac{s(X)}{\exp (\theta) m(X)+1-m(X)}\right) \\
+	\beta_\theta(X) = \log\left(\frac{g(X)}{\exp (\theta) m(X)+1-m(X)}\right) \\
   \partial_\theta \beta_\theta = -\frac{m(X)\exp(\theta)}{m(X)\exp(\theta) + (1-m(x))}
 \end{gather*}
 
 Putting this altogether and plugging into the score function, we get:
-$$\psi(W ; \theta, s(X), m(X))=\left(Y-\frac{\exp (D \theta) s(X)}{\exp (\theta) m(X)+1-m(X)}\right)\left(D-\frac{\exp (\theta) m(X)}{\exp (\theta) m(X)+1-m(X)}\right)$$
+$$\psi(W ; \theta, g(X), m(X))=\left(Y-\frac{\exp (D \theta) g(X)}{\exp (\theta) m(X)+1-m(X)}\right)\left(D-\frac{\exp (\theta) m(X)}{\exp (\theta) m(X)+1-m(X)}\right)$$
 
 \noindent \underline{Implementation}: \\
-Steps 1 - 5 are the same as the previous
+Steps 1 and 2 are the same as the linear model in the previous section.
 \begin{enumerate}
-  \setcounter{enumi}{5}
+  \setcounter{enumi}{2}
 	\item Using the DML2 algorithm, for each $k$, construct the average of the moment:
   \begin{gather*}
-  	\frac{1}{n}\sum_{i = 1}^n \left(Y_i-\frac{\exp (D_i \theta) s_i}{\exp (\theta) m_i+1-m_i}\right)\left(D_i-\frac{\exp (\theta) m_i}{\exp (\theta) m_i+1-m_i}\right)
+  	\frac{1}{n}\sum_{i = 1}^n \left(Y_i-\frac{\exp (D_i \theta) g_i}{\exp (\theta) m_i+1-m_i}\right)\left(D_i-\frac{\exp (\theta) m_i}{\exp (\theta) m_i+1-m_i}\right)
   \end{gather*}
 	\item To get a covariance matrix for this estimate of $\theta$, we first compute $J_0$ defined by
 	\begin{align*}
@@ -262,12 +266,12 @@ Steps 1 - 5 are the same as the previous
 	To break down this calculation, let
 	\begin{align*}
 		P_i &= \exp (\theta) m_i+1-m_i \\
-		A_i &= \frac{\exp (D_i \theta) s_i}{P} \\
+		A_i &= \frac{\exp (D_i \theta) g_i}{P} \\
 		B_i &= \frac{\exp (\theta) m_i}{P}
 	\end{align*}
 	So we have
   \begin{align*}
-  	J_0 = E_W\left[ A \times \left(\frac{\exp(\theta)m }{P} + \frac{\exp(\theta)^2s^2}{P^2}\right) + B \times \left(\frac{D\exp(D\theta)s}{P} + \frac{\exp(D\theta)s}{P^2}\right) \right]
+  	J_0 = E_W\left[ A \times \left(\frac{\exp(\theta)m }{P} + \frac{\exp(\theta)^2g^2}{P^2}\right) + B \times \left(\frac{D\exp(D\theta)g}{P} + \frac{\exp(D\theta)g}{P^2}\right) \right]
   \end{align*}
 	As always, we have
 	\begin{gather*}
@@ -275,7 +279,7 @@ Steps 1 - 5 are the same as the previous
 	\end{gather*}
 	And we can compute
 	\begin{gather*}
-		\widehat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}
+		\hat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}
 	\end{gather*}
 \end{enumerate}
 
@@ -286,9 +290,11 @@ Regression forest can be used instead of LASSO for both the linear and Poisson c
 \begin{enumerate}
 	\item Make $k$  splits of the data into training and estimation sets. Default is $k = 5$ folds in our implementation
 
-	For each $k = 1, ... K$, implement the following steps:
-	\item In \textbf{training} set $k$, use a regression forest to generate a model of $Y$ on and $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $s_k = E[Y|X]$.
-	\item In \textbf{training} set $k$, use a regresison forest to generate a model of $D_j$ on $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $m_{k, j} = E[D_j|X]$. Collect to form $m_k = (m'_{k,1}, m'_{k,2}, . . ., m'_{k, J})$
-	\item The rest of the implementation should follow steps 6 and 7 of either the linear or Poisson setting, depending on your model.
+	\item For each $k = 1, ... K$, implement the following steps:
+  \begin{enumerate}
+    \item In \textbf{training} set $k$, use a regression forest to generate a model of $Y$ on and $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $g_k = E[Y|X]$.
+    \item In \textbf{training} set $k$, use a regresison forest to generate a model of $D_j$ on $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $m_{k, j} = E[D_j|X]$. Collect to form $m_k = (m'_{k,1}, m'_{k,2}, . . ., m'_{k, J})$
+    \item The rest of the implementation should follow steps 6 and 7 of either the linear or Poisson setting, depending on your model.
+  \end{enumerate}
 \end{enumerate}
 \end{document}

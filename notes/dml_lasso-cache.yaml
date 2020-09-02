@@ -134,9 +134,9 @@ files:
         2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
     type: ParsedYAML
   dml_lasso.tex:
-    timeStamp: 2020-09-02T19:54:53.254Z
+    timeStamp: 2020-09-02T20:35:28.673Z
     jobNames: []
-    hash: fpPrptKRCCoF93BJrwox80p6DpYNPdnHdumXuIfMnF4=
+    hash: hDNvtBA9SgAOfRNCdEvLpQMERE2vTyzID5YjU390SDA=
     type: LaTeX
     subType: article
   'C:\Users\Yixin Sun\AppData\Roaming\dicy\config.yaml':
@@ -147,7 +147,7 @@ files:
     jobNames: []
     type: Nil
   dml_lasso.fls-ParsedFileListing:
-    timeStamp: 2020-08-28T17:54:24.227Z
+    timeStamp: 2020-09-02T20:34:25.968Z
     jobNames: []
     value:
       messages: []
@@ -214,9 +214,6 @@ files:
         - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy10.pfb'
         - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy8.pfb'
         - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmti10.pfb'
-        - >-
-          C:\Program Files\MiKTeX
-          2.9\fonts\type1\public\amsfonts\cmextra\cmex9.pfb
         - 'C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii'
         - 'C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty'
         - 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty'
@@ -373,7 +370,6 @@ files:
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty'
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amstext.sty'
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls'
-        - 'C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd'
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\base\size11.clo'
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg'
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.sty'
@@ -429,7 +425,7 @@ files:
       calls: []
     type: ParsedFileListing
   dml_lasso.log-ParsedLaTeXLog:
-    timeStamp: 2020-08-28T17:56:33.281Z
+    timeStamp: 2020-09-02T20:35:08.335Z
     jobNames: []
     value:
       messages:
@@ -2025,62 +2021,6 @@ files:
             range:
               start: 605
               end: 605
-        - severity: error
-          name: pdfTeX
-          text: Undefined control sequence
-          log:
-            file: dml_lasso.log
-            range:
-              start: 615
-              end: 616
-          source:
-            file: dml_lasso.tex
-            range:
-              start: 63
-              end: 63
-        - severity: error
-          name: pdfTeX
-          text: Undefined control sequence
-          log:
-            file: dml_lasso.log
-            range:
-              start: 624
-              end: 625
-          source:
-            file: dml_lasso.tex
-            range:
-              start: 117
-              end: 117
-        - severity: info
-          name: pdfTeX
-          category: LaTeX Font
-          text: Try loading font information for OMS+cmr
-          source:
-            file: dml_lasso.tex
-            range:
-              start: 135
-              end: 135
-          log:
-            file: dml_lasso.log
-            range:
-              start: 633
-              end: 633
-        - severity: info
-          name: pdfTeX
-          category: LaTeX Font
-          text: >-
-            Font shape `OMS/cmr/m/n' in size <10.95> not available Font shape
-            `OMS/cmsy/m/n' tried instead.
-          source:
-            file: dml_lasso.tex
-            range:
-              start: 135
-              end: 135
-          log:
-            file: dml_lasso.log
-            range:
-              start: 638
-              end: 639
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2088,13 +2028,13 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 294
-              end: 294
+              start: 300
+              end: 300
           log:
             file: dml_lasso.log
             range:
-              start: 641
-              end: 641
+              start: 616
+              end: 616
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2102,13 +2042,13 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 294
-              end: 294
+              start: 300
+              end: 300
           log:
             file: dml_lasso.log
             range:
-              start: 642
-              end: 642
+              start: 617
+              end: 617
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2116,13 +2056,13 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 294
-              end: 294
+              start: 300
+              end: 300
           log:
             file: dml_lasso.log
             range:
-              start: 645
-              end: 645
+              start: 619
+              end: 619
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2130,13 +2070,13 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 294
-              end: 294
+              start: 300
+              end: 300
           log:
             file: dml_lasso.log
             range:
-              start: 646
-              end: 646
+              start: 620
+              end: 620
         - severity: info
           name: pdfTeX
           category: Package rerunfilecheck
@@ -2148,8 +2088,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 647
-              end: 648
+              start: 621
+              end: 622
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2157,33 +2097,33 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 294
-              end: 294
+              start: 300
+              end: 300
           log:
             file: dml_lasso.log
             range:
-              start: 649
-              end: 649
+              start: 623
+              end: 623
       inputs: []
       outputs:
         - dml_lasso.pdf
       calls: []
     type: ParsedLaTeXLog
   dml_lasso.log:
-    timeStamp: 2020-09-02T19:54:56.273Z
+    timeStamp: 2020-09-02T20:35:30.841Z
     jobNames: []
-    hash: 5x3IO7ZoEgrbxh/Upq1sAhZL4b4QtG3aQSmGgByOmUU=
+    hash: sbNmsMvcXo4MuYeuobiOGPoN7OUDk3qAS1xBjb/CMik=
     type: LaTeXLog
     subType: pdfTeX
   dml_lasso.aux:
-    timeStamp: 2020-09-02T19:54:56.131Z
+    timeStamp: 2020-09-02T20:35:30.624Z
     jobNames: []
     hash: VeRuUFkRVzoIguAM3TjI4uPxuOI0wgzAYcollaqf7NE=
     type: LaTeXAuxilary
   dml_lasso.fls:
-    timeStamp: 2020-09-02T19:54:56.280Z
+    timeStamp: 2020-09-02T20:35:30.856Z
     jobNames: []
-    hash: mm9AKr6RazW/IsbjjrkExHUmdCnktX/EZTsNmH2Lz+M=
+    hash: zDQF07u4hmWZm4n7Yw9eiQuiG6CgxQO/Bvge08xQFHM=
     type: FileListing
   dml_lasso.aux-ParsedLaTeXAuxilary:
     timeStamp: 2020-08-28T17:54:24.203Z
@@ -2753,7 +2693,7 @@ files:
     timeStamp: 2017-04-10T02:58:41.639Z
     jobNames: []
   dml_lasso.out:
-    timeStamp: 2020-09-02T19:54:56.135Z
+    timeStamp: 2020-09-02T20:35:30.629Z
     jobNames: []
     hash: P+NLSW+7xh/dhBejL85Z9oGwAa4t680t6VfXlb7I4GA=
     type: OUT
@@ -2785,7 +2725,7 @@ files:
     timeStamp: 2009-07-14T18:37:46.000Z
     jobNames: []
   dml_lasso.toc:
-    timeStamp: 2020-09-02T19:54:56.137Z
+    timeStamp: 2020-09-02T20:35:30.632Z
     jobNames: []
     hash: qBr+5he2byw+CcQ9GerPaEsmz5VmudpA3nnEE1BDFFs=
     type: TableOfContents
@@ -2805,14 +2745,14 @@ files:
     timeStamp: 2009-07-14T18:37:46.000Z
     jobNames: []
   dml_lasso.pdf:
-    timeStamp: 2020-09-02T19:54:56.269Z
+    timeStamp: 2020-09-02T20:35:30.822Z
     jobNames: []
-    hash: Oz/HTxaJL3wRSfH7ymHCXJlk2zk/R5WMdsAI0IPuEgE=
+    hash: gmF44qd2XafRDsFwTC6KIRYEP87lazk0YDdoZWsZi94=
     type: PortableDocumentFormat
   dml_lasso.synctex.gz:
-    timeStamp: 2020-09-02T19:54:56.271Z
+    timeStamp: 2020-09-02T20:35:30.826Z
     jobNames: []
-    hash: vXzC9WBPyPp81kDwZKuxzu0tV73zBb4cbjusBPsxD3c=
+    hash: 5CU4+nBJoXQDnh/D5NgnopfnbbfMgzH4QhAOLl+/bYc=
     type: SyncTeX
 rules:
   - name: ApplyOptions
