@@ -162,7 +162,7 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
   tx <- get_rhs_cols(f, d, 2)
   if(poly_degree > 1){
     tx <-
-      poly(as.matrix(tx), degree = poly_degree, raw = TRUE) %>%
+      poly(as.matrix(tx), degree = poly_degree) %>%
       as_tibble() %>%
       setNames(paste0("c", str_replace_all(names(.), "\\.", "\\_")))
   }
