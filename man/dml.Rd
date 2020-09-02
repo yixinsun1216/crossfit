@@ -11,7 +11,7 @@ dml(
   ml = "lasso",
   n = 101,
   nfolds = 5,
-  score = "finite",
+  score = "concentrate",
   workers = 1,
   drop_na = FALSE,
   family = NULL,
@@ -25,9 +25,8 @@ dml(
 \item{d}{a dataframe containing the variables in f.}
 
 \item{ml}{Machine learning method to be used for estimating nuisance parameters.
-Currently it takes in `lasso`, `rlasso` (from the `hdm` package), and `rf`
-for regression forest. Note `rlasso` is not available for `model = "poisson"`.
-Default is `ml = "lasso"`.}
+Currently it takes in `lasso`, and `rf` for regression forest. Note `rf`
+is not available for `score = "finite"`. Default is `ml = "lasso"`.}
 
 \item{n}{Number of times to repeat the sample splitting and take median of
 results over the n samples. Default is `n = 100`.}

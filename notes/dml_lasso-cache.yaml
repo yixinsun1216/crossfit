@@ -73,7 +73,7 @@ options:
     2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
 files:
   dicy-instance.yaml-ParsedYAML:
-    timeStamp: 2020-09-01T19:52:51.472Z
+    timeStamp: 2020-09-02T19:54:53.417Z
     jobNames: []
     value:
       severity: info
@@ -134,13 +134,13 @@ files:
         2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
     type: ParsedYAML
   dml_lasso.tex:
-    timeStamp: 2020-09-01T19:52:51.411Z
+    timeStamp: 2020-09-02T19:54:53.254Z
     jobNames: []
     hash: fpPrptKRCCoF93BJrwox80p6DpYNPdnHdumXuIfMnF4=
     type: LaTeX
     subType: article
   'C:\Users\Yixin Sun\AppData\Roaming\dicy\config.yaml':
-    timeStamp: 2020-08-30T13:53:10.797Z
+    timeStamp: 2020-09-02T14:15:41.787Z
     jobNames: []
     type: YAML
   x.y-Nil:
@@ -2170,18 +2170,18 @@ files:
       calls: []
     type: ParsedLaTeXLog
   dml_lasso.log:
-    timeStamp: 2020-09-01T19:52:57.523Z
+    timeStamp: 2020-09-02T19:54:56.273Z
     jobNames: []
-    hash: YUsDFDm+30PM4gdjWZEJjXsalMShVbYJJcaMy4PbYTk=
+    hash: 5x3IO7ZoEgrbxh/Upq1sAhZL4b4QtG3aQSmGgByOmUU=
     type: LaTeXLog
     subType: pdfTeX
   dml_lasso.aux:
-    timeStamp: 2020-09-01T19:52:57.289Z
+    timeStamp: 2020-09-02T19:54:56.131Z
     jobNames: []
     hash: VeRuUFkRVzoIguAM3TjI4uPxuOI0wgzAYcollaqf7NE=
     type: LaTeXAuxilary
   dml_lasso.fls:
-    timeStamp: 2020-09-01T19:52:57.530Z
+    timeStamp: 2020-09-02T19:54:56.280Z
     jobNames: []
     hash: mm9AKr6RazW/IsbjjrkExHUmdCnktX/EZTsNmH2Lz+M=
     type: FileListing
@@ -2753,7 +2753,7 @@ files:
     timeStamp: 2017-04-10T02:58:41.639Z
     jobNames: []
   dml_lasso.out:
-    timeStamp: 2020-09-01T19:52:57.310Z
+    timeStamp: 2020-09-02T19:54:56.135Z
     jobNames: []
     hash: P+NLSW+7xh/dhBejL85Z9oGwAa4t680t6VfXlb7I4GA=
     type: OUT
@@ -2785,7 +2785,7 @@ files:
     timeStamp: 2009-07-14T18:37:46.000Z
     jobNames: []
   dml_lasso.toc:
-    timeStamp: 2020-09-01T19:52:57.340Z
+    timeStamp: 2020-09-02T19:54:56.137Z
     jobNames: []
     hash: qBr+5he2byw+CcQ9GerPaEsmz5VmudpA3nnEE1BDFFs=
     type: TableOfContents
@@ -2805,12 +2805,12 @@ files:
     timeStamp: 2009-07-14T18:37:46.000Z
     jobNames: []
   dml_lasso.pdf:
-    timeStamp: 2020-09-01T19:52:57.519Z
+    timeStamp: 2020-09-02T19:54:56.269Z
     jobNames: []
-    hash: 9wpSdwcnj3NEEthGR/DU5zJX5Ozg8CqqnHxS1+A0ce8=
+    hash: Oz/HTxaJL3wRSfH7ymHCXJlk2zk/R5WMdsAI0IPuEgE=
     type: PortableDocumentFormat
   dml_lasso.synctex.gz:
-    timeStamp: 2020-09-01T19:52:57.521Z
+    timeStamp: 2020-09-02T19:54:56.271Z
     jobNames: []
     hash: vXzC9WBPyPp81kDwZKuxzu0tV73zBb4cbjusBPsxD3c=
     type: SyncTeX
