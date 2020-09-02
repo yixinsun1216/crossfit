@@ -98,10 +98,7 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, nfolds = 5,
 
   # lasso cannot handle NAs, so first prepare data if user specifies to drop NAs
   if(drop_na){
-    d <-
-      get_all_vars(f, d) %>%
-      filter(complete.cases(.)) %>%
-      as_tibble
+    d <- drop_na(d)
   }
 
   # parallelise the process if number of workers is > 1. Otherwise, future_map
@@ -162,7 +159,7 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
   tx <- get_rhs_cols(f, d, 2)
   if(poly_degree > 1){
     tx <-
-      poly(as.matrix(tx), degree = poly_degree) %>%
+      poly(as.matrix(tx), degree = poly_degree, raw = TRUE) %>%
       as_tibble() %>%
       setNames(paste0("c", str_replace_all(names(.), "\\.", "\\_")))
   }
@@ -182,7 +179,7 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
   if(score == "finite"){
     instruments <-
       map2(folds$train, folds$test,
-           function(x, y) dml_fold(x, y, xnames, ynames, dnames, model, family))
+           function(x, y) dml_fold(x, y, xnames, ynames, dnames, model, family, ml))
   }
 
   # For the concentrating out approach, calculate the partial outcome, s = E[Y|X],
@@ -253,7 +250,7 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
 # step 4. Calculate m = x_tilde*mu
 
 dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
-                     family){
+                     family, ml){
   # if using glmnet, make sure family is properly assigned
   # if model is linear, then use binomial for binary variable, and gaussian
   # otherwise
