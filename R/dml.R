@@ -286,12 +286,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
   x_hat <-
     coef(cv.glmnet(dep, resp, family = family, standardize = FALSE,
                    lambda = l1)) %>%
-    tidy()
-
-  print(paste0("D is included: ", "Auction" %in% x_hat$row))
-
-  x_hat <-
-    x_hat %>%
+    tidy() %>%
     filter(row %in% xnames) %>%
     pull(row)
 
