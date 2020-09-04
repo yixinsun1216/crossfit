@@ -45,7 +45,7 @@ The vector $\mu$ above is defined by the hessian of this criterion function.  Le
 Then we define $\mu$ as $\mu = J_{\theta, \beta} J_{\beta, \beta}^{-1}$.
 
 
-\subsection{The Linear Setting - LASSO Implementation}
+\subsection{The Linear Setting}
 The linear regression, the function $l$ is
 \begin{gather*}
 	l(W; \theta, \beta) = -\frac{(Y - D\theta - X'\beta)^2}{2}
@@ -65,7 +65,7 @@ $$	\mu = E\left[D X^{\prime}\right]\left(E\left[X X^{\prime}\right]\right)^{-1}$
 The Neyman orthogonal score is then given by:
 $$ \psi(W ; \theta, \eta)=\left(Y-D \theta-X^{\prime} \beta\right)(D-\mu X) $$
 
-\noindent \underline{Implementation}: \\
+\subsubsection{Implementation - LASSO}
 These steps give a single point estimate, $\hat{\theta}$ and an associated covariance matrix for a given split structure.  See below for how we combine point estimates and covariance matrices across many split structures into a single point estimate/covariance matrix that should be less sensitive to the monte carlo nature of splitting.
 
 \begin{enumerate}
@@ -99,7 +99,7 @@ These steps give a single point estimate, $\hat{\theta}$ and an associated covar
 	$$\hat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}$$
 \end{enumerate}
 
-\subsection{The Poisson Setting - LASSO Implementation}
+\subsection{The Poisson Setting}
 In Poisson regression, the function $l$ is
 \begin{equation*}
 	l(W; \theta, \beta) = Y(D\theta + X\beta) - \exp(D\theta + X\beta)
@@ -126,7 +126,7 @@ The Neyman Orthogonal moment for Poisson regression is then:
 	\psi = (Y - \exp(D\theta + X\beta))(D - X\mu)
 \end{equation*}
 
-\noindent \underline{Implementation}:
+\subsubsection{Implementation - Poisson LASSO}
 \begin{enumerate}
 	\item Make $k$ splits of the data into training and estimation sets. Default is $k=5$ in our implementation.
   \item For each $k = 1, ..., K$, implement the following steps:
@@ -178,7 +178,7 @@ $$\begin{aligned}
 So our score function here is:
 $$\psi\left(W ; \theta, \beta, \partial_{\theta} \beta_{\theta}\right):=\partial_{\theta} \ell(W ; \theta, \beta)+\left[\partial_{\theta} \beta_{\theta}\right]^{\prime} \partial_{\beta} \ell(W ; \theta, \beta)$$
 
-\subsection{The Linear Setting - LASSO implementation}
+\subsection{The Linear Setting}
 Consider again the function:
 $$\ell(W ; \theta, \beta)=-\frac{(Y-D \theta-\beta(X))^{2}}{2}$$
 Taking FOC with respect to $\beta$, we get:
@@ -196,7 +196,7 @@ Letting $g(x) = E[Y|X]$ and $m(x) = E[D|X]$, we get the following Neyman orthogo
 
 Note that we now use ML methods to calculate $E[D|X]$ and $E[Y|X]$, which we plug into the score function we derived above. This is different from the finite-nuisance parameter approach, which uses ML to calculate the finite-nuisance parameter component, $s = X\beta$. The implication of this is that the ML steps for the concentrating-out approach are fairly uniform across ML methods and model types; as you can see below, what changes is just the score function that we are optimizing over.
 
-\noindent \underline{Implementation}:
+\subsubsection{Implementation - LASSO}
 \begin{enumerate}
 	\item Make $k$  splits of the data into training and estimation sets. Default is $k = 5$ folds in our implementation.
 	\item For each $k = 1, ... K$, implement the following steps:
@@ -226,7 +226,19 @@ Note that we now use ML methods to calculate $E[D|X]$ and $E[Y|X]$, which we plu
 	$$\hat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}$$
 \end{enumerate}
 
-\subsection{The Poisson Setting - LASSO implementation}
+\subsubsection{Implementation - Regression Forest}
+\begin{enumerate}
+	\item Make $k$  splits of the data into training and estimation sets. Default is $k = 5$ folds in our implementation
+
+	\item For each $k = 1, ... K$, implement the following steps:
+  \begin{enumerate}
+    \item In \textbf{training} set $k$, use a regression forest to generate a model of $Y$ on and $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $g_k = E[Y|X]$.
+    \item In \textbf{training} set $k$, use a regresison forest to generate a model of $D_j$ on $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $m_{k, j} = E[D_j|X]$. Collect to form $m_k = (m'_{k,1}, m'_{k,2}, . . ., m'_{k, J})$
+  \end{enumerate}
+  \item The rest of the implementation should follow steps 3 and 4 of the lasso instructions in the previous section.
+\end{enumerate}
+
+\subsection{The Poisson Setting}
 We have only solved the orthogonal score for the case when $D$ is a univariate binary variable. Consider again for the regression case, the function $l$ is
 \begin{equation*}
 	l(W; \theta, \beta) = Y(D\theta + X\beta(X)) - \exp(D\theta + \beta(X))
@@ -251,7 +263,7 @@ From this, we have the following:
 Putting this altogether and plugging into the score function, we get:
 $$\psi(W ; \theta, g(X), m(X))=\left(Y-\frac{\exp (D \theta) g(X)}{\exp (\theta) m(X)+1-m(X)}\right)\left(D-\frac{\exp (\theta) m(X)}{\exp (\theta) m(X)+1-m(X)}\right)$$
 
-\noindent \underline{Implementation}: \\
+\subsubsection{Implementation - Poisson}
 Steps 1 and 2 are the same as the linear model in the previous section.
 \begin{enumerate}
   \setcounter{enumi}{2}
@@ -283,18 +295,7 @@ Steps 1 and 2 are the same as the linear model in the previous section.
 	\end{gather*}
 \end{enumerate}
 
-\subsection{Regression Forest Setting}
-Regression forest can be used instead of LASSO for both the linear and Poisson concentrating-out approach.
+\subsubsection{Implementation - Regression Forest}
+Steps 1 and 2 follow the same steps as the instructions in section 2.1.2, while steps 3 and 4 follow the Poisson LASSO in the previous section.
 
-\noindent \underline{Implementation}:
-\begin{enumerate}
-	\item Make $k$  splits of the data into training and estimation sets. Default is $k = 5$ folds in our implementation
-
-	\item For each $k = 1, ... K$, implement the following steps:
-  \begin{enumerate}
-    \item In \textbf{training} set $k$, use a regression forest to generate a model of $Y$ on and $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $g_k = E[Y|X]$.
-    \item In \textbf{training} set $k$, use a regresison forest to generate a model of $D_j$ on $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $m_{k, j} = E[D_j|X]$. Collect to form $m_k = (m'_{k,1}, m'_{k,2}, . . ., m'_{k, J})$
-    \item The rest of the implementation should follow steps 6 and 7 of either the linear or Poisson setting, depending on your model.
-  \end{enumerate}
-\end{enumerate}
 \end{document}

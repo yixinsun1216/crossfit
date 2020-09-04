@@ -184,8 +184,6 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
       l1 <- NULL
     }
 
-    stop("made it")
-
     instruments <-
       map2(folds$train, folds$test, function(x, y)
         dml_fold(x, y, xnames, ynames, dnames, model, family, ml, l1))
@@ -285,12 +283,15 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
   dep <- as.matrix(fold_train[, c(dnames, xnames)])
   resp <- as.matrix(fold_train[, ynames])
 
-  include <- as.numeric(names(fold_train) %in% dnames)
+  x_hat <-
+    coef(cv.glmnet(dep, resp, family = family, standardize = FALSE,
+                   lambda = l1)) %>%
+    tidy()
+
+  print(paste0("D is included: ", "Auction" %in% x_hat$row))
 
   x_hat <-
-    coef(cv.glmnet(dep, resp, family = family, lambda = l1,
-                   penalty.factor = include, standardize = FALSE)) %>%
-    tidy() %>%
+    x_hat %>%
     filter(row %in% xnames) %>%
     pull(row)
 

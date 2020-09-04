@@ -220,8 +220,8 @@ INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmex10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 OUTPUT dml_lasso.toc
-INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmti10.tfm
 INPUT C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map
+INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmti10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmbx12.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmr9.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmmi9.tfm
