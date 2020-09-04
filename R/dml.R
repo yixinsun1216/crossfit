@@ -44,22 +44,20 @@
 #' }
 #'
 #' @examples
-#' # Effect of temperature and precipitation on corn yield in the presence of
-#' # time and locational effects
+#' Effect of temperature and precipitation on corn yield in the presence of
+#' time and locational effects
 #' data(corn_yield)
 #' library(magrittr)
 #'
-#' yield_dml <-
+#' yield_dml_rf <-
 #'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
 #'   as.formula() %>%
-#'   dml(corn_yield, "linear", n = 5,
-#'   ml = "regression_forest")
+#'   dml(corn_yield, "linear", n = 5, ml = "rf")
 #'
 #' yield_dml_lasso <-
 #'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
 #'   as.formula() %>%
-#'   dml(corn_yield, "linear", n = 5,
-#'   ml = "lasso", family = "gaussian")
+#'   dml(corn_yield, "linear", n = 5,  ml = "lasso", poly_degree = 3, score = "finite")
 #'
 #' @references V. Chernozhukov, D. Chetverikov, M. Demirer, E. Duflo, C. Hansen,
 #' W. Newey, and J. Robins. Double/debiased machine learning for treatment and
@@ -76,16 +74,15 @@
 #' @importFrom Formula Formula
 #' @importFrom modelr crossv_kfold
 #' @importFrom broom tidy
-#' @importFrom glmnet cv.glmnet
-#' @importFrom hdm rlasso
+#' @importFrom glmnet cv.glmnet glmnet
 #'
 #'
 #' @export
 # main user-facing routine
 #' @export
 dml <- function(f, d, model = "linear", ml = "lasso", n = 101, nfolds = 5,
-                score = "concentrate", workers = 1, drop_na = FALSE, family = NULL,
-                poly_degree = 1, ...) {
+                score = "concentrate", workers = 1, drop_na = FALSE,
+                family = NULL, poly_degree = 1, ...) {
   dml_call <- match.call()
 
   # to make the median well-defined, add 1 to n if the user requests an even
@@ -156,12 +153,14 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
 
   # (c) expand out any non-linear formula for x and sanitize names
   # expand out to polynomial depending on the user-inputted poly_degree
-  tx <- get_rhs_cols(f, d, 2)
+  tx <-
+    get_rhs_cols(f, d, 2) %>%
+    setNames(paste0("c", str_replace_all(names(.), "\\.|:", "\\_")))
   if(poly_degree > 1){
     tx <-
-      poly(as.matrix(tx), degree = poly_degree, raw = TRUE) %>%
+      poly(as.matrix(tx), degree = poly_degree) %>%
       as_tibble() %>%
-      setNames(paste0("c", str_replace_all(names(.), "\\.", "\\_")))
+      setNames(paste0("c", str_replace_all(names(.), "\\.|:", "\\_")))
   }
   xnames <- names(tx)
 
@@ -177,17 +176,33 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
   # Calculate instruments -----------------------------------------------------
   # For each fold, calculate the partial outcome, s = x*beta, and m = x*mu
   if(score == "finite"){
+    if(ml == "lasso"){
+      y_reg <- cv.glmnet(as.matrix(cbind(tx, td)), as.matrix(ty),
+                         standardize = FALSE)
+      l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
+    } else{
+      l1 <- NULL
+    }
+
+    stop("made it")
+
     instruments <-
-      map2(folds$train, folds$test,
-           function(x, y) dml_fold(x, y, xnames, ynames, dnames, model, family, ml))
+      map2(folds$train, folds$test, function(x, y)
+        dml_fold(x, y, xnames, ynames, dnames, model, family, ml, l1))
   }
 
   # For the concentrating out approach, calculate the partial outcome, s = E[Y|X],
   # and m = E[D|X]
   if(score == "concentrate"){
+    if(ml == "lasso"){
+      y_reg <- cv.glmnet(as.matrix(tx), as.matrix(ty), standardize = FALSE)
+      l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
+    } else{
+      l1 <- NULL
+    }
     instruments <-
       map2(folds$train, folds$test, function(x, y)
-        dml_fold_concentrate(x, y, xnames, ynames, dnames, ml))
+        dml_fold_concentrate(x, y, xnames, ynames, dnames, ml, l1))
   }
 
   s <- map(instruments, pluck(1))
@@ -250,7 +265,7 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, nfolds, ...){
 # step 4. Calculate m = x_tilde*mu
 
 dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
-                     family, ml){
+                     family, ml, l1){
   # if using glmnet, make sure family is properly assigned
   # if model is linear, then use binomial for binary variable, and gaussian
   # otherwise
@@ -273,7 +288,8 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
   include <- as.numeric(names(fold_train) %in% dnames)
 
   x_hat <-
-    coef(cv.glmnet(dep, resp, family = family, penalty.factor = include)) %>%
+    coef(cv.glmnet(dep, resp, family = family, lambda = l1,
+                   penalty.factor = include, standardize = FALSE)) %>%
     tidy() %>%
     filter(row %in% xnames) %>%
     pull(row)
@@ -321,7 +337,8 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
   # predict, for the testing sample s = E[Y|X]
 # step 2. Using training data, train an ml model of d on x. Use this model to
   # predict, for the test sample, n = E[Y|X]
-dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames, ml){
+dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
+                                 ml, l1){
   if(ml == "lasso"){
     # step 1:
     # pluck out x and y variables
@@ -329,7 +346,7 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames, 
     resp <- as.matrix(fold_train[, ynames])
 
     x_hat <-
-      coef(cv.glmnet(dep, resp)) %>%
+      coef(cv.glmnet(dep, resp, lambda = l1, standardize = FALSE)) %>%
       tidy() %>%
       filter(row %in% xnames) %>%
       pull(row)
@@ -382,7 +399,7 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml){
     resp <- as.matrix(fold_train[, dvar])
 
     x_tilde <-
-      coef(cv.glmnet(dep, resp, weights = w)) %>%
+      coef(cv.glmnet(dep, resp, weights = w, standardize = FALSE)) %>%
       tidy() %>%
       filter(row %in% xnames) %>%
       pull(row)

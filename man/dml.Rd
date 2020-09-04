@@ -47,8 +47,8 @@ is `false`}
 \item{family}{if `ml = lasso`, this is passed onto `cv.glmnet` to describe
 the response variable type.}
 
-\item{poly_degree}{degree of polynomial for the nuisance parameters.
-Default is `poly_degree = 1`.}
+\item{poly_degree}{degree of polynomial for the nuisance parameters,
+to be used when `ml = "lasso"`. Default is `poly_degree = 1`.}
 }
 \value{
 \code{dml} returns an object of class "dml" with the following components:
@@ -71,8 +71,7 @@ library(magrittr)
 yield_dml <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
-  dml(corn_yield, "linear", n = 5,
-  ml = "regression_forest")
+  dml(corn_yield, "linear", n = 11, ml = "rf")
 
 yield_dml_lasso <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
