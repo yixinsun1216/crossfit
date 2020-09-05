@@ -1,0 +1,301 @@
+\documentclass[11pt]{article}
+\usepackage{setspace}
+\doublespacing
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amsfonts}
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true, % make the links colored
+    linkcolor=blue, % color TOC links in blue
+    urlcolor=red, % color URLs in red
+    linktoc=all % 'all' will create links for everything in the TOC
+}
+
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\DeclareMathOperator*{\argmax}{argmax}
+\title{LASSO/Poisson DML implementation}
+\author{Thomas R. Covert, Yixin Sun}
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\section{Setup from Chernozhukov et al - Finite Nuisance Parameter Approach}
+Let $\theta$ be the thing we care about and $\beta$ be the nuisance parameters (location, time etc).  The data is $W = (Y, D, X)$ where $Y$ is an outcome, $D$ is the vector of stuff we care about and $X$ is the stuff we don't care about.  The true values of $\theta$ and $\beta$, denoted as $\theta_0$ and $\beta_0$, fit the data best, in the sense that
+\begin{equation*}
+	(\theta_0, \beta_0) = \argmax \underset{\theta, \beta} E_W\left[l(W, \theta, \beta)\right]
+\end{equation*}
+where $l(W, \theta, \beta)$ is some criterion (squared deviation, log likelihood etc).
+
+The \textit{Neyman Orthogonal Score} $\psi$ is defined by:
+\begin{equation*}
+	\psi(W, \theta, \beta, \mu) = \frac{\partial}{\partial \theta}l(W, \theta, \beta) - \mu \frac{\partial}{\partial \beta}l(W, \theta, \beta)
+\end{equation*}
+The vector $\mu$ above is defined by the hessian of this criterion function.  Let $J$ be:
+\begin{equation*}
+	J =
+	\begin{pmatrix}
+		J_{\theta, \theta} & J_{\theta, \beta} \\
+		J_{\beta, \theta} & J_{\beta, \beta}
+	\end{pmatrix}
+	= \frac{\partial}{\partial \theta \partial \beta} E_W\left[\frac{\partial}{\partial \theta \partial \beta} l(W, \theta, \beta)\right]
+\end{equation*}
+Then we define $\mu$ as $\mu = J_{\theta, \beta} J_{\beta, \beta}^{-1}$.
+
+
+\subsection{The Linear Setting}
+The linear regression, the function $l$ is
+\begin{gather*}
+	l(W; \theta, \beta) = -\frac{(Y - D\theta - X'\beta)^2}{2}
+\end{gather*}
+and the necessary gradients needed for $\psi$ are:
+\begin{gather*}
+	\partial \ell_{\theta}(W ; \theta, \beta)=\left(Y-D \theta-X^{\prime} \beta\right) D \\
+  \partial \ell_{\beta}(W ; \theta, \beta)=\left(Y-D \theta-X^{\prime} \beta\right) X
+\end{gather*}
+The entries in the Hessian matrix that we need to compute $\mu$ are:
+\begin{gather*}
+	J_{\theta \beta}=-E\left[D X^{\prime}\right] \\
+  J_{\beta \beta}=-E\left[X X^{\prime}\right]
+\end{gather*}
+yielding this expression for $\mu$:
+$$	\mu = E\left[D X^{\prime}\right]\left(E\left[X X^{\prime}\right]\right)^{-1}$$
+The Neyman orthogonal score is then given by:
+$$ \psi(W ; \theta, \eta)=\left(Y-D \theta-X^{\prime} \beta\right)(D-\mu X) $$
+
+\subsubsection{Implementation - LASSO}
+These steps give a single point estimate, $\hat{\theta}$ and an associated covariance matrix for a given split structure.  See below for how we combine point estimates and covariance matrices across many split structures into a single point estimate/covariance matrix that should be less sensitive to the monte carlo nature of splitting.
+
+\begin{enumerate}
+	\item Make $k$  splits of the data into training and estimation sets. Default is $k = 5$ folds in our implementation
+	\item For each $k = 1, ... K$, implement the following steps:
+  \begin{enumerate}
+    \item In a \textbf{training} set $k$, use a linear LASSO of $Y$ on $D$ and $X$ to select the covariates (making sure $D$ is always included), $\hat{X}_k$. Then fit a linear regression of $Y$ on $\hat{X}_k$ and $D$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
+  	\item In the \textbf{estimation} set $k$, compute $s_k = \hat{X}_k\hat{\beta}_k$.
+  	\item In the \textbf{training} set $k$, compute a linear LASSO of $D_j$ on $X$ to select covariates $\tilde{X}_{k, j}$, for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k, j}$, and denote this $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu}_k$.
+  	\item In the \textbf{estimation} set, construct
+    $$m_k = \tilde{X}_k\tilde{\mu}_k$$
+  \end{enumerate}
+	\item Using the DML2 algorithm, for each $k$, construct the average of the moment:
+	$$\frac{1}{n} \sum_{i=1}^{n}(D_i - m_{i})^{\prime}\left({Y}_{i}- s_i -D_{i} \theta^{\prime}\right) $$
+	Then average over each of these folds to get the final objective function, which we use to compute $\hat{\theta}$ by minimizing squared deviations from zero (if $D$ is univariate, we can just do root-finding).
+	Note, this is also different from what $\mathrm{STATA}$ does. It seems like they compute this moment in one step using all the data, and ignore the hold out structure.
+	\item To get a covariance matrix for this estimate of $\theta$, we first compute $J_0$ defined by:
+	$$
+	\begin{aligned}
+	J_{0} &=\frac{\partial}{\partial \theta} E_{W} \left[\psi(W, \hat{\theta}, \hat{\beta})\right] \\
+	&=-E_{W}\left[D^{\prime} (D-m)\right]
+	\end{aligned}$$
+	Next we compute $\Psi:$
+	$$
+	\begin{aligned}
+	\Psi &=E_{W}\left[\psi(W, \theta, \tilde{\theta}, \hat{\beta}) \psi(W, \theta, \tilde{\theta}, \hat{\beta})^{\prime}\right] \\
+	\psi(W, \hat{\theta}, \tilde{\theta}, \hat{\beta}) &= (Y_{i}- s_i - D_{i} \hat{\theta}^{\prime}) (D_i - m_i)
+	\end{aligned}
+	$$
+	And we can compute:
+	$$\hat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}$$
+\end{enumerate}
+
+\subsection{The Poisson Setting}
+In Poisson regression, the function $l$ is
+\begin{equation*}
+	l(W; \theta, \beta) = Y(D\theta + X\beta) - \exp(D\theta + X\beta)
+\end{equation*}
+and its associated gradients needed for the definition of $\psi$ are
+\begin{align*}
+	\frac{\partial}{\partial \theta}l(W, \theta, \beta) &= (Y - \exp(D\theta + X\beta)) D \\
+	\frac{\partial}{\partial \beta}l(W, \theta, \beta) &= (Y - \exp(D\theta + X\beta)) X
+\end{align*}
+The entries in the Hessian matrix that we need to compute $\mu$ are:
+\begin{align*}
+	J_{\theta, \theta} &= -E\left[D'D\exp(D\theta + X\beta)\right] \\
+	J_{\theta, \beta} &= -E\left[D'X\exp(D\theta + X\beta)\right] \\
+	J_{\beta, \beta} &= -E\left[X'X\exp(D\theta + X\beta)\right]
+\end{align*}
+yielding this expression for $\mu$:
+\begin{equation*}
+	\mu = E\left[D'X\exp(D\theta + X\beta)\right]\left(E\left[X'X\exp(D\theta + X\beta)\right]\right)^{-1}
+\end{equation*}
+This construction is revealing, since it looks like weighted least squares, with $D$ as the outcome, $X$ as the covariates, and weights equal to $\exp(D\theta + X\beta)$.
+
+The Neyman Orthogonal moment for Poisson regression is then:
+\begin{equation*}
+	\psi = (Y - \exp(D\theta + X\beta))(D - X\mu)
+\end{equation*}
+
+\subsubsection{Implementation - Poisson LASSO}
+\begin{enumerate}
+	\item Make $k$ splits of the data into training and estimation sets. Default is $k=5$ in our implementation.
+  \item For each $k = 1, ..., K$, implement the following steps:
+  \begin{enumerate}
+    \item In a \textbf{training} set $k$, use Poisson LASSO of $Y$ on $D$ and $X$ to select the covariates, $\hat{X}_k$ (making sure $D$ is always included). Then fit a Poisson regression of $Y$ on $\hat{X}_k$ and $D$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
+  	\item In the corresponding \textbf{estimation} set $k$, compute $s_k = \hat{X}_k \hat{\beta}_k$.
+  	\item Back in the \textbf{training} set $k$, compute weights $w_k = \exp(D\hat{\theta}_k + X\hat{\beta}_k)$ using the results from step 2.  Compute a linear LASSO of $D_j$ on $X$ using those weights to select covariates $\tilde{X}_{k,j}$ for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k,j}$, and denote this $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu}_k$.
+  	\item In \textbf{estimation} set, construct
+  	\begin{gather*}
+  		m_k = \tilde{X}_k\tilde{\mu}_k
+  	\end{gather*}
+  \end{enumerate}
+	\item Using the DML2 algorithm, for each $k$, construct the average of the moment:
+	$$
+	\frac{1}{n} \sum_{i=1}^{n}\left(D_{i}-m_{i}\right)^{\prime}\left(Y_{i}-\exp(s_{i}-D_{i} \theta^{\prime})\right)
+	$$
+	Then average over each of these folds to get the final objective function, which we use to compute
+	$\hat{\theta}$ by minimizing squared deviations from zero (if $D$ is univariate, we can just do root-finding).
+	\item To get a covariance matrix for this estimate of $\theta$, we first compute $J_0$, defined by:
+	\begin{align*}
+		J_0 &= \frac{\partial}{\partial \theta} E_W \left[\psi(Y,D,X,\hat{\theta},\tilde{\theta}, \tilde{\beta}) \right]\\
+		&= -E_W\left[D'\exp(D\hat{\theta} + s)(D - X\hat{\mu}) \right]
+	\end{align*}
+	Next we compute $\Psi$:
+	\begin{align*}
+		\Psi &= E_W\left[\psi(W, \hat{\theta},\tilde{\theta}, \tilde{\beta})\psi(W, \hat{\theta},\tilde{\theta}, \tilde{\beta})'\right] \\
+			&= E_W\left[(Y - \exp(D\hat{\theta} + s))^2(D - X\tilde{\mu})(D - X\tilde{\mu})'\right]
+	\end{align*}
+	In both cases, we compute each of these as the average over points in the estimation set $k$, and then average over each of the estimation sets within a split structure.\footnote{For an example of this averaging, see the formula for $\hat{J}_0$ on page C27 of the original DML paper.} We then get:
+	$$\hat{Var}(\hat{\theta}) = \frac{1}{n} J_0^{-1} \Psi J_0^{-1}$$
+
+\end{enumerate}
+
+
+\section{Concentrating Out Approach}
+Chernozhukov et. al write that the approach for constructing Neyman orthogonal scores is closely related to the ``concentrating-out approach". For all $\theta \in \Theta,$ let $\beta_{\theta}$ be the solution of the following optimization problem:
+$$
+\argmax_{\beta \in \mathcal{B}} E[\ell(W ; \theta, \beta)]
+$$
+where $\beta_\theta$ satisfies
+$$\partial_{\beta} E\left[\ell\left(W ; \theta, \beta_{\theta}\right)\right]=0$$
+
+Differentiating this with respect to $\theta$ and interchanging the order of differentiation gives us
+$$\begin{aligned}
+0 &=\partial_{\theta} \partial_{\beta} E\left[\ell\left(W ; \theta, \beta_{\theta}\right)\right]=\partial_{\beta} \partial_{\theta} E\left[\ell\left(W ; \theta, \beta_{\theta}\right)\right] \\
+&=\partial_{\beta} E\left[\partial_{\theta} \ell\left(W ; \theta, \beta_{\theta}\right)+\left[\partial_{\theta} \beta_{\theta}\right]^{\prime} \partial_{\beta} \ell\left(W ; \theta, \beta_{\theta}\right)\right] \\
+&=\left.\partial_{\beta} E\left[\psi\left(W ; \theta, \beta, \partial_{\theta} \beta_{\theta}\right)\right]\right|_{\beta=\beta_{\theta}}
+\end{aligned}$$
+So our score function here is:
+$$\psi\left(W ; \theta, \beta, \partial_{\theta} \beta_{\theta}\right):=\partial_{\theta} \ell(W ; \theta, \beta)+\left[\partial_{\theta} \beta_{\theta}\right]^{\prime} \partial_{\beta} \ell(W ; \theta, \beta)$$
+
+\subsection{The Linear Setting}
+Consider again the function:
+$$\ell(W ; \theta, \beta)=-\frac{(Y-D \theta-\beta(X))^{2}}{2}$$
+Taking FOC with respect to $\beta$, we get:
+\begin{align*}
+	0 = E[Y - D\theta - \beta(X)| X] \\
+  0 = E[Y- D\theta|X] - \beta(X) \\
+	\Rightarrow \beta(X) = E[Y - D\theta |X]
+\end{align*}
+Letting $g(x) = E[Y|X]$ and $m(x) = E[D|X]$, we get the following Neyman orthogonal score
+\begin{align*}
+	\psi\left(W ; \theta, \beta_{\theta}\right) &=-\frac{1}{2} \frac{d\left\{Y-D \theta-E[Y-D \theta | X]\right\}^{2}}{d \theta} \\
+	&=\left(D-E[D | X]\right) \times\left(Y-E[Y | X]-\left(D-E[D | X]\right) \theta\right) \\
+	&=\left(D-m(X)\right) \times\left(Y- g(x) - (D - m(x) )\theta\right)
+\end{align*}
+
+Note that we now use ML methods to calculate $E[D|X]$ and $E[Y|X]$, which we plug into the score function we derived above. This is different from the finite-nuisance parameter approach, which uses ML to calculate the finite-nuisance parameter component, $s = X\beta$. The implication of this is that the ML steps for the concentrating-out approach are fairly uniform across ML methods and model types; as you can see below, what changes is just the score function that we are optimizing over.
+
+\subsubsection{Implementation - LASSO}
+\begin{enumerate}
+	\item Make $k$  splits of the data into training and estimation sets. Default is $k = 5$ folds in our implementation.
+	\item For each $k = 1, ... K$, implement the following steps:
+  \begin{enumerate}
+    \item In a \textbf{training} set $k$, use a linear LASSO to generate a model of  $Y$ on and $X$ to select the covariates, $\hat{X}_k$. Then fit a linear regression of $Y$ on $\hat{X}_k$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
+  	\item In the \textbf{estimation} set $k$, compute $g_k = E[Y|X]$ using the model generated in the previous step.
+  	\item In the \textbf{training} set $k$, compute a linear LASSO of $D_j$ on $X$ to select covariates $\tilde{X}_{k,j}$ for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k,j}$, and denote the estimated coefficients as $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu_k}$.
+  	\item In the \textbf{estimation} set, compute $m_k = E[D|X]$, using the model generated from the previous step.
+  \end{enumerate}
+	\item Using the DML2 algorithm, for each $k$, construct the average of the moment:
+	$$\frac{1}{n} \sum_{i=1}^{n} (D_i - m_{i})^\prime\left({Y}_{i}- g_i -(D_{i} - m_i) \theta^{\prime}\right)$$
+	Then average over each of these folds to get the final objective function, which we use to compute $\hat{\theta}$ by minimizing squared deviations from zero.
+	\item To get a covariance matrix for this estimate of $\theta$, we first compute $J_0$ defined by:
+	$$
+	\begin{aligned}
+	J_{0} &=\frac{\partial}{\partial \theta} E_{W}\left[ \psi(W, \hat{\theta}, \hat{\beta}) \right]\\
+	&=-E_{W}\left[(D-m)^{\prime} (D-m)\right]
+	\end{aligned}$$
+	Next we compute $\Psi:$
+	$$
+	\begin{aligned}
+	\Psi &=E_{W}\left[\psi(W, \theta, \tilde{\theta}, \hat{\beta}) \psi(W, \theta, \tilde{\theta}, \hat{\beta})^{\prime}\right] \\
+	\psi(W, \hat{\theta}, \tilde{\theta}, \hat{\beta}) &= (Y_{i}- g_i - (D_{i} - m_i)\hat{\theta}^{\prime}) (D_i - m_i)
+	\end{aligned}
+	$$
+	And we can compute:
+	$$\hat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}$$
+\end{enumerate}
+
+\subsubsection{Implementation - Regression Forest}
+\begin{enumerate}
+	\item Make $k$  splits of the data into training and estimation sets. Default is $k = 5$ folds in our implementation
+
+	\item For each $k = 1, ... K$, implement the following steps:
+  \begin{enumerate}
+    \item In \textbf{training} set $k$, use a regression forest to generate a model of $Y$ on and $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $g_k = E[Y|X]$.
+    \item In \textbf{training} set $k$, use a regresison forest to generate a model of $D_j$ on $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $m_{k, j} = E[D_j|X]$. Collect to form $m_k = (m'_{k,1}, m'_{k,2}, . . ., m'_{k, J})$
+  \end{enumerate}
+  \item The rest of the implementation should follow steps 3 and 4 of the lasso instructions in the previous section.
+\end{enumerate}
+
+\subsection{The Poisson Setting}
+We have only solved the orthogonal score for the case when $D$ is a univariate binary variable. Consider again for the regression case, the function $l$ is
+\begin{equation*}
+	l(W; \theta, \beta) = Y(D\theta + X\beta(X)) - \exp(D\theta + \beta(X))
+\end{equation*}
+
+\noindent Taking FOC with respect to $\beta$, we get:
+\begin{align*}
+	\beta_\theta(X) &= E[\exp(D\theta + \beta(X)) | X] \\
+  &= \exp(\beta(X)) E[\exp(D\theta)|X] \\
+  &= \exp(\beta(x)) \left(Pr(D = 1 | X)\exp(\theta) + (1 - Pr(D = 1 | X))\right) \\
+	&= \exp(\beta(x)) \left(E[D | X]\exp(D\theta) + (1-E[D|X]))\right)
+\end{align*}
+As before, let $g(X) = E[Y|X]$ and $m(X) = E[D|X]$ and rearrange to get:
+$$\exp \left(\beta_{\theta}(X)\right)=\frac{g(X)}{\exp (\theta) m(X)+1-m(X)}$$
+
+From this, we have the following:
+\begin{gather*}
+	\beta_\theta(X) = \log\left(\frac{g(X)}{\exp (\theta) m(X)+1-m(X)}\right) \\
+  \partial_\theta \beta_\theta = -\frac{m(X)\exp(\theta)}{m(X)\exp(\theta) + (1-m(x))}
+\end{gather*}
+
+Putting this altogether and plugging into the score function, we get:
+$$\psi(W ; \theta, g(X), m(X))=\left(Y-\frac{\exp (D \theta) g(X)}{\exp (\theta) m(X)+1-m(X)}\right)\left(D-\frac{\exp (\theta) m(X)}{\exp (\theta) m(X)+1-m(X)}\right)$$
+
+\subsubsection{Implementation - Poisson}
+Steps 1 and 2 are the same as the linear model in the previous section.
+\begin{enumerate}
+  \setcounter{enumi}{2}
+	\item Using the DML2 algorithm, for each $k$, construct the average of the moment:
+  \begin{gather*}
+  	\frac{1}{n}\sum_{i = 1}^n \left(Y_i-\frac{\exp (D_i \theta) g_i}{\exp (\theta) m_i+1-m_i}\right)\left(D_i-\frac{\exp (\theta) m_i}{\exp (\theta) m_i+1-m_i}\right)
+  \end{gather*}
+	\item To get a covariance matrix for this estimate of $\theta$, we first compute $J_0$ defined by
+	\begin{align*}
+		J_{0} &=\frac{\partial}{\partial \theta} E_{W}\left[ \psi(W, \hat{\theta}, \hat{\beta}) \right]
+	\end{align*}
+	To break down this calculation, let
+	\begin{align*}
+		P_i &= \exp (\theta) m_i+1-m_i \\
+		A_i &= \frac{\exp (D_i \theta) g_i}{P} \\
+		B_i &= \frac{\exp (\theta) m_i}{P}
+	\end{align*}
+	So we have
+  \begin{align*}
+  	J_0 = E_W\left[ A \times \left(\frac{\exp(\theta)m }{P} + \frac{\exp(\theta)^2g^2}{P^2}\right) + B \times \left(\frac{D\exp(D\theta)g}{P} + \frac{\exp(D\theta)g}{P^2}\right) \right]
+  \end{align*}
+	As always, we have
+	\begin{gather*}
+		\Psi=E_{W}\left[\psi(W, \theta, \tilde{\theta}, \hat{\beta}) \psi(W, \theta, \tilde{\theta}, \hat{\beta})^{\prime}\right]
+	\end{gather*}
+	And we can compute
+	\begin{gather*}
+		\hat{\operatorname{Var}}(\hat{\theta})=\frac{1}{n} J_{0}^{-1} \Psi J_{0}^{-1}
+	\end{gather*}
+\end{enumerate}
+
+\subsubsection{Implementation - Regression Forest}
+Steps 1 and 2 follow the same steps as the instructions in section 2.1.2, while steps 3 and 4 follow the Poisson LASSO in the previous section.
+
+\end{document}
