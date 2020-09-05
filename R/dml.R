@@ -82,7 +82,7 @@
 #' @export
 dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
                 score = "concentrate", workers = 1, drop_na = FALSE,
-                family = NULL, poly_degree = 1, ...) {
+                family = NULL, poly_degree = 1, lambda = NULL, ...) {
   dml_call <- match.call()
 
   # to make the median well-defined, add 1 to n if the user requests an even
@@ -106,7 +106,7 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
 
   seq(1, nn) %>%
     future_map(function(.x, ...) dml_step(f, d, model, ml, poly_degree, family,
-                                          score, k, ...), ...,
+                                          score, k, lambda, ...), ...,
                .options = future_options(packages = c("splines"))) %>%
     get_medians(nrow(d), dml_call)
 
@@ -114,7 +114,7 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
 }
 
 #' @export
-dml_step <- function(f, d, model, ml, poly_degree, family, score, k, ...){
+dml_step <- function(f, d, model, ml, poly_degree, family, score, k, lambda,  ...){
   # assign proper score function dependending on if the user specifies using the
   # finite nuisance parameter vs concentrating-out approach, and whether the
   # model is linear or poisson
@@ -175,12 +175,12 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, k, ...){
   # Calculate instruments -----------------------------------------------------
   # For each fold, calculate the partial outcome, s = x*beta, and m = x*mu
   if(score == "finite"){
-    if(ml == "lasso"){
+    if(ml == "lasso" & is.null(lambda)){
       y_reg <- cv.glmnet(as.matrix(cbind(tx, td)), as.matrix(ty),
                          standardize = FALSE, ...)
       l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
     } else{
-      l1 <- NULL
+      l1 <- lambda
     }
 
     instruments <-
@@ -195,7 +195,7 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, k, ...){
       y_reg <- cv.glmnet(as.matrix(tx), as.matrix(ty), standardize = FALSE, ...)
       l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
     } else{
-      l1 <- NULL
+      l1 <- lambda
     }
     instruments <-
       map2(folds$train, folds$test, function(x, y)
