@@ -1,0 +1,3412 @@
+version: 0.12.2
+filePath: dml_lasso.tex
+options:
+  $BIBINPUTS:
+    - $ROOTDIR
+    - $ROOTDIR/$OUTDIR
+    - ''
+  $TEXINPUTS:
+    - $ROOTDIR
+    - $ROOTDIR/$OUTDIR
+    - ''
+  bibtexEngine: bibtex
+  cleanPatterns:
+    - '**/*.aux'
+    - '**/*.aux.bak'
+    - '**/*.bbl'
+    - '**/*.bcf'
+    - '**/*.blg'
+    - '**/*.dvi'
+    - '**/*.fdb_latexmk'
+    - '**/*.fls'
+    - '**/*.idx'
+    - '**/*.idx.bak'
+    - '**/*.ilg'
+    - '**/*.ind'
+    - '**/*.lof'
+    - '**/*.log'
+    - '**/*.lol'
+    - '**/*.lot'
+    - '**/*.nav'
+    - '**/*.out'
+    - '**/*.pdf'
+    - '**/*.ps'
+    - '**/*.snm'
+    - '**/*.synctex.gz'
+    - '**/*.toc'
+    - '/**/_minted-${JOB}'
+    - '/${OUTDIR}/sage-plots-for-${JOB}.tex'
+    - /missfont.log
+    - /texput.log
+    - /texput.aux
+  dviToPdfEngine: xdvipdfmx
+  engine: pdflatex
+  epstopdfBoundingBox: default
+  epstopdfOutputPath: $DIR_0/$NAME_0.pdf
+  indexAutomaticRanges: true
+  indexEngine: makeindex
+  indexOrdering: word
+  indexSorting: default
+  knitrConcordance: true
+  knitrOutputPath: $JOB.tex
+  lhs2texStyle: poly
+  literateAgdaEngine: agda
+  literateHaskellEngine: lhs2TeX
+  loadCache: true
+  loadUserOptions: true
+  outputFormat: pdf
+  phaseCycles: 20
+  pweaveCacheDirectory: pweave-cache-for-$JOB
+  pweaveFigureDirectory: pweave-figures-for-$JOB
+  pweaveKernel: python3
+  pweaveOutputFormat: tex
+  pweaveOutputPath: $JOB.tex
+  saveCache: true
+  severity: info
+  validateCache: true
+  synctex: true
+  copyTargetsToRoot: true
+  outputDirectory: ''
+  intermediatePostScript: false
+  $PATH: >-
+    %SystemDrive%\texlive\2017\bin\win32;%SystemDrive%\texlive\2016\bin\win32;%SystemDrive%\texlive\2015\bin\win32;%ProgramFiles%\MiKTeX
+    2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
+files:
+  dicy-instance.yaml-ParsedYAML:
+    timeStamp: 2020-09-02T19:54:53.417Z
+    jobNames: []
+    value:
+      severity: info
+    type: ParsedYAML
+  dicy.yaml-ParsedYAML:
+    jobNames: []
+    type: ParsedYAML
+  dml_lasso.yaml-ParsedYAML:
+    jobNames: []
+    type: ParsedYAML
+  dml_lasso.tex-ParsedLaTeXMagic:
+    timeStamp: 2020-08-27T17:09:52.939Z
+    jobNames: []
+    value: {}
+    type: ParsedLaTeXMagic
+  'C:\Users\Yixin Sun\AppData\Roaming\dicy\config.yaml-ParsedYAML':
+    timeStamp: 2020-08-27T17:09:52.911Z
+    jobNames: []
+    value:
+      synctex: true
+      engine: pdflatex
+      severity: warning
+      copyTargetsToRoot: true
+      outputDirectory: ''
+      outputFormat: pdf
+      cleanPatterns:
+        - '**/*.aux'
+        - '**/*.aux.bak'
+        - '**/*.bbl'
+        - '**/*.bcf'
+        - '**/*.blg'
+        - '**/*.dvi'
+        - '**/*.fdb_latexmk'
+        - '**/*.fls'
+        - '**/*.idx'
+        - '**/*.idx.bak'
+        - '**/*.ilg'
+        - '**/*.ind'
+        - '**/*.lof'
+        - '**/*.log'
+        - '**/*.lol'
+        - '**/*.lot'
+        - '**/*.nav'
+        - '**/*.out'
+        - '**/*.pdf'
+        - '**/*.ps'
+        - '**/*.snm'
+        - '**/*.synctex.gz'
+        - '**/*.toc'
+        - '/**/_minted-${JOB}'
+        - '/${OUTDIR}/sage-plots-for-${JOB}.tex'
+        - /missfont.log
+        - /texput.log
+        - /texput.aux
+      intermediatePostScript: false
+      $PATH: >-
+        %SystemDrive%\texlive\2017\bin\win32;%SystemDrive%\texlive\2016\bin\win32;%SystemDrive%\texlive\2015\bin\win32;%ProgramFiles%\MiKTeX
+        2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
+    type: ParsedYAML
+  dml_lasso.tex:
+    timeStamp: 2020-09-04T15:35:34.838Z
+    jobNames: []
+    hash: 40Htc62q2X3cV6VQjzCYL1a54b6Qyl+x17Prrm0Y77I=
+    type: LaTeX
+    subType: article
+  'C:\Users\Yixin Sun\AppData\Roaming\dicy\config.yaml':
+    timeStamp: 2020-09-02T14:15:41.787Z
+    jobNames: []
+    type: YAML
+  x.y-Nil:
+    jobNames: []
+    type: Nil
+  dml_lasso.fls-ParsedFileListing:
+    timeStamp: 2020-09-02T20:34:25.968Z
+    jobNames: []
+    value:
+      messages: []
+      inputs:
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\cmextra\cmex8.tfm
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\cmextra\cmex9.tfm
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msam5.tfm
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msam7.tfm
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx10.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx12.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmex10.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi10.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi12.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi6.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi8.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi9.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr10.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr12.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr17.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr6.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr8.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr9.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy10.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy6.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy8.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy9.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmti10.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx10.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx12.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmex10.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi10.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi6.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi8.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi9.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr10.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr12.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr17.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr6.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr8.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr9.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy10.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy8.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmti10.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-generic.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-hyperref.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty'
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcore.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorearrows.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoreexternal.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoregraphicstate.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoreimage.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorelayers.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoreobjects.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorepathconstruct.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorepathprocessing.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorepathusage.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorepatterns.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorepoints.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorequick.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorescopes.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoreshade.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoretransformations.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoretransparency.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarycalc.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarytopaths.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\frontendlayer\tikz\tikz.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\libraries\pgflibraryplothandlers.code.tex
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmath.code.tex'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathcalc.code.tex'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfloat.code.tex'
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.base.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.basic.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.comparison.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.integerarithmetics.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.misc.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.random.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.round.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.trigonometric.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathparser.code.tex
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathutil.code.tex'
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\modules\pgfmodulematrix.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\modules\pgfmoduleplot.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\modules\pgfmoduleshapes.code.tex
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgf.cfg'
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\systemlayer\pgfsys-common-pdf.def
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\systemlayer\pgfsys-pdftex.def
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\systemlayer\pgfsys.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\systemlayer\pgfsysprotocol.code.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\systemlayer\pgfsyssoftpath.code.tex
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgffor.code.tex'
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfkeys.code.tex'
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\utilities\pgfkeysfiltered.code.tex
+        - 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfrcs.code.tex'
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\utilities\pgfutil-common-lists.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\utilities\pgfutil-common.tex
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\utilities\pgfutil-latex.def
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amstext.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\base\size11.clo'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\color.cfg'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\graphics.cfg'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics-def\pdftex.def'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\color.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\ms\everyshi.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\basiclayer\pgf.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\basiclayer\pgfcore.sty'
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\latex\pgf\compatibility\pgfcomp-version-0-65.sty
+        - >-
+          C:\Program Files\MiKTeX
+          2.9\tex\latex\pgf\compatibility\pgfcomp-version-1-18.sty
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\frontendlayer\tikz.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\math\pgfmath.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\systemlayer\pgfsys.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgffor.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgfkeys.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgfrcs.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\setspace\setspace.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\url\url.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+        - 'C:\ProgramData\MiKTeX\2.9\pdftex\config\pdftex.map'
+        - >-
+          C:\Users\Yixin
+          Sun\AppData\Local\MiKTeX\2.9\miktex\data\le\pdftex\pdflatex.fmt
+        - dml_lasso.aux
+        - dml_lasso.out
+        - dml_lasso.tex
+        - dml_lasso.toc
+      outputs:
+        - dml_lasso.aux
+        - dml_lasso.log
+        - dml_lasso.out
+        - dml_lasso.pdf
+        - dml_lasso.toc
+      calls: []
+    type: ParsedFileListing
+  dml_lasso.log-ParsedLaTeXLog:
+    timeStamp: 2020-09-04T15:35:38.171Z
+    jobNames: []
+    value:
+      messages:
+        - name: pdfTeX
+          severity: info
+          text: setspace 2011/12/19 v6.7a set line spacing
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\setspace\setspace.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 24
+              end: 24
+        - name: pdfTeX
+          severity: info
+          text: geometry 2010/09/12 v5.6 Page Geometry
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 26
+              end: 26
+        - name: pdfTeX
+          severity: info
+          text: keyval 2014/10/28 v1.15 key=value parser (DPC)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 28
+              end: 28
+        - name: pdfTeX
+          severity: info
+          text: ifpdf 2016/05/14 v3.1 Provides the ifpdf switch
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 31
+              end: 31
+        - name: pdfTeX
+          severity: info
+          text: ifvtex 2016/05/16 v1.6 Detect VTeX and its facilities (HO)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 33
+              end: 33
+        - severity: info
+          name: pdfTeX
+          category: Package ifvtex
+          text: VTeX not detected.
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 34
+              end: 34
+        - name: pdfTeX
+          severity: info
+          text: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 36
+              end: 36
+        - name: pdfTeX
+          severity: info
+          text: amsmath 2016/06/28 v2.15d AMS math features
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 52
+              end: 52
+        - name: pdfTeX
+          severity: info
+          text: amstext 2000/06/29 v2.01 AMS text
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amstext.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 56
+              end: 56
+        - name: pdfTeX
+          severity: info
+          text: amsbsy 1999/11/29 v1.2d Bold Symbols
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 62
+              end: 62
+        - name: pdfTeX
+          severity: info
+          text: amsopn 2016/03/08 v2.02 operator names
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 65
+              end: 65
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \frac
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+            range:
+              start: 199
+              end: 199
+          log:
+            file: dml_lasso.log
+            range:
+              start: 68
+              end: 68
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \overline
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+            range:
+              start: 297
+              end: 297
+          log:
+            file: dml_lasso.log
+            range:
+              start: 71
+              end: 71
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \ldots
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+            range:
+              start: 394
+              end: 394
+          log:
+            file: dml_lasso.log
+            range:
+              start: 74
+              end: 74
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \dots
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+            range:
+              start: 397
+              end: 397
+          log:
+            file: dml_lasso.log
+            range:
+              start: 75
+              end: 75
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \cdots
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+            range:
+              start: 518
+              end: 518
+          log:
+            file: dml_lasso.log
+            range:
+              start: 76
+              end: 76
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Redeclaring font encoding OML
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+            range:
+              start: 634
+              end: 634
+          log:
+            file: dml_lasso.log
+            range:
+              start: 80
+              end: 80
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Redeclaring font encoding OMS
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+            range:
+              start: 635
+              end: 635
+          log:
+            file: dml_lasso.log
+            range:
+              start: 81
+              end: 81
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: 'Redefining \['
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+            range:
+              start: 2739
+              end: 2739
+          log:
+            file: dml_lasso.log
+            range:
+              start: 102
+              end: 102
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: 'Redefining \]'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+            range:
+              start: 2740
+              end: 2740
+          log:
+            file: dml_lasso.log
+            range:
+              start: 103
+              end: 103
+        - name: pdfTeX
+          severity: info
+          text: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 105
+              end: 105
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: >-
+            Overwriting math alphabet `\mathfrak' in version `bold' U/euf/m/n
+            --> U/euf/b/n.
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty'
+            range:
+              start: 106
+              end: 106
+          log:
+            file: dml_lasso.log
+            range:
+              start: 108
+              end: 109
+        - name: pdfTeX
+          severity: info
+          text: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\color.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 111
+              end: 111
+        - severity: info
+          name: pdfTeX
+          category: Package color
+          text: 'Driver file: pdftex.def'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\color.sty'
+            range:
+              start: 147
+              end: 147
+          log:
+            file: dml_lasso.log
+            range:
+              start: 115
+              end: 115
+        - name: pdfTeX
+          severity: info
+          text: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 119
+              end: 119
+        - name: pdfTeX
+          severity: info
+          text: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 121
+              end: 121
+        - name: pdfTeX
+          severity: info
+          text: hyperref 2016/06/24 v6.83q Hypertext links for LaTeX
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 125
+              end: 125
+        - name: pdfTeX
+          severity: info
+          text: >-
+            hobsub-hyperref 2016/05/16 v1.14 Bundle oberdiek, subset hyperref
+            (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 127
+              end: 128
+        - name: pdfTeX
+          severity: info
+          text: 'hobsub-generic 2016/05/16 v1.14 Bundle oberdiek, subset generic (HO)'
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 130
+              end: 130
+        - name: pdfTeX
+          severity: info
+          text: hobsub 2016/05/16 v1.14 Construct package bundles (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 131
+              end: 131
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `infwarerr' (already loaded).
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 132
+              end: 132
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `ltxcmds' (already loaded).
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 133
+              end: 133
+        - name: pdfTeX
+          severity: info
+          text: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 134
+              end: 134
+        - severity: info
+          name: pdfTeX
+          category: Package ifluatex
+          text: LuaTeX not detected.
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 135
+              end: 135
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `ifvtex' (already loaded).
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 136
+              end: 136
+        - name: pdfTeX
+          severity: info
+          text: intcalc 2016/05/16 v1.2 Expandable calculations with integers (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 137
+              end: 137
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `ifpdf' (already loaded).
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 138
+              end: 138
+        - name: pdfTeX
+          severity: info
+          text: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 139
+              end: 139
+        - severity: info
+          name: pdfTeX
+          category: Package etexcmds
+          text: >-
+            Could not find \expanded. That can mean that you are not using
+            pdfTeX 1.50 or that some package has redefined \expanded. In the
+            latter case, load this package earlier.
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 140
+              end: 143
+        - name: pdfTeX
+          severity: info
+          text: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 144
+              end: 144
+        - name: pdfTeX
+          severity: info
+          text: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 145
+              end: 145
+        - name: pdfTeX
+          severity: info
+          text: >-
+            pdftexcmds 2016/05/21 v0.22 Utility functions of pdfTeX for LuaTeX
+            (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 146
+              end: 147
+        - severity: info
+          name: pdfTeX
+          category: Package pdftexcmds
+          text: LuaTeX not detected.
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 148
+              end: 148
+        - severity: info
+          name: pdfTeX
+          category: Package pdftexcmds
+          text: \pdf@primitive is available.
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 149
+              end: 149
+        - severity: info
+          name: pdfTeX
+          category: Package pdftexcmds
+          text: \pdf@ifprimitive is available.
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 150
+              end: 150
+        - severity: info
+          name: pdfTeX
+          category: Package pdftexcmds
+          text: \pdfdraftmode found.
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 151
+              end: 151
+        - name: pdfTeX
+          severity: info
+          text: pdfescape 2016/05/16 v1.14 Implements pdfTeX's escape features (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 152
+              end: 152
+        - name: pdfTeX
+          severity: info
+          text: >-
+            bigintcalc 2016/05/16 v1.4 Expandable calculations on big integers
+            (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 153
+              end: 154
+        - name: pdfTeX
+          severity: info
+          text: bitset 2016/05/16 v1.2 Handle bit-vector datatype (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 155
+              end: 155
+        - name: pdfTeX
+          severity: info
+          text: uniquecounter 2016/05/16 v1.3 Provide unlimited unique counter (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 156
+              end: 156
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `hobsub' (already loaded).
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 158
+              end: 158
+        - name: pdfTeX
+          severity: info
+          text: letltxmacro 2016/05/16 v1.5 Let assignment for LaTeX macros (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 159
+              end: 159
+        - name: pdfTeX
+          severity: info
+          text: hopatch 2016/05/16 v1.3 Wrapper for package hooks (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 160
+              end: 160
+        - name: pdfTeX
+          severity: info
+          text: xcolor-patch 2016/05/16 xcolor patch
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 161
+              end: 161
+        - name: pdfTeX
+          severity: info
+          text: atveryend 2016/05/16 v1.9 Hooks at the very end of document (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 162
+              end: 162
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: \enddocument detected (standard20110627).
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 163
+              end: 163
+        - name: pdfTeX
+          severity: info
+          text: atbegshi 2016/06/09 v1.18 At begin shipout hook (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 164
+              end: 164
+        - name: pdfTeX
+          severity: info
+          text: refcount 2016/05/16 v3.5 Data extraction from label references (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 165
+              end: 165
+        - name: pdfTeX
+          severity: info
+          text: hycolor 2016/05/16 v1.8 Color options for hyperref/bookmark (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 166
+              end: 166
+        - name: pdfTeX
+          severity: info
+          text: auxhook 2016/05/16 v1.4 Hooks for auxiliary files (HO)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 168
+              end: 168
+        - name: pdfTeX
+          severity: info
+          text: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 170
+              end: 170
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper figures OFF
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 4486
+              end: 4486
+          log:
+            file: dml_lasso.log
+            range:
+              start: 182
+              end: 182
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link nesting OFF
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 4491
+              end: 4491
+          log:
+            file: dml_lasso.log
+            range:
+              start: 183
+              end: 183
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper index ON
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 4494
+              end: 4494
+          log:
+            file: dml_lasso.log
+            range:
+              start: 184
+              end: 184
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Plain pages OFF
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 4501
+              end: 4501
+          log:
+            file: dml_lasso.log
+            range:
+              start: 185
+              end: 185
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Backreferencing OFF
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 4506
+              end: 4506
+          log:
+            file: dml_lasso.log
+            range:
+              start: 186
+              end: 186
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Implicit mode ON; LaTeX internals redefined.
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 187
+              end: 187
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Bookmarks ON
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 4735
+              end: 4735
+          log:
+            file: dml_lasso.log
+            range:
+              start: 188
+              end: 188
+        - name: pdfTeX
+          severity: info
+          text: 'url 2013/09/16 ver 3.4 Verb mode for urls, etc.'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\url\url.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 192
+              end: 192
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \url
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 5088
+              end: 5088
+          log:
+            file: dml_lasso.log
+            range:
+              start: 194
+              end: 194
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper figures OFF
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 6342
+              end: 6342
+          log:
+            file: dml_lasso.log
+            range:
+              start: 199
+              end: 199
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link nesting OFF
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 6347
+              end: 6347
+          log:
+            file: dml_lasso.log
+            range:
+              start: 200
+              end: 200
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper index ON
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 6350
+              end: 6350
+          log:
+            file: dml_lasso.log
+            range:
+              start: 201
+              end: 201
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: backreferencing OFF
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 6357
+              end: 6357
+          log:
+            file: dml_lasso.log
+            range:
+              start: 202
+              end: 202
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link coloring OFF
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 6362
+              end: 6362
+          log:
+            file: dml_lasso.log
+            range:
+              start: 203
+              end: 203
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link coloring with OCG OFF
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 6367
+              end: 6367
+          log:
+            file: dml_lasso.log
+            range:
+              start: 204
+              end: 204
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: PDF/A mode OFF
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 6372
+              end: 6372
+          log:
+            file: dml_lasso.log
+            range:
+              start: 205
+              end: 205
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \ref
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 6412
+              end: 6412
+          log:
+            file: dml_lasso.log
+            range:
+              start: 206
+              end: 206
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \pageref
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+            range:
+              start: 6416
+              end: 6416
+          log:
+            file: dml_lasso.log
+            range:
+              start: 207
+              end: 207
+        - name: pdfTeX
+          severity: info
+          text: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 220
+              end: 220
+        - severity: info
+          name: pdfTeX
+          category: Package uniquecounter
+          text: New unique counter `rerunfilecheck'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty'
+            range:
+              start: 282
+              end: 282
+          log:
+            file: dml_lasso.log
+            range:
+              start: 221
+              end: 222
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Option `colorlinks' set `true'
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 13
+              end: 13
+          log:
+            file: dml_lasso.log
+            range:
+              start: 226
+              end: 226
+        - name: pdfTeX
+          severity: info
+          text: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\ms\everyshi.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 239
+              end: 239
+        - name: pdfTeX
+          severity: info
+          text: pgfrcs 2015/08/07 v3.0.1a (rcs-revision 1.31)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\pgf\utilities\pgfrcs.code.tex
+          log:
+            file: dml_lasso.log
+            range:
+              start: 241
+              end: 241
+        - name: pdfTeX
+          severity: info
+          text: pgf 2015/08/07 v3.0.1a (rcs-revision 1.15)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\basiclayer\pgf.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 243
+              end: 243
+        - name: pdfTeX
+          severity: info
+          text: 'graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 246
+              end: 246
+        - name: pdfTeX
+          severity: info
+          text: 'graphics 2016/07/10 v1.0t Standard LaTeX Graphics (DPC,SPQR)'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 248
+              end: 248
+        - name: pdfTeX
+          severity: info
+          text: trig 2016/01/03 v1.10 sin cos tan (DPC)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 250
+              end: 250
+        - severity: info
+          name: pdfTeX
+          category: Package graphics
+          text: 'Driver file: pdftex.def'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty'
+            range:
+              start: 99
+              end: 99
+          log:
+            file: dml_lasso.log
+            range:
+              start: 254
+              end: 254
+        - name: pdfTeX
+          severity: info
+          text: pgfsys 2014/07/09 v3.0.1a (rcs-revision 1.48)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\pgf\systemlayer\pgfsys.code.tex
+          log:
+            file: dml_lasso.log
+            range:
+              start: 260
+              end: 260
+        - name: pdfTeX
+          severity: info
+          text: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 306
+              end: 306
+        - severity: info
+          name: pdfTeX
+          category: Package xcolor
+          text: 'Driver file: pdftex.def'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 225
+              end: 225
+          log:
+            file: dml_lasso.log
+            range:
+              start: 310
+              end: 310
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \color
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 709
+              end: 709
+          log:
+            file: dml_lasso.log
+            range:
+              start: 311
+              end: 311
+        - severity: info
+          name: pdfTeX
+          category: Package xcolor
+          text: Model `cmy' substituted by `cmy0'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 1348
+              end: 1348
+          log:
+            file: dml_lasso.log
+            range:
+              start: 312
+              end: 312
+        - severity: info
+          name: pdfTeX
+          category: Package xcolor
+          text: Model `hsb' substituted by `rgb'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 1352
+              end: 1352
+          log:
+            file: dml_lasso.log
+            range:
+              start: 313
+              end: 313
+        - severity: info
+          name: pdfTeX
+          category: Package xcolor
+          text: Model `RGB' extended
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 1364
+              end: 1364
+          log:
+            file: dml_lasso.log
+            range:
+              start: 314
+              end: 314
+        - severity: info
+          name: pdfTeX
+          category: Package xcolor
+          text: Model `HTML' substituted by `rgb'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 1366
+              end: 1366
+          log:
+            file: dml_lasso.log
+            range:
+              start: 315
+              end: 315
+        - severity: info
+          name: pdfTeX
+          category: Package xcolor
+          text: Model `Hsb' substituted by `hsb'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 1367
+              end: 1367
+          log:
+            file: dml_lasso.log
+            range:
+              start: 316
+              end: 316
+        - severity: info
+          name: pdfTeX
+          category: Package xcolor
+          text: Model `tHsb' substituted by `hsb'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 1368
+              end: 1368
+          log:
+            file: dml_lasso.log
+            range:
+              start: 317
+              end: 317
+        - severity: info
+          name: pdfTeX
+          category: Package xcolor
+          text: Model `HSB' substituted by `hsb'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 1369
+              end: 1369
+          log:
+            file: dml_lasso.log
+            range:
+              start: 318
+              end: 318
+        - severity: info
+          name: pdfTeX
+          category: Package xcolor
+          text: Model `Gray' substituted by `gray'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 1370
+              end: 1370
+          log:
+            file: dml_lasso.log
+            range:
+              start: 319
+              end: 319
+        - severity: info
+          name: pdfTeX
+          category: Package xcolor
+          text: Model `wave' substituted by `hsb'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+            range:
+              start: 1371
+              end: 1371
+          log:
+            file: dml_lasso.log
+            range:
+              start: 320
+              end: 320
+        - name: pdfTeX
+          severity: info
+          text: pgfcore 2010/04/11 v3.0.1a (rcs-revision 1.7)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\pgf\basiclayer\pgfcore.code.tex
+          log:
+            file: dml_lasso.log
+            range:
+              start: 322
+              end: 322
+        - name: pdfTeX
+          severity: info
+          text: pgfcomp-version-0-65 2007/07/03 v3.0.1a (rcs-revision 1.7)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\latex\pgf\compatibility\pgfcomp-version-0-65.
+          log:
+            file: dml_lasso.log
+            range:
+              start: 449
+              end: 449
+        - name: pdfTeX
+          severity: info
+          text: pgfcomp-version-1-18 2007/07/23 v3.0.1a (rcs-revision 1.1)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\latex\pgf\compatibility\pgfcomp-version-1-18.
+          log:
+            file: dml_lasso.log
+            range:
+              start: 455
+              end: 455
+        - name: pdfTeX
+          severity: info
+          text: pgffor 2013/12/13 v3.0.1a (rcs-revision 1.25)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\pgf\utilities\pgffor.code.tex
+          log:
+            file: dml_lasso.log
+            range:
+              start: 462
+              end: 462
+        - name: pdfTeX
+          severity: info
+          text: tikz 2015/08/07 v3.0.1a (rcs-revision 1.151)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\pgf\frontendlayer\tikz\tikz.code.t
+          log:
+            file: dml_lasso.log
+            range:
+              start: 470
+              end: 470
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for OML/cmm/m/it ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 510
+              end: 511
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for T1/cmr/m/n ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 512
+              end: 513
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for OT1/cmr/m/n ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 514
+              end: 515
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for OMS/cmsy/m/n ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 516
+              end: 517
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for OMX/cmex/m/n ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 518
+              end: 519
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for U/cmr/m/n ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 520
+              end: 521
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for PD1/pdf/m/n ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 522
+              end: 523
+        - name: pdfTeX
+          severity: info
+          text: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 572
+              end: 572
+        - name: pdfTeX
+          severity: info
+          text: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 574
+              end: 574
+        - severity: info
+          name: pdfTeX
+          category: Package epstopdf-base
+          text: Redefining graphics rule for `.eps'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty'
+            range:
+              start: 438
+              end: 438
+          log:
+            file: dml_lasso.log
+            range:
+              start: 576
+              end: 577
+        - severity: info
+          name: pdfTeX
+          category: Package grfext
+          text: >-
+            Graphics extension search list:
+            [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2,.eps]
+            \AppendGraphicsExtensions.
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty'
+            range:
+              start: 456
+              end: 456
+          log:
+            file: dml_lasso.log
+            range:
+              start: 578
+              end: 581
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link coloring ON
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 584
+              end: 584
+        - name: pdfTeX
+          severity: info
+          text: nameref 2016/05/21 v2.44 Cross-referencing by name of section
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 586
+              end: 586
+        - name: pdfTeX
+          severity: info
+          text: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\gettitlestring.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 588
+              end: 588
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \ref
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 592
+              end: 592
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \pageref
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 593
+              end: 593
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \nameref
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 20
+              end: 20
+          log:
+            file: dml_lasso.log
+            range:
+              start: 594
+              end: 594
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Try loading font information for U+msa
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 22
+              end: 22
+          log:
+            file: dml_lasso.log
+            range:
+              start: 601
+              end: 601
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Try loading font information for U+msb
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 22
+              end: 22
+          log:
+            file: dml_lasso.log
+            range:
+              start: 605
+              end: 605
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Empty hook `BeforeClearDocument'
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 301
+              end: 301
+          log:
+            file: dml_lasso.log
+            range:
+              start: 616
+              end: 616
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Empty hook `AfterLastShipout'
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 301
+              end: 301
+          log:
+            file: dml_lasso.log
+            range:
+              start: 617
+              end: 617
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Executing hook `AtVeryEndDocument'
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 301
+              end: 301
+          log:
+            file: dml_lasso.log
+            range:
+              start: 619
+              end: 619
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Executing hook `AtEndAfterFileList'
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 301
+              end: 301
+          log:
+            file: dml_lasso.log
+            range:
+              start: 620
+              end: 620
+        - severity: warning
+          name: pdfTeX
+          category: Package rerunfilecheck
+          text: >-
+            File `dml_lasso.out' has changed. Rerun to get outlines right or use
+            package `bookmark'.
+          source:
+            file: dml_lasso.tex
+          log:
+            file: dml_lasso.log
+            range:
+              start: 622
+              end: 624
+        - severity: info
+          name: pdfTeX
+          category: Package rerunfilecheck
+          text: >-
+            Checksums for `dml_lasso.out': Before:
+            EE272F10A01B8402D0F2E630F9FFB513;1013 After:
+            C8A7272A95B7CEEA8EA238B114A01CD1;967.
+          source:
+            file: dml_lasso.tex
+          log:
+            file: dml_lasso.log
+            range:
+              start: 626
+              end: 628
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Empty hook `AtVeryVeryEnd'
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 301
+              end: 301
+          log:
+            file: dml_lasso.log
+            range:
+              start: 629
+              end: 629
+      inputs: []
+      outputs:
+        - dml_lasso.pdf
+      calls: []
+    type: ParsedLaTeXLog
+  dml_lasso.log:
+    timeStamp: 2020-09-04T15:35:37.933Z
+    jobNames: []
+    hash: 52LVJUZnpHpmkCTF3qvx3i2EgDx6z3yEroa1xYiXT/4=
+    type: LaTeXLog
+    subType: pdfTeX
+  dml_lasso.aux:
+    timeStamp: 2020-09-04T15:35:37.751Z
+    jobNames: []
+    hash: GztnifYEsuGIS8wv5mSAvf4VK68WSuIx2bR1sZbbAY4=
+    type: LaTeXAuxilary
+  dml_lasso.fls:
+    timeStamp: 2020-09-04T15:35:37.955Z
+    jobNames: []
+    hash: uzRJ9qXYGrvJUtg3/RzRcKxDwos/FljNh+UYyI1q2dA=
+    type: FileListing
+  dml_lasso.aux-ParsedLaTeXAuxilary:
+    timeStamp: 2020-09-04T15:34:26.682Z
+    jobNames: []
+    value:
+      commands:
+        - relax
+        - providecommand
+        - providecommand
+        - HyperFirstAtBeginDocument
+        - global
+        - gdef
+        - global
+        - gdef
+        - gdef
+        - AtEndDocument
+        - let
+        - let
+        - fi
+        - fi
+        - global
+        - gdef
+        - providecommand
+        - providecommand
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+    type: ParsedLaTeXAuxilary
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm':
+    timeStamp: 2009-02-06T20:24:08.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmex8.tfm':
+    timeStamp: 2009-02-06T20:24:08.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmex9.tfm':
+    timeStamp: 2009-02-11T15:13:40.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msam10.tfm':
+    timeStamp: 2009-02-06T20:24:14.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msam5.tfm':
+    timeStamp: 2009-02-06T20:24:14.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msam7.tfm':
+    timeStamp: 2009-02-06T20:24:14.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm':
+    timeStamp: 2009-02-06T20:24:14.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm5.tfm':
+    timeStamp: 2009-02-06T20:24:14.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm7.tfm':
+    timeStamp: 2009-02-06T20:24:14.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx10.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx12.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmex10.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi10.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi12.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi6.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi8.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi9.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr10.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr12.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr17.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr6.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr8.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr9.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy10.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy6.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy8.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy9.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmti10.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx10.pfb':
+    timeStamp: 2009-07-14T18:37:46.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx12.pfb':
+    timeStamp: 2009-07-14T18:37:46.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmex10.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi10.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi8.pfb':
+    timeStamp: 2009-07-14T18:37:46.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi9.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr10.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr12.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr17.pfb':
+    timeStamp: 2009-07-14T18:37:46.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr6.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr8.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr9.pfb':
+    timeStamp: 2009-07-14T18:37:46.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy10.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy8.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmti10.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cmextra\cmex9.pfb':
+    timeStamp: 2009-07-14T18:37:50.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\symbols\msbm10.pfb':
+    timeStamp: 2009-07-14T18:37:53.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii':
+    timeStamp: 2011-06-01T08:54:21.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty':
+    timeStamp: 2010-09-12T03:06:29.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty':
+    timeStamp: 2016-06-09T18:36:18.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-generic.sty':
+    timeStamp: 2016-06-09T18:36:18.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-hyperref.sty':
+    timeStamp: 2016-06-09T18:36:18.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty':
+    timeStamp: 2016-06-09T18:36:18.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty':
+    timeStamp: 2016-06-09T18:36:18.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcore.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorearrows.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoreexternal.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoregraphicstate.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoreimage.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorelayers.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoreobjects.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorepathconstruct.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorepathprocessing.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorepathusage.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorepatterns.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorepoints.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorequick.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorescopes.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoreshade.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoretransformations.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoretransparency.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarycalc.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarytopaths.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\frontendlayer\tikz\tikz.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\libraries\pgflibraryplothandlers.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmath.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathcalc.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfloat.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.base.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.basic.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.comparison.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.integerarithmetics.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.misc.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.random.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.round.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.trigonometric.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathparser.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathutil.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\modules\pgfmodulematrix.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\modules\pgfmoduleplot.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\modules\pgfmoduleshapes.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgf.cfg':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgfsys-common-pdf.def':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgfsys-pdftex.def':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgfsys.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgfsysprotocol.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgfsyssoftpath.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgffor.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfkeys.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfkeysfiltered.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfrcs.code.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfutil-common-lists.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfutil-common.tex':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: TeX
+  'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfutil-latex.def':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg':
+    timeStamp: 2006-01-02T22:53:43.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty':
+    timeStamp: 2013-01-14T21:09:32.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd':
+    timeStamp: 2013-01-14T21:09:32.000Z
+    jobNames: []
+    type: FontDescription
+  'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd':
+    timeStamp: 2013-01-14T21:09:32.000Z
+    jobNames: []
+    type: FontDescription
+  'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty':
+    timeStamp: 2016-06-28T13:20:16.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty':
+    timeStamp: 2016-06-28T13:20:16.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty':
+    timeStamp: 2016-06-28T13:20:16.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty':
+    timeStamp: 2016-06-28T13:20:16.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amstext.sty':
+    timeStamp: 2016-06-28T13:20:16.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls':
+    timeStamp: 2016-07-30T07:13:10.000Z
+    jobNames: []
+    type: LaTeXClass
+  'C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd':
+    timeStamp: 2016-07-30T07:13:12.000Z
+    jobNames: []
+    type: FontDescription
+  'C:\Program Files\MiKTeX 2.9\tex\latex\base\size11.clo':
+    timeStamp: 2016-07-30T07:13:10.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg':
+    timeStamp: 2010-09-14T13:37:16.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.sty':
+    timeStamp: 2010-09-14T13:37:16.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\color.cfg':
+    timeStamp: 2016-06-14T08:51:32.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\graphics.cfg':
+    timeStamp: 2016-06-14T08:51:32.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\latex\graphics-def\pdftex.def':
+    timeStamp: 2016-08-16T23:31:20.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty':
+    timeStamp: 2016-07-15T11:43:30.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty':
+    timeStamp: 2016-07-15T11:43:30.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty':
+    timeStamp: 2016-07-15T11:43:30.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty':
+    timeStamp: 2016-07-15T11:43:30.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def':
+    timeStamp: 2016-06-24T17:15:56.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty':
+    timeStamp: 2016-06-24T17:15:56.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty':
+    timeStamp: 2016-06-24T17:15:56.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def':
+    timeStamp: 2016-06-24T17:15:56.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\latex\ms\everyshi.sty':
+    timeStamp: 2011-11-01T11:39:51.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty':
+    timeStamp: 2016-06-09T18:36:20.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty':
+    timeStamp: 2016-06-09T18:36:20.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty':
+    timeStamp: 2016-06-09T18:36:20.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty':
+    timeStamp: 2016-06-09T18:36:20.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty':
+    timeStamp: 2016-06-09T18:36:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\basiclayer\pgf.sty':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\basiclayer\pgfcore.sty':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\compatibility\pgfcomp-version-0-65.sty':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\compatibility\pgfcomp-version-1-18.sty':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\frontendlayer\tikz.sty':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\math\pgfmath.sty':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\systemlayer\pgfsys.sty':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgffor.sty':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgfkeys.sty':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgfrcs.sty':
+    timeStamp: 2015-08-29T15:57:22.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\setspace\setspace.sty':
+    timeStamp: 2011-12-19T11:27:57.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\url\url.sty':
+    timeStamp: 2013-12-31T11:47:32.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty':
+    timeStamp: 2016-05-13T10:33:01.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\ProgramData\MiKTeX\2.9\pdftex\config\pdftex.map':
+    timeStamp: 2020-08-21T15:21:41.681Z
+    jobNames: []
+  'C:\Users\Yixin Sun\AppData\Local\MiKTeX\2.9\miktex\data\le\pdftex\pdflatex.fmt':
+    timeStamp: 2017-04-10T02:58:41.639Z
+    jobNames: []
+  dml_lasso.out:
+    timeStamp: 2020-09-04T15:35:37.753Z
+    jobNames: []
+    hash: F13QvugiZn3mz20/UZhd4hF6sGeECDEpdqhchunFrMg=
+    type: OUT
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmbsy6.tfm':
+    timeStamp: 2009-02-06T20:24:08.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmbsy8.tfm':
+    timeStamp: 2009-02-06T20:24:08.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmmib6.tfm':
+    timeStamp: 2009-02-06T20:24:08.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmmib8.tfm':
+    timeStamp: 2009-02-06T20:24:08.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbsy10.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx6.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx8.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmib10.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmib10.pfb':
+    timeStamp: 2009-07-14T18:37:46.000Z
+    jobNames: []
+  dml_lasso.toc:
+    timeStamp: 2020-09-04T15:35:37.756Z
+    jobNames: []
+    hash: CFZ7R7ikgLP/imI6Mgt/7kKA9XSsBwbQ4i1w2z//RKk=
+    type: TableOfContents
+  'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty':
+    timeStamp: 2016-06-09T18:36:18.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty':
+    timeStamp: 2016-06-09T18:36:18.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\color.sty':
+    timeStamp: 2016-07-15T11:43:30.000Z
+    jobNames: []
+    type: LaTeXStyle
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi6.pfb':
+    timeStamp: 2009-07-14T18:37:46.000Z
+    jobNames: []
+  dml_lasso.pdf:
+    timeStamp: 2020-09-04T15:35:37.926Z
+    jobNames: []
+    hash: 3cyOe1ecQO/czeczcwMb2VvGXA1dRF/IEvELQWomqBo=
+    type: PortableDocumentFormat
+  dml_lasso.synctex.gz:
+    timeStamp: 2020-09-04T15:35:37.927Z
+    jobNames: []
+    hash: U5yIUv+iiIoqHSRIGnkl3aSFCJC1A1OGKLAh9WXGbLQ=
+    type: SyncTeX
+rules:
+  - name: ApplyOptions
+    command: load
+    phase: initialize
+    parameters: []
+    inputs:
+      - file: dicy.yaml-ParsedYAML
+        type: default
+      - file: dml_lasso.yaml-ParsedYAML
+        type: default
+      - file: dml_lasso.tex-ParsedLaTeXMagic
+        type: default
+      - file: dicy-instance.yaml-ParsedYAML
+        type: default
+      - file: 'C:\Users\Yixin Sun\AppData\Roaming\dicy\config.yaml-ParsedYAML'
+        type: default
+    outputs: []
+  - name: LoadAndValidateCache
+    command: load
+    phase: initialize
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: Migrate
+    command: load
+    phase: initialize
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: ApplyOptions
+    command: load
+    phase: execute
+    parameters: []
+    inputs:
+      - file: dicy.yaml-ParsedYAML
+        type: default
+      - file: dml_lasso.yaml-ParsedYAML
+        type: default
+      - file: dml_lasso.tex-ParsedLaTeXMagic
+        type: default
+      - file: dicy-instance.yaml-ParsedYAML
+        type: default
+      - file: 'C:\Users\Yixin Sun\AppData\Roaming\dicy\config.yaml-ParsedYAML'
+        type: default
+    outputs: []
+  - name: ParseOptionsFile
+    command: load
+    phase: execute
+    parameters: []
+    inputs:
+      - file: 'C:\Users\Yixin Sun\AppData\Roaming\dicy\config.yaml'
+        type: default
+    outputs:
+      - file: 'C:\Users\Yixin Sun\AppData\Roaming\dicy\config.yaml-ParsedYAML'
+        type: default
+  - name: ParseLaTeXMagic
+    command: load
+    phase: execute
+    parameters:
+      - dml_lasso.tex
+    inputs:
+      - file: dml_lasso.tex
+        type: default
+    outputs:
+      - file: dml_lasso.tex-ParsedLaTeXMagic
+        type: default
+  - name: AssignJobNames
+    command: load
+    phase: finalize
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: FindLogFiles
+    command: build
+    phase: initialize
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: LaTeX
+    command: build
+    phase: execute
+    parameters:
+      - dml_lasso.tex
+    inputs:
+      - file: dml_lasso.tex
+        type: default
+      - file: dml_lasso.fls-ParsedFileListing
+        type: default
+      - file: dml_lasso.log-ParsedLaTeXLog
+        type: default
+      - file: dml_lasso.aux
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\cmextra\cmex8.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\cmextra\cmex9.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msam5.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msam7.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx10.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx12.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmex10.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi10.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi12.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi6.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi8.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmi9.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr10.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr12.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr17.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr6.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr8.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmr9.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy10.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy6.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy8.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy9.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmti10.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx10.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx12.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmex10.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi10.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi8.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi9.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr10.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr12.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr17.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr6.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr8.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmr9.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy10.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy8.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmti10.pfb'
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\type1\public\amsfonts\cmextra\cmex9.pfb
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\type1\public\amsfonts\symbols\msbm10.pfb
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-generic.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-hyperref.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty'
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcore.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorearrows.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoreexternal.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoregraphicstate.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoreimage.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorelayers.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoreobjects.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorepathconstruct.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorepathprocessing.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorepathusage.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorepatterns.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorepoints.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorequick.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcorescopes.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoreshade.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoretransformations.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\basiclayer\pgfcoretransparency.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarycalc.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarytopaths.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\frontendlayer\tikz\tikz.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\libraries\pgflibraryplothandlers.code.tex
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmath.code.tex'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathcalc.code.tex'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfloat.code.tex'
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.base.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.basic.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.comparison.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.integerarithmetics.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.misc.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.random.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.round.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathfunctions.trigonometric.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\math\pgfmathparser.code.tex
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmathutil.code.tex'
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\modules\pgfmodulematrix.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\modules\pgfmoduleplot.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\modules\pgfmoduleshapes.code.tex
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgf.cfg'
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\systemlayer\pgfsys-common-pdf.def
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\systemlayer\pgfsys-pdftex.def
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\systemlayer\pgfsys.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\systemlayer\pgfsysprotocol.code.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\systemlayer\pgfsyssoftpath.code.tex
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgffor.code.tex'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfkeys.code.tex'
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\utilities\pgfkeysfiltered.code.tex
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfrcs.code.tex'
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\utilities\pgfutil-common-lists.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\utilities\pgfutil-common.tex
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\generic\pgf\utilities\pgfutil-latex.def
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amstext.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\base\size11.clo'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\color.cfg'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\graphics.cfg'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics-def\pdftex.def'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\ms\everyshi.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\basiclayer\pgf.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\basiclayer\pgfcore.sty'
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\latex\pgf\compatibility\pgfcomp-version-0-65.sty
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\tex\latex\pgf\compatibility\pgfcomp-version-1-18.sty
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\frontendlayer\tikz.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\math\pgfmath.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\systemlayer\pgfsys.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgffor.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgfkeys.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgfrcs.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\setspace\setspace.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\url\url.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty'
+        type: default
+      - file: 'C:\ProgramData\MiKTeX\2.9\pdftex\config\pdftex.map'
+        type: default
+      - file: >-
+          C:\Users\Yixin
+          Sun\AppData\Local\MiKTeX\2.9\miktex\data\le\pdftex\pdflatex.fmt
+        type: default
+      - file: dml_lasso.out
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\cmextra\cmbsy6.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\cmextra\cmbsy8.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\cmextra\cmmib6.tfm
+        type: default
+      - file: >-
+          C:\Program Files\MiKTeX
+          2.9\fonts\tfm\public\amsfonts\cmextra\cmmib8.tfm
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbsy10.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx6.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx8.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmmib10.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmib10.pfb'
+        type: default
+      - file: dml_lasso.toc
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\color.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi6.pfb'
+        type: default
+    outputs:
+      - file: dml_lasso.aux
+        type: default
+      - file: dml_lasso.fls
+        type: default
+      - file: dml_lasso.log
+        type: default
+      - file: dml_lasso.out
+        type: default
+      - file: dml_lasso.toc
+        type: default
+      - file: dml_lasso.pdf
+        type: target
+      - file: dml_lasso.synctex.gz
+        type: target
+  - name: LogProducedTargets
+    command: build
+    phase: finalize
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: CheckForMissingBuildRule
+    command: build
+    phase: finalize
+    parameters:
+      - dml_lasso.tex
+    inputs:
+      - file: dml_lasso.tex
+        type: default
+    outputs: []
+  - name: FindLogFiles
+    command: log
+    phase: initialize
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: ReportLogMessages
+    command: log
+    phase: execute
+    parameters:
+      - dml_lasso.log-ParsedLaTeXLog
+    inputs:
+      - file: dml_lasso.log-ParsedLaTeXLog
+        type: default
+    outputs: []
+  - name: ParseLaTeXLog
+    command: log
+    phase: execute
+    parameters:
+      - dml_lasso.log
+    inputs:
+      - file: dml_lasso.log
+        type: default
+    outputs:
+      - file: dml_lasso.log-ParsedLaTeXLog
+        type: default
+  - name: SaveCache
+    command: save
+    phase: execute
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: ParseLaTeXLog
+    command: build
+    phase: execute
+    parameters:
+      - dml_lasso.log
+    inputs:
+      - file: dml_lasso.log
+        type: default
+    outputs:
+      - file: dml_lasso.log-ParsedLaTeXLog
+        type: default
+  - name: ParseLaTeXAuxilary
+    command: build
+    phase: execute
+    parameters:
+      - dml_lasso.aux
+    inputs:
+      - file: dml_lasso.aux
+        type: default
+    outputs:
+      - file: dml_lasso.aux-ParsedLaTeXAuxilary
+        type: default
+  - name: ParseFileListing
+    command: build
+    phase: execute
+    parameters:
+      - dml_lasso.fls
+    inputs:
+      - file: dml_lasso.fls
+        type: default
+    outputs:
+      - file: dml_lasso.fls-ParsedFileListing
+        type: default

@@ -4,7 +4,7 @@
 \alias{psi_plr}
 \title{Double Machine Learning Moments}
 \usage{
-psi_plr(theta, Y, D, gamma, delta)
+psi_plr(theta, Y, D, m, s)
 }
 \arguments{
 \item{theta}{scalar or vector of the treatment effect parameter(s).}
@@ -13,9 +13,9 @@ psi_plr(theta, Y, D, gamma, delta)
 
 \item{D}{a vector or data.frame of the treatment variable(s) of interest.}
 
-\item{gamma}{a vector of E[Y|X=x], where X is a vector of controls.}
+\item{s}{a vector of E[Y|X=x], where X is a vector of controls.}
 
-\item{delta}{a vector or data.frame of E[D|X=x].}
+\item{Z}{a vector or data.frame of D - E[D|X=x].}
 }
 \description{
 Moment functions for partial linear model and partial linear poisson model.

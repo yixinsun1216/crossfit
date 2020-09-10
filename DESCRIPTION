@@ -16,7 +16,7 @@ Description: An implementation of double/debiased machine learning method
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1.9000
+RoxygenNote: 7.1.1
 Imports: 
     magrittr,
     tibble,

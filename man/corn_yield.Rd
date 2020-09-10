@@ -4,7 +4,8 @@
 \name{corn_yield}
 \alias{corn_yield}
 \title{Effect of Temperature and Precipitation on Corn Yields}
-\format{A data frame with 11,480 rows and 7 variables
+\format{
+A data frame with 11,480 rows and 7 variables
 \describe{
   \item{logcornyield}{log corn yields}
   \item{year}{Year of observation}
@@ -16,7 +17,8 @@
   precipitation is 40, then prec_lo is 2}
   \item{prec_hi}{precipitation above 42}
   ...
-}}
+}
+}
 \source{
 \url{https://www.aeaweb.org/articles?id=10.1257/pol.20130025}
 }
