@@ -73,7 +73,7 @@ options:
     2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
 files:
   dicy-instance.yaml-ParsedYAML:
-    timeStamp: 2020-09-02T19:54:53.417Z
+    timeStamp: 2020-09-15T15:31:11.280Z
     jobNames: []
     value:
       severity: info
@@ -134,20 +134,20 @@ files:
         2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
     type: ParsedYAML
   dml_lasso.tex:
-    timeStamp: 2020-09-04T15:35:34.838Z
+    timeStamp: 2020-09-15T16:27:50.604Z
     jobNames: []
-    hash: 40Htc62q2X3cV6VQjzCYL1a54b6Qyl+x17Prrm0Y77I=
+    hash: AUPBTe6nVA1kVhBCCbSVZ8AO+EFiH+jOcnpkQLZ1q2I=
     type: LaTeX
     subType: article
   'C:\Users\Yixin Sun\AppData\Roaming\dicy\config.yaml':
-    timeStamp: 2020-09-02T14:15:41.787Z
+    timeStamp: 2020-09-14T14:43:54.579Z
     jobNames: []
     type: YAML
   x.y-Nil:
     jobNames: []
     type: Nil
   dml_lasso.fls-ParsedFileListing:
-    timeStamp: 2020-09-02T20:34:25.968Z
+    timeStamp: 2020-09-15T16:24:16.587Z
     jobNames: []
     value:
       messages: []
@@ -198,6 +198,7 @@ files:
         - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy8.tfm'
         - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmsy9.tfm'
         - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmti10.tfm'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmtt10.tfm'
         - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx10.pfb'
         - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx12.pfb'
         - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmex10.pfb'
@@ -214,6 +215,7 @@ files:
         - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy10.pfb'
         - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmsy8.pfb'
         - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmti10.pfb'
+        - 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmtt10.pfb'
         - 'C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii'
         - 'C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty'
         - 'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty'
@@ -386,6 +388,7 @@ files:
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty'
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def'
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\ms\everyshi.sty'
+        - 'C:\Program Files\MiKTeX 2.9\tex\latex\natbib\natbib.sty'
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty'
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty'
         - 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty'
@@ -413,6 +416,7 @@ files:
           C:\Users\Yixin
           Sun\AppData\Local\MiKTeX\2.9\miktex\data\le\pdftex\pdflatex.fmt
         - dml_lasso.aux
+        - dml_lasso.bbl
         - dml_lasso.out
         - dml_lasso.tex
         - dml_lasso.toc
@@ -425,7 +429,7 @@ files:
       calls: []
     type: ParsedFileListing
   dml_lasso.log-ParsedLaTeXLog:
-    timeStamp: 2020-09-04T15:35:38.171Z
+    timeStamp: 2020-09-15T16:27:59.974Z
     jobNames: []
     value:
       messages:
@@ -694,14 +698,38 @@ files:
               end: 109
         - name: pdfTeX
           severity: info
+          text: 'natbib 2010/09/13 8.31b (PWD, AO)'
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\natbib\natbib.sty'
+          log:
+            file: dml_lasso.log
+            range:
+              start: 111
+              end: 111
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \cite
+          source:
+            file: 'C:\Program Files\MiKTeX 2.9\tex\latex\natbib\natbib.sty'
+            range:
+              start: 694
+              end: 694
+          log:
+            file: dml_lasso.log
+            range:
+              start: 114
+              end: 114
+        - name: pdfTeX
+          severity: info
           text: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
           source:
             file: 'C:\Program Files\MiKTeX 2.9\tex\latex\graphics\color.sty'
           log:
             file: dml_lasso.log
             range:
-              start: 111
-              end: 111
+              start: 117
+              end: 117
         - severity: info
           name: pdfTeX
           category: Package color
@@ -714,8 +742,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 115
-              end: 115
+              start: 121
+              end: 121
         - name: pdfTeX
           severity: info
           text: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
@@ -724,8 +752,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 119
-              end: 119
+              start: 125
+              end: 125
         - name: pdfTeX
           severity: info
           text: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
@@ -734,8 +762,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 121
-              end: 121
+              start: 127
+              end: 127
         - name: pdfTeX
           severity: info
           text: hyperref 2016/06/24 v6.83q Hypertext links for LaTeX
@@ -744,8 +772,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 125
-              end: 125
+              start: 131
+              end: 131
         - name: pdfTeX
           severity: info
           text: >-
@@ -758,87 +786,11 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 127
-              end: 128
+              start: 133
+              end: 134
         - name: pdfTeX
           severity: info
           text: 'hobsub-generic 2016/05/16 v1.14 Bundle oberdiek, subset generic (HO)'
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-generic.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 130
-              end: 130
-        - name: pdfTeX
-          severity: info
-          text: hobsub 2016/05/16 v1.14 Construct package bundles (HO)
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-generic.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 131
-              end: 131
-        - severity: info
-          name: pdfTeX
-          category: Package hobsub
-          text: Skipping package `infwarerr' (already loaded).
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-generic.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 132
-              end: 132
-        - severity: info
-          name: pdfTeX
-          category: Package hobsub
-          text: Skipping package `ltxcmds' (already loaded).
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-generic.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 133
-              end: 133
-        - name: pdfTeX
-          severity: info
-          text: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-generic.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 134
-              end: 134
-        - severity: info
-          name: pdfTeX
-          category: Package ifluatex
-          text: LuaTeX not detected.
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-generic.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 135
-              end: 135
-        - severity: info
-          name: pdfTeX
-          category: Package hobsub
-          text: Skipping package `ifvtex' (already loaded).
           source:
             file: >-
               C:\Program Files\MiKTeX
@@ -850,7 +802,7 @@ files:
               end: 136
         - name: pdfTeX
           severity: info
-          text: intcalc 2016/05/16 v1.2 Expandable calculations with integers (HO)
+          text: hobsub 2016/05/16 v1.14 Construct package bundles (HO)
           source:
             file: >-
               C:\Program Files\MiKTeX
@@ -863,7 +815,7 @@ files:
         - severity: info
           name: pdfTeX
           category: Package hobsub
-          text: Skipping package `ifpdf' (already loaded).
+          text: Skipping package `infwarerr' (already loaded).
           source:
             file: >-
               C:\Program Files\MiKTeX
@@ -873,6 +825,82 @@ files:
             range:
               start: 138
               end: 138
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `ltxcmds' (already loaded).
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 139
+              end: 139
+        - name: pdfTeX
+          severity: info
+          text: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 140
+              end: 140
+        - severity: info
+          name: pdfTeX
+          category: Package ifluatex
+          text: LuaTeX not detected.
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 141
+              end: 141
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `ifvtex' (already loaded).
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 142
+              end: 142
+        - name: pdfTeX
+          severity: info
+          text: intcalc 2016/05/16 v1.2 Expandable calculations with integers (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 143
+              end: 143
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `ifpdf' (already loaded).
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-generic.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 144
+              end: 144
         - name: pdfTeX
           severity: info
           text: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
@@ -883,8 +911,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 139
-              end: 139
+              start: 145
+              end: 145
         - severity: info
           name: pdfTeX
           category: Package etexcmds
@@ -899,8 +927,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 140
-              end: 143
+              start: 146
+              end: 149
         - name: pdfTeX
           severity: info
           text: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
@@ -911,8 +939,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 144
-              end: 144
+              start: 150
+              end: 150
         - name: pdfTeX
           severity: info
           text: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
@@ -923,8 +951,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 145
-              end: 145
+              start: 151
+              end: 151
         - name: pdfTeX
           severity: info
           text: >-
@@ -937,8 +965,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 146
-              end: 147
+              start: 152
+              end: 153
         - severity: info
           name: pdfTeX
           category: Package pdftexcmds
@@ -950,8 +978,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 148
-              end: 148
+              start: 154
+              end: 154
         - severity: info
           name: pdfTeX
           category: Package pdftexcmds
@@ -963,8 +991,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 149
-              end: 149
+              start: 155
+              end: 155
         - severity: info
           name: pdfTeX
           category: Package pdftexcmds
@@ -976,8 +1004,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 150
-              end: 150
+              start: 156
+              end: 156
         - severity: info
           name: pdfTeX
           category: Package pdftexcmds
@@ -989,8 +1017,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 151
-              end: 151
+              start: 157
+              end: 157
         - name: pdfTeX
           severity: info
           text: pdfescape 2016/05/16 v1.14 Implements pdfTeX's escape features (HO)
@@ -1001,8 +1029,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 152
-              end: 152
+              start: 158
+              end: 158
         - name: pdfTeX
           severity: info
           text: >-
@@ -1015,8 +1043,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 153
-              end: 154
+              start: 159
+              end: 160
         - name: pdfTeX
           severity: info
           text: bitset 2016/05/16 v1.2 Handle bit-vector datatype (HO)
@@ -1027,8 +1055,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 155
-              end: 155
+              start: 161
+              end: 161
         - name: pdfTeX
           severity: info
           text: uniquecounter 2016/05/16 v1.3 Provide unlimited unique counter (HO)
@@ -1039,8 +1067,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 156
-              end: 156
+              start: 162
+              end: 162
         - severity: info
           name: pdfTeX
           category: Package hobsub
@@ -1052,84 +1080,11 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 158
-              end: 158
-        - name: pdfTeX
-          severity: info
-          text: letltxmacro 2016/05/16 v1.5 Let assignment for LaTeX macros (HO)
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 159
-              end: 159
-        - name: pdfTeX
-          severity: info
-          text: hopatch 2016/05/16 v1.3 Wrapper for package hooks (HO)
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 160
-              end: 160
-        - name: pdfTeX
-          severity: info
-          text: xcolor-patch 2016/05/16 xcolor patch
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 161
-              end: 161
-        - name: pdfTeX
-          severity: info
-          text: atveryend 2016/05/16 v1.9 Hooks at the very end of document (HO)
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 162
-              end: 162
-        - severity: info
-          name: pdfTeX
-          category: Package atveryend
-          text: \enddocument detected (standard20110627).
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
-          log:
-            file: dml_lasso.log
-            range:
-              start: 163
-              end: 163
-        - name: pdfTeX
-          severity: info
-          text: atbegshi 2016/06/09 v1.18 At begin shipout hook (HO)
-          source:
-            file: >-
-              C:\Program Files\MiKTeX
-              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
-          log:
-            file: dml_lasso.log
-            range:
               start: 164
               end: 164
         - name: pdfTeX
           severity: info
-          text: refcount 2016/05/16 v3.5 Data extraction from label references (HO)
+          text: letltxmacro 2016/05/16 v1.5 Let assignment for LaTeX macros (HO)
           source:
             file: >-
               C:\Program Files\MiKTeX
@@ -1141,7 +1096,7 @@ files:
               end: 165
         - name: pdfTeX
           severity: info
-          text: hycolor 2016/05/16 v1.8 Color options for hyperref/bookmark (HO)
+          text: hopatch 2016/05/16 v1.3 Wrapper for package hooks (HO)
           source:
             file: >-
               C:\Program Files\MiKTeX
@@ -1153,14 +1108,87 @@ files:
               end: 166
         - name: pdfTeX
           severity: info
+          text: xcolor-patch 2016/05/16 xcolor patch
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 167
+              end: 167
+        - name: pdfTeX
+          severity: info
+          text: atveryend 2016/05/16 v1.9 Hooks at the very end of document (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 168
+              end: 168
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: \enddocument detected (standard20110627).
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 169
+              end: 169
+        - name: pdfTeX
+          severity: info
+          text: atbegshi 2016/06/09 v1.18 At begin shipout hook (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 170
+              end: 170
+        - name: pdfTeX
+          severity: info
+          text: refcount 2016/05/16 v3.5 Data extraction from label references (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 171
+              end: 171
+        - name: pdfTeX
+          severity: info
+          text: hycolor 2016/05/16 v1.8 Color options for hyperref/bookmark (HO)
+          source:
+            file: >-
+              C:\Program Files\MiKTeX
+              2.9\tex\generic\oberdiek\hobsub-hyperref.sty
+          log:
+            file: dml_lasso.log
+            range:
+              start: 172
+              end: 172
+        - name: pdfTeX
+          severity: info
           text: auxhook 2016/05/16 v1.4 Hooks for auxiliary files (HO)
           source:
             file: 'C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty'
           log:
             file: dml_lasso.log
             range:
-              start: 168
-              end: 168
+              start: 174
+              end: 174
         - name: pdfTeX
           severity: info
           text: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
@@ -1169,8 +1197,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 170
-              end: 170
+              start: 176
+              end: 176
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1183,8 +1211,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 182
-              end: 182
+              start: 188
+              end: 188
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1197,8 +1225,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 183
-              end: 183
+              start: 189
+              end: 189
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1211,8 +1239,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 184
-              end: 184
+              start: 190
+              end: 190
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1225,8 +1253,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 185
-              end: 185
+              start: 191
+              end: 191
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1239,8 +1267,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 186
-              end: 186
+              start: 192
+              end: 192
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1250,8 +1278,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 187
-              end: 187
+              start: 193
+              end: 193
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1264,8 +1292,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 188
-              end: 188
+              start: 194
+              end: 194
         - name: pdfTeX
           severity: info
           text: 'url 2013/09/16 ver 3.4 Verb mode for urls, etc.'
@@ -1274,8 +1302,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 192
-              end: 192
+              start: 198
+              end: 198
         - severity: info
           name: pdfTeX
           category: LaTeX
@@ -1288,8 +1316,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 194
-              end: 194
+              start: 200
+              end: 200
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1302,8 +1330,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 199
-              end: 199
+              start: 205
+              end: 205
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1316,8 +1344,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 200
-              end: 200
+              start: 206
+              end: 206
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1330,8 +1358,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 201
-              end: 201
+              start: 207
+              end: 207
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1344,8 +1372,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 202
-              end: 202
+              start: 208
+              end: 208
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1358,8 +1386,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 203
-              end: 203
+              start: 209
+              end: 209
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1372,8 +1400,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 204
-              end: 204
+              start: 210
+              end: 210
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1386,8 +1414,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 205
-              end: 205
+              start: 211
+              end: 211
         - severity: info
           name: pdfTeX
           category: LaTeX
@@ -1400,8 +1428,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 206
-              end: 206
+              start: 212
+              end: 212
         - severity: info
           name: pdfTeX
           category: LaTeX
@@ -1414,8 +1442,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 207
-              end: 207
+              start: 213
+              end: 213
         - name: pdfTeX
           severity: info
           text: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
@@ -1424,8 +1452,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 220
-              end: 220
+              start: 226
+              end: 226
         - severity: info
           name: pdfTeX
           category: Package uniquecounter
@@ -1438,8 +1466,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 221
-              end: 222
+              start: 227
+              end: 228
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1447,13 +1475,13 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 13
-              end: 13
+              start: 14
+              end: 14
           log:
             file: dml_lasso.log
             range:
-              start: 226
-              end: 226
+              start: 232
+              end: 232
         - name: pdfTeX
           severity: info
           text: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
@@ -1462,8 +1490,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 239
-              end: 239
+              start: 245
+              end: 245
         - name: pdfTeX
           severity: info
           text: pgfrcs 2015/08/07 v3.0.1a (rcs-revision 1.31)
@@ -1474,8 +1502,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 241
-              end: 241
+              start: 247
+              end: 247
         - name: pdfTeX
           severity: info
           text: pgf 2015/08/07 v3.0.1a (rcs-revision 1.15)
@@ -1484,8 +1512,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 243
-              end: 243
+              start: 249
+              end: 249
         - name: pdfTeX
           severity: info
           text: 'graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)'
@@ -1494,8 +1522,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 246
-              end: 246
+              start: 252
+              end: 252
         - name: pdfTeX
           severity: info
           text: 'graphics 2016/07/10 v1.0t Standard LaTeX Graphics (DPC,SPQR)'
@@ -1504,8 +1532,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 248
-              end: 248
+              start: 254
+              end: 254
         - name: pdfTeX
           severity: info
           text: trig 2016/01/03 v1.10 sin cos tan (DPC)
@@ -1514,8 +1542,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 250
-              end: 250
+              start: 256
+              end: 256
         - severity: info
           name: pdfTeX
           category: Package graphics
@@ -1528,8 +1556,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 254
-              end: 254
+              start: 260
+              end: 260
         - name: pdfTeX
           severity: info
           text: pgfsys 2014/07/09 v3.0.1a (rcs-revision 1.48)
@@ -1540,8 +1568,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 260
-              end: 260
+              start: 266
+              end: 266
         - name: pdfTeX
           severity: info
           text: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
@@ -1550,8 +1578,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 306
-              end: 306
+              start: 312
+              end: 312
         - severity: info
           name: pdfTeX
           category: Package xcolor
@@ -1564,8 +1592,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 310
-              end: 310
+              start: 316
+              end: 316
         - severity: info
           name: pdfTeX
           category: LaTeX
@@ -1578,8 +1606,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 311
-              end: 311
+              start: 317
+              end: 317
         - severity: info
           name: pdfTeX
           category: Package xcolor
@@ -1592,8 +1620,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 312
-              end: 312
+              start: 318
+              end: 318
         - severity: info
           name: pdfTeX
           category: Package xcolor
@@ -1606,8 +1634,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 313
-              end: 313
+              start: 319
+              end: 319
         - severity: info
           name: pdfTeX
           category: Package xcolor
@@ -1620,8 +1648,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 314
-              end: 314
+              start: 320
+              end: 320
         - severity: info
           name: pdfTeX
           category: Package xcolor
@@ -1634,8 +1662,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 315
-              end: 315
+              start: 321
+              end: 321
         - severity: info
           name: pdfTeX
           category: Package xcolor
@@ -1648,8 +1676,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 316
-              end: 316
+              start: 322
+              end: 322
         - severity: info
           name: pdfTeX
           category: Package xcolor
@@ -1662,8 +1690,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 317
-              end: 317
+              start: 323
+              end: 323
         - severity: info
           name: pdfTeX
           category: Package xcolor
@@ -1676,8 +1704,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 318
-              end: 318
+              start: 324
+              end: 324
         - severity: info
           name: pdfTeX
           category: Package xcolor
@@ -1690,8 +1718,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 319
-              end: 319
+              start: 325
+              end: 325
         - severity: info
           name: pdfTeX
           category: Package xcolor
@@ -1704,8 +1732,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 320
-              end: 320
+              start: 326
+              end: 326
         - name: pdfTeX
           severity: info
           text: pgfcore 2010/04/11 v3.0.1a (rcs-revision 1.7)
@@ -1716,8 +1744,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 322
-              end: 322
+              start: 328
+              end: 328
         - name: pdfTeX
           severity: info
           text: pgfcomp-version-0-65 2007/07/03 v3.0.1a (rcs-revision 1.7)
@@ -1728,8 +1756,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 449
-              end: 449
+              start: 455
+              end: 455
         - name: pdfTeX
           severity: info
           text: pgfcomp-version-1-18 2007/07/23 v3.0.1a (rcs-revision 1.1)
@@ -1740,8 +1768,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 455
-              end: 455
+              start: 461
+              end: 461
         - name: pdfTeX
           severity: info
           text: pgffor 2013/12/13 v3.0.1a (rcs-revision 1.25)
@@ -1752,8 +1780,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 462
-              end: 462
+              start: 468
+              end: 468
         - name: pdfTeX
           severity: info
           text: tikz 2015/08/07 v3.0.1a (rcs-revision 1.151)
@@ -1764,8 +1792,22 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 470
-              end: 470
+              start: 476
+              end: 476
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Option `colorlinks' set `true'
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 28
+              end: 28
+          log:
+            file: dml_lasso.log
+            range:
+              start: 514
+              end: 514
         - severity: info
           name: pdfTeX
           category: LaTeX Font
@@ -1773,64 +1815,8 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 20
-              end: 20
-          log:
-            file: dml_lasso.log
-            range:
-              start: 510
-              end: 511
-        - severity: info
-          name: pdfTeX
-          category: LaTeX Font
-          text: Checking defaults for T1/cmr/m/n ... okay
-          source:
-            file: dml_lasso.tex
-            range:
-              start: 20
-              end: 20
-          log:
-            file: dml_lasso.log
-            range:
-              start: 512
-              end: 513
-        - severity: info
-          name: pdfTeX
-          category: LaTeX Font
-          text: Checking defaults for OT1/cmr/m/n ... okay
-          source:
-            file: dml_lasso.tex
-            range:
-              start: 20
-              end: 20
-          log:
-            file: dml_lasso.log
-            range:
-              start: 514
-              end: 515
-        - severity: info
-          name: pdfTeX
-          category: LaTeX Font
-          text: Checking defaults for OMS/cmsy/m/n ... okay
-          source:
-            file: dml_lasso.tex
-            range:
-              start: 20
-              end: 20
-          log:
-            file: dml_lasso.log
-            range:
-              start: 516
-              end: 517
-        - severity: info
-          name: pdfTeX
-          category: LaTeX Font
-          text: Checking defaults for OMX/cmex/m/n ... okay
-          source:
-            file: dml_lasso.tex
-            range:
-              start: 20
-              end: 20
+              start: 33
+              end: 33
           log:
             file: dml_lasso.log
             range:
@@ -1839,12 +1825,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: Checking defaults for U/cmr/m/n ... okay
+          text: Checking defaults for T1/cmr/m/n ... okay
           source:
             file: dml_lasso.tex
             range:
-              start: 20
-              end: 20
+              start: 33
+              end: 33
           log:
             file: dml_lasso.log
             range:
@@ -1853,17 +1839,73 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: Checking defaults for PD1/pdf/m/n ... okay
+          text: Checking defaults for OT1/cmr/m/n ... okay
           source:
             file: dml_lasso.tex
             range:
-              start: 20
-              end: 20
+              start: 33
+              end: 33
           log:
             file: dml_lasso.log
             range:
               start: 522
               end: 523
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for OMS/cmsy/m/n ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 33
+              end: 33
+          log:
+            file: dml_lasso.log
+            range:
+              start: 524
+              end: 525
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for OMX/cmex/m/n ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 33
+              end: 33
+          log:
+            file: dml_lasso.log
+            range:
+              start: 526
+              end: 527
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for U/cmr/m/n ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 33
+              end: 33
+          log:
+            file: dml_lasso.log
+            range:
+              start: 528
+              end: 529
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for PD1/pdf/m/n ... okay
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 33
+              end: 33
+          log:
+            file: dml_lasso.log
+            range:
+              start: 530
+              end: 531
         - name: pdfTeX
           severity: info
           text: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -1872,8 +1914,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 572
-              end: 572
+              start: 580
+              end: 580
         - name: pdfTeX
           severity: info
           text: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
@@ -1882,8 +1924,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 574
-              end: 574
+              start: 582
+              end: 582
         - severity: info
           name: pdfTeX
           category: Package epstopdf-base
@@ -1896,8 +1938,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 576
-              end: 577
+              start: 584
+              end: 585
         - severity: info
           name: pdfTeX
           category: Package grfext
@@ -1913,8 +1955,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 578
-              end: 581
+              start: 586
+              end: 589
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -1922,13 +1964,13 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 20
-              end: 20
+              start: 33
+              end: 33
           log:
             file: dml_lasso.log
             range:
-              start: 584
-              end: 584
+              start: 592
+              end: 592
         - name: pdfTeX
           severity: info
           text: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -1937,8 +1979,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 586
-              end: 586
+              start: 594
+              end: 594
         - name: pdfTeX
           severity: info
           text: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
@@ -1949,8 +1991,8 @@ files:
           log:
             file: dml_lasso.log
             range:
-              start: 588
-              end: 588
+              start: 596
+              end: 596
         - severity: info
           name: pdfTeX
           category: LaTeX
@@ -1958,13 +2000,13 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 20
-              end: 20
+              start: 33
+              end: 33
           log:
             file: dml_lasso.log
             range:
-              start: 592
-              end: 592
+              start: 600
+              end: 600
         - severity: info
           name: pdfTeX
           category: LaTeX
@@ -1972,36 +2014,8 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 20
-              end: 20
-          log:
-            file: dml_lasso.log
-            range:
-              start: 593
-              end: 593
-        - severity: info
-          name: pdfTeX
-          category: LaTeX
-          text: Redefining \nameref
-          source:
-            file: dml_lasso.tex
-            range:
-              start: 20
-              end: 20
-          log:
-            file: dml_lasso.log
-            range:
-              start: 594
-              end: 594
-        - severity: info
-          name: pdfTeX
-          category: LaTeX Font
-          text: Try loading font information for U+msa
-          source:
-            file: dml_lasso.tex
-            range:
-              start: 22
-              end: 22
+              start: 33
+              end: 33
           log:
             file: dml_lasso.log
             range:
@@ -2009,18 +2023,46 @@ files:
               end: 601
         - severity: info
           name: pdfTeX
+          category: LaTeX
+          text: Redefining \nameref
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 33
+              end: 33
+          log:
+            file: dml_lasso.log
+            range:
+              start: 602
+              end: 602
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Try loading font information for U+msa
+          source:
+            file: dml_lasso.tex
+            range:
+              start: 35
+              end: 35
+          log:
+            file: dml_lasso.log
+            range:
+              start: 609
+              end: 609
+        - severity: info
+          name: pdfTeX
           category: LaTeX Font
           text: Try loading font information for U+msb
           source:
             file: dml_lasso.tex
             range:
-              start: 22
-              end: 22
+              start: 35
+              end: 35
           log:
             file: dml_lasso.log
             range:
-              start: 605
-              end: 605
+              start: 613
+              end: 613
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2028,13 +2070,13 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 301
-              end: 301
+              start: 320
+              end: 320
           log:
             file: dml_lasso.log
             range:
-              start: 616
-              end: 616
+              start: 625
+              end: 625
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2042,13 +2084,13 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 301
-              end: 301
+              start: 320
+              end: 320
           log:
             file: dml_lasso.log
             range:
-              start: 617
-              end: 617
+              start: 626
+              end: 626
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2056,13 +2098,13 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 301
-              end: 301
+              start: 320
+              end: 320
           log:
             file: dml_lasso.log
             range:
-              start: 619
-              end: 619
+              start: 628
+              end: 628
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2070,40 +2112,26 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 301
-              end: 301
+              start: 320
+              end: 320
           log:
             file: dml_lasso.log
             range:
-              start: 620
-              end: 620
-        - severity: warning
-          name: pdfTeX
-          category: Package rerunfilecheck
-          text: >-
-            File `dml_lasso.out' has changed. Rerun to get outlines right or use
-            package `bookmark'.
-          source:
-            file: dml_lasso.tex
-          log:
-            file: dml_lasso.log
-            range:
-              start: 622
-              end: 624
+              start: 629
+              end: 629
         - severity: info
           name: pdfTeX
           category: Package rerunfilecheck
           text: >-
-            Checksums for `dml_lasso.out': Before:
-            EE272F10A01B8402D0F2E630F9FFB513;1013 After:
-            C8A7272A95B7CEEA8EA238B114A01CD1;967.
+            File `dml_lasso.out' has not changed. Checksum:
+            D8CF30CDC08332D41B68295A8719071C;1037.
           source:
             file: dml_lasso.tex
           log:
             file: dml_lasso.log
             range:
-              start: 626
-              end: 628
+              start: 630
+              end: 631
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2111,36 +2139,36 @@ files:
           source:
             file: dml_lasso.tex
             range:
-              start: 301
-              end: 301
+              start: 320
+              end: 320
           log:
             file: dml_lasso.log
             range:
-              start: 629
-              end: 629
+              start: 632
+              end: 632
       inputs: []
       outputs:
         - dml_lasso.pdf
       calls: []
     type: ParsedLaTeXLog
   dml_lasso.log:
-    timeStamp: 2020-09-04T15:35:37.933Z
+    timeStamp: 2020-09-15T16:27:58.165Z
     jobNames: []
-    hash: 52LVJUZnpHpmkCTF3qvx3i2EgDx6z3yEroa1xYiXT/4=
+    hash: H7zz1kR758FfqT9qtiHgoZYOYMpvzCCxs8YjlXWsj7s=
     type: LaTeXLog
     subType: pdfTeX
   dml_lasso.aux:
-    timeStamp: 2020-09-04T15:35:37.751Z
+    timeStamp: 2020-09-15T16:27:57.915Z
     jobNames: []
-    hash: GztnifYEsuGIS8wv5mSAvf4VK68WSuIx2bR1sZbbAY4=
+    hash: 4K3QCG5eBY+WdjP0rrnX6OWDyGX6wAa6/PFxMERK/fw=
     type: LaTeXAuxilary
   dml_lasso.fls:
-    timeStamp: 2020-09-04T15:35:37.955Z
+    timeStamp: 2020-09-15T16:27:58.235Z
     jobNames: []
-    hash: uzRJ9qXYGrvJUtg3/RzRcKxDwos/FljNh+UYyI1q2dA=
+    hash: 5erDHCwdV2vtUd8lYwzamkeSiWFh+0pSpxGn05YVQik=
     type: FileListing
   dml_lasso.aux-ParsedLaTeXAuxilary:
-    timeStamp: 2020-09-04T15:34:26.682Z
+    timeStamp: 2020-09-15T16:24:07.771Z
     jobNames: []
     value:
       commands:
@@ -2167,12 +2195,19 @@ files:
         - '@writefile'
         - '@writefile'
         - '@writefile'
+        - citation
+        - citation
         - '@writefile'
         - '@writefile'
         - '@writefile'
         - '@writefile'
         - '@writefile'
         - '@writefile'
+        - '@writefile'
+        - bibstyle
+        - bibdata
+        - bibcite
+        - bibcite
         - '@writefile'
     type: ParsedLaTeXAuxilary
   'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm':
@@ -2712,9 +2747,9 @@ files:
     timeStamp: 2017-04-10T02:58:41.639Z
     jobNames: []
   dml_lasso.out:
-    timeStamp: 2020-09-04T15:35:37.753Z
+    timeStamp: 2020-09-15T16:27:57.917Z
     jobNames: []
-    hash: F13QvugiZn3mz20/UZhd4hF6sGeECDEpdqhchunFrMg=
+    hash: QATo0whD8QIiz97GDKTUmyz/Np8Akb/m8nI+2H59Zqk=
     type: OUT
   'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\amsfonts\cmextra\cmbsy6.tfm':
     timeStamp: 2009-02-06T20:24:08.000Z
@@ -2744,9 +2779,9 @@ files:
     timeStamp: 2009-07-14T18:37:46.000Z
     jobNames: []
   dml_lasso.toc:
-    timeStamp: 2020-09-04T15:35:37.756Z
+    timeStamp: 2020-09-15T16:27:57.919Z
     jobNames: []
-    hash: CFZ7R7ikgLP/imI6Mgt/7kKA9XSsBwbQ4i1w2z//RKk=
+    hash: TKE0ZsKi4fQGj3yJbnPK2fCXbNkZZPLWJHqhjTOYhG4=
     type: TableOfContents
   'C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty':
     timeStamp: 2016-06-09T18:36:18.000Z
@@ -2764,15 +2799,53 @@ files:
     timeStamp: 2009-07-14T18:37:46.000Z
     jobNames: []
   dml_lasso.pdf:
-    timeStamp: 2020-09-04T15:35:37.926Z
+    timeStamp: 2020-09-15T16:27:58.162Z
     jobNames: []
-    hash: 3cyOe1ecQO/czeczcwMb2VvGXA1dRF/IEvELQWomqBo=
+    hash: Ws+a6CxSkZYfY7Nzn9UNVqf/2czzw9nN2dMpXafaE8Y=
     type: PortableDocumentFormat
   dml_lasso.synctex.gz:
-    timeStamp: 2020-09-04T15:35:37.927Z
+    timeStamp: 2020-09-15T16:27:58.163Z
     jobNames: []
-    hash: U5yIUv+iiIoqHSRIGnkl3aSFCJC1A1OGKLAh9WXGbLQ=
+    hash: /qeCeJOpvQ7wotwMlIFqYuYQanwxqzffI8uCFnvQbBM=
     type: SyncTeX
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmtt10.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmtt10.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\tex\latex\natbib\natbib.sty':
+    timeStamp: 2010-12-13T14:04:41.000Z
+    jobNames: []
+    type: LaTeXStyle
+  dml_lasso.blg-ParsedBibTeXLog:
+    timeStamp: 2020-09-15T16:24:02.424Z
+    jobNames: []
+    value:
+      messages: []
+      inputs:
+        - "dml_lasso.aux\r"
+        - "C:\\Program Files\\MiKTeX 2.9\\bibtex\\bst\\economic\\aer.bst\r"
+        - "dml.bib\r"
+      outputs: []
+      calls: []
+    type: ParsedBibTeXLog
+  'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx9.tfm':
+    timeStamp: 2006-01-09T00:04:13.000Z
+    jobNames: []
+  'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx9.pfb':
+    timeStamp: 2009-07-14T18:37:47.000Z
+    jobNames: []
+  dml_lasso.bbl:
+    timeStamp: 2020-09-15T16:27:54.732Z
+    jobNames: []
+    hash: ox1OwglJS+oMTVLpATT05+fyChGnPBV8kxd9OmFB4zg=
+  dml_lasso.blg:
+    timeStamp: 2020-09-15T16:27:54.740Z
+    jobNames: []
+    hash: FB6zGDqFvTfzhB3kSUsIBEYhoAoA1ipkI8XmTTKfYAQ=
+    type: BibTeXLog
+    subType: BibTeX
 rules:
   - name: ApplyOptions
     command: load
@@ -3315,6 +3388,18 @@ rules:
         type: default
       - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmmi6.pfb'
         type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmtt10.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmtt10.pfb'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\tex\latex\natbib\natbib.sty'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\tfm\public\cm\cmbx9.tfm'
+        type: default
+      - file: 'C:\Program Files\MiKTeX 2.9\fonts\type1\public\amsfonts\cm\cmbx9.pfb'
+        type: default
+      - file: dml_lasso.bbl
+        type: default
     outputs:
       - file: dml_lasso.aux
         type: default
@@ -3409,4 +3494,55 @@ rules:
         type: default
     outputs:
       - file: dml_lasso.fls-ParsedFileListing
+        type: default
+  - name: BibTeX
+    command: build
+    phase: execute
+    parameters:
+      - dml_lasso.aux
+      - dml_lasso.aux-ParsedLaTeXAuxilary
+    inputs:
+      - file: dml_lasso.aux
+        type: default
+      - file: dml_lasso.aux-ParsedLaTeXAuxilary
+        type: default
+      - file: dml_lasso.log-ParsedLaTeXLog
+        type: default
+      - file: dml_lasso.blg-ParsedBibTeXLog
+        type: default
+    outputs:
+      - file: dml_lasso.bbl
+        type: default
+      - file: dml_lasso.blg
+        type: default
+  - name: ParseBibTeXLog
+    command: build
+    phase: execute
+    parameters:
+      - dml_lasso.blg
+    inputs:
+      - file: dml_lasso.blg
+        type: default
+    outputs:
+      - file: dml_lasso.blg-ParsedBibTeXLog
+        type: default
+  - name: ReportLogMessages
+    command: log
+    phase: execute
+    parameters:
+      - dml_lasso.blg-ParsedBibTeXLog
+    inputs:
+      - file: dml_lasso.blg-ParsedBibTeXLog
+        type: default
+    outputs: []
+  - name: ParseBibTeXLog
+    command: log
+    phase: execute
+    parameters:
+      - dml_lasso.blg
+    inputs:
+      - file: dml_lasso.blg
+        type: default
+    outputs:
+      - file: dml_lasso.blg-ParsedBibTeXLog
         type: default

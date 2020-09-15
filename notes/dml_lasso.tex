@@ -3,6 +3,7 @@
 \doublespacing
 \usepackage[margin=2cm]{geometry}
 \usepackage{amsmath,amsfonts}
+\usepackage{natbib}
 \usepackage{color}
 \usepackage{hyperref}
 \hypersetup{
@@ -15,6 +16,18 @@
 \usepackage{tikz}
 \usetikzlibrary{calc}
 \DeclareMathOperator*{\argmax}{argmax}
+
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true, % make the links colored
+    linkcolor=blue, % color TOC links in blue
+    urlcolor=red, % color URLs in red
+    citecolor=black,
+    linktoc=all % 'all' will create links for everything in the TOC
+}
+
+
 \title{LASSO/Poisson DML implementation}
 \author{Thomas R. Covert, Yixin Sun}
 \begin{document}
@@ -155,11 +168,13 @@ The Neyman Orthogonal moment for Poisson regression is then:
 		\Psi &= E_W\left[\psi(W, \hat{\theta},\tilde{\theta}, \tilde{\beta})\psi(W, \hat{\theta},\tilde{\theta}, \tilde{\beta})'\right] \\
 			&= E_W\left[(Y - \exp(D\hat{\theta} + s))^2(D - X\tilde{\mu})(D - X\tilde{\mu})'\right]
 	\end{align*}
-	In both cases, we compute each of these as the average over points in the estimation set $k$, and then average over each of the estimation sets within a split structure.\footnote{For an example of this averaging, see the formula for $\hat{J}_0$ on page C27 of the original DML paper.} We then get:
+	In both cases, we compute each of these as the average over points in the estimation set $k$, and then average over each of the estimation sets within a split structure.\footnote{For an example of this averaging, see the formula for $\hat{J}_0$ on page C27 of \citet{chernozhukov_doubledebiased_2018}} We then get:
 	$$\hat{Var}(\hat{\theta}) = \frac{1}{n} J_0^{-1} \Psi J_0^{-1}$$
 
 \end{enumerate}
 
+\subsection{Lasso Specification}
+When using the \verb|dml| function, the default machine learning method is a conventional lasso, implemented using \verb|cv.glmnet| from the \verb|glmnet| package. The user also has the option to use \verb|ml = "hal"|, which uses functions from \verb|hal9001|, an R package that implements the scalable highly adaptive lasso (HAL). HAL is a nonparametric regression estimator that applies L1-regularized lasso regression to a design matrix composed of indicator functions corresponding to the support of the functional over a set of covariates and interactions. Intuitively, we are creating a matrix composed of basis functions based on the covariates. Using the empirical CDFs of the covariates, we create a matrix consisting of indicator basis functions (generating dummy variables from the covariate). This results in a large, sparse matrix with binary entries. Many basis functions are created, and we can use the usual lasso methods to select the useful basis functions. For both methods, the user can specify the polynomial degree of the covariates that the lasso is implemented on \citep{coyle_hal9001_2020}.
 
 \section{Concentrating Out Approach}
 Chernozhukov et. al write that the approach for constructing Neyman orthogonal scores is closely related to the ``concentrating-out approach". For all $\theta \in \Theta,$ let $\beta_{\theta}$ be the solution of the following optimization problem:
@@ -298,4 +313,8 @@ Steps 1 and 2 are the same as the linear model in the previous section.
 \subsubsection{Implementation - Regression Forest}
 Steps 1 and 2 follow the same steps as the instructions in section 2.1.2, while steps 3 and 4 follow the Poisson LASSO in the previous section.
 
+
+
+\bibliographystyle{aer}
+\bibliography{dml}
 \end{document}

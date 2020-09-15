@@ -1,0 +1,18 @@
+\ifx\undefined\bysame
+\newcommand{\bysame}{\leavevmode\hbox to\leftmargin{\hrulefill\,\,}}
+\fi
+\begin{thebibliography}{xx}
+
+\harvarditem[Chernozhukov et al.]{Chernozhukov, Chetverikov, Demirer, Duflo,
+  Hansen, Newey and Robins}{2018}{chernozhukov_doubledebiased_2018}
+{\bf Chernozhukov, Victor, Denis Chetverikov, Mert Demirer, Esther Duflo,
+  Christian Hansen, Whitney Newey, and James Robins}, ``Double/debiased machine
+  learning for treatment and structural parameters,'' {\it The Econometrics
+  Journal}, February 2018, {\it 21} (1), C1--C68.
+
+\harvarditem[Coyle et al.]{Coyle, Hejazi and van~der
+  Laan}{2020}{coyle_hal9001_2020}
+{\bf Coyle, Jeremy~R, Nima~S Hejazi, and Mark~J van~der Laan}, ``hal9001: {The}
+  {Scalable} {Highly} {Adaptive} {Lasso},'' June 2020.
+
+\end{thebibliography}

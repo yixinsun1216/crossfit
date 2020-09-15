@@ -33,6 +33,8 @@ INPUT C:/Program Files/MiKTeX 2.9/tex/latex/amsmath/amsopn.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/amsmath/amsopn.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/amsfonts/amsfonts.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/amsfonts/amsfonts.sty
+INPUT C:/Program Files/MiKTeX 2.9/tex/latex/natbib/natbib.sty
+INPUT C:/Program Files/MiKTeX 2.9/tex/latex/natbib/natbib.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/graphics/color.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/graphics/color.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/graphics-cfg/color.cfg
@@ -232,6 +234,9 @@ INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam5.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
+INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmtt10.tfm
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.bbl
+INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.bbl
 INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.aux
 INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
 INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
@@ -267,3 +272,5 @@ INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb
 INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb
 INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb
 INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb
+INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb
+INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb
