@@ -16,8 +16,13 @@
 #'   value of theta.
 #'   The default is `model = "linear"`.
 #' @param ml Machine learning method to be used for estimating nuisance parameters.
-#'   Currently it takes in `lasso`, and `rf` for regression forest. Note `rf`
-#'   is not available for `score = "finite"`. Default is `ml = "lasso"`.
+#'   Currently it takes in `lasso`, `hal`, and `rf` for regression forest. `lasso`
+#'   uses the \code{\link[glmnet:cv.glmnet]{cv.glmnet}} function. `hal` uses the
+#'   \code{\link[hal9001:make_design_matrix]{make_design_matrix}} function to
+#'   generate basis functions from the desired covariates. This creates a matrix
+#'   of dummy variables that is then inputted into `cv.glmnet`, acting as newly
+#'   defined covariates. `rf` uses \code{\link[grf:regression_forest]{regression_forest}},
+#'   and is not available for `score = "finite"`. Default is `ml = "lasso"`.
 #' @param n Number of times to repeat the sample splitting and take median of
 #'   results over the n samples. Default is `n = 100`.
 #' @param k Number of folds for cross-fitting
