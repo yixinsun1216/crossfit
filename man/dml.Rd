@@ -10,12 +10,13 @@ dml(
   model = "linear",
   ml = "lasso",
   n = 101,
-  nfolds = 5,
+  k = 5,
   score = "concentrate",
   workers = 1,
   drop_na = FALSE,
   family = NULL,
   poly_degree = 1,
+  lambda = NULL,
   ...
 )
 }
@@ -31,7 +32,7 @@ is not available for `score = "finite"`. Default is `ml = "lasso"`.}
 \item{n}{Number of times to repeat the sample splitting and take median of
 results over the n samples. Default is `n = 100`.}
 
-\item{nfolds}{Number of folds for cross-fitting}
+\item{k}{Number of folds for cross-fitting}
 
 \item{score}{Takes either value `finite` or `concentrate`. `finite` refers to
 using the finite nuisance parameter orthogonal score construction, and
@@ -63,21 +64,20 @@ to be used when `ml = "lasso"`. Default is `poly_degree = 1`.}
 Double Machine Learning Estimates
 }
 \examples{
-# Effect of temperature and precipitation on corn yield in the presence of
-# time and locational effects
+Effect of temperature and precipitation on corn yield in the presence of
+time and locational effects
 data(corn_yield)
 library(magrittr)
 
-yield_dml <-
+yield_dml_rf <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
-  dml(corn_yield, "linear", n = 11, ml = "rf")
+  dml(corn_yield, "linear", n = 5, ml = "rf")
 
 yield_dml_lasso <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
-  dml(corn_yield, "linear", n = 5,
-  ml = "lasso", family = "gaussian")
+  dml(corn_yield, "linear", n = 5,  ml = "lasso", poly_degree = 3, score = "finite")
 
 }
 \references{
