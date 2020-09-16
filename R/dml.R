@@ -107,11 +107,9 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
   # make the estimation dataset -----------------------------------------------
   # (a) expand out any non-linear formula for y and sanitize names
   ty <- get_lhs_col(f, d)
-  ynames <- names(ty)
 
   # (b) expand out any non-linear formula for d and sanitize names
   td <- get_rhs_cols(f, d, 1)
-  dnames <- names(td)
 
   # (c) expand out any non-linear formula for x and sanitize names
   # expand out to polynomial depending on the user-inputted poly_degree
@@ -124,7 +122,6 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
       as_tibble() %>%
       setNames(paste0("c", str_replace_all(names(.), "\\.|:", "\\_")))
   }
-  xnames <- names(tx)
 
   # (d) make a new dataset of transformed y, transformed d and (transformed) x
   newdata <- bind_cols(ty, td, tx)
