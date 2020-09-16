@@ -151,6 +151,7 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
     l1 <- lambda[[1]]
     l2 <- lambda[-1]
   }
+  if(!is.list(l2)) l2 <- list(l2)
 
   # pass into main dml function that is run n times -------------------
   seq(1, nn) %>%
