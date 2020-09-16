@@ -104,18 +104,71 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
     plan(future::multisession, workers = workers)
   }
 
+  # make the estimation dataset -----------------------------------------------
+  # (a) expand out any non-linear formula for y and sanitize names
+  ty <- get_lhs_col(f, d)
+  ynames <- names(ty)
+
+  # (b) expand out any non-linear formula for d and sanitize names
+  td <- get_rhs_cols(f, d, 1)
+  dnames <- names(td)
+
+  # (c) expand out any non-linear formula for x and sanitize names
+  # expand out to polynomial depending on the user-inputted poly_degree
+  tx <-
+    get_rhs_cols(f, d, 2) %>%
+    setNames(str_replace_all(names(.), "\\.|:", "\\_"))
+  if(poly_degree > 1){
+    tx <-
+      poly(as.matrix(tx), degree = poly_degree) %>%
+      as_tibble() %>%
+      setNames(paste0("c", str_replace_all(names(.), "\\.|:", "\\_")))
+  }
+  xnames <- names(tx)
+
+  # (d) make a new dataset of transformed y, transformed d and (transformed) x
+  newdata <- bind_cols(ty, td, tx)
+
+  # Calculate lambda to be used in cv.glmnet operation -------------------
+  if(ml == "lasso" & is.null(lambda)){
+    if(score == "finite"){
+      y_reg <- cv.glmnet(as.matrix(cbind(tx, td)), as.matrix(ty),
+                         standardize = FALSE, ...)
+      l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
+    }
+
+    if(score == "concentrate"){
+      y_reg <- cv.glmnet(as.matrix(tx), as.matrix(ty), standardize = FALSE, ...)
+      l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
+    }
+
+    d_reg <-
+      map(td, c) %>%
+      map(function(d) cv.glmnet(as.matrix(tx), d, standardize = FALSE, ...))
+
+    l2 <-
+      d_reg %>%
+      map(function(x) seq(x$lambda.min, x$lambda.1se, length.out = 10))
+
+  } else{
+    l1 <- lambda[[1]]
+    l2 <- lambda[-1]
+  }
+
+  # pass into main dml function that is run n times -------------------
   seq(1, nn) %>%
-    future_map(function(.x, ...) dml_step(f, d, model, ml, poly_degree, family,
-                                          score, k, lambda, ...), ...,
+    future_map(function(.x, ...)
+      dml_step(f, newdata, tx, ty, td, model, ml, poly_degree,
+               family, score, k, l1, l2, ...), ...,
                .options = future_options(packages = c("splines"))) %>%
     get_medians(nrow(d), dml_call)
 
 
 }
 
-#' @export
-dml_step <- function(f, d, model, ml, poly_degree, family, score, k, lambda,  ...){
-  # assign proper score function dependending on if the user specifies using the
+dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
+                     family, score, k, l1, l2,  ...){
+  # assign proper score function depending on if the user specifies using the
   # finite nuisance parameter vs concentrating-out approach, and whether the
   # model is linear or poisson
   if(model == "poisson" & score == "finite"){
@@ -142,32 +195,11 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, k, lambda,  ..
     stop("rf only available for concentrating out method")
   }
 
-  # make the estimation dataset -----------------------------------------------
-  # (a) expand out any non-linear formula for y and sanitize names
-  ty <- get_lhs_col(f, d)
   ynames <- names(ty)
-
-  # (b) expand out any non-linear formula for d and sanitize names
-  td <- get_rhs_cols(f, d, 1)
   dnames <- names(td)
-
-  # (c) expand out any non-linear formula for x and sanitize names
-  # expand out to polynomial depending on the user-inputted poly_degree
-  tx <-
-    get_rhs_cols(f, d, 2) %>%
-    setNames(paste0("c", str_replace_all(names(.), "\\.|:", "\\_")))
-  if(poly_degree > 1){
-    tx <-
-      poly(as.matrix(tx), degree = poly_degree) %>%
-      as_tibble() %>%
-      setNames(paste0("c", str_replace_all(names(.), "\\.|:", "\\_")))
-  }
   xnames <- names(tx)
 
-  # (d) make a new dataset of transformed y, transformed d and (transformed) x
-  newdata <- bind_cols(ty, td, tx)
-
-  # (e) finally, generate cross validation folds of this. Default is 5 folds
+  # generate cross validation folds of this. Default is 5 folds
   folds <- crossv_kfold(newdata, k)
   folds$train <- map(folds$train, as_tibble)
   folds$test <- map(folds$test, as_tibble)
@@ -175,31 +207,17 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, k, lambda,  ..
   # Calculate instruments -----------------------------------------------------
   # For each fold, calculate the partial outcome, s = x*beta, and m = x*mu
   if(score == "finite"){
-    if(ml == "lasso" & is.null(lambda)){
-      y_reg <- cv.glmnet(as.matrix(cbind(tx, td)), as.matrix(ty),
-                         standardize = FALSE, ...)
-      l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
-    } else{
-      l1 <- lambda
-    }
-
     instruments <-
       map2(folds$train, folds$test, function(x, y)
-        dml_fold(x, y, xnames, ynames, dnames, model, family, ml, l1, ...))
+        dml_fold(x, y, xnames, ynames, dnames, model, family, ml, l1, l2, ...))
   }
 
   # For the concentrating out approach, calculate the partial outcome, s = E[Y|X],
   # and m = E[D|X]
   if(score == "concentrate"){
-    if(ml == "lasso"){
-      y_reg <- cv.glmnet(as.matrix(tx), as.matrix(ty), standardize = FALSE, ...)
-      l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
-    } else{
-      l1 <- lambda
-    }
     instruments <-
       map2(folds$train, folds$test, function(x, y)
-        dml_fold_concentrate(x, y, xnames, ynames, dnames, ml, l1, ...))
+        dml_fold_concentrate(x, y, xnames, ynames, dnames, ml, l1, l2, ...))
   }
 
   s <- map(instruments, pluck(1))
@@ -233,7 +251,7 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, k, lambda,  ..
           function(x) square(obj(x)),
           function(x) grad(x) %*% obj(x),
           method = "BFGS",
-          control = list(maxit = 500000))
+          control = list(maxit = 5000))
 
   # Calculate covariance matrix -----------------------------------------------
   J0 <- grad(theta$par)
@@ -262,7 +280,7 @@ dml_step <- function(f, d, model, ml, poly_degree, family, score, k, lambda,  ..
 # step 4. Calculate m = x_tilde*mu
 
 dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
-                     family, ml, l1, ...){
+                     family, ml, l1, l2, ...){
   # if using glmnet, make sure family is properly assigned
   # if model is linear, then use binomial for binary variable, and gaussian
   # otherwise
@@ -317,9 +335,10 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
     weights <- exp(predict(beta_hat, data = fold_train))
   }
 
-  # step 3 + 4 find mu & calculate m = x_tilde*mu ------
+  # step 3 + 4 find mu & calculate m = x_tilde*mu -------------------------
   # loop over each d to find mu
-  m_k <- map_dfc(dnames, estimate_m, xnames, weights, fold_train, fold_test, ml, ...)
+  m_k <- map2_dfc(dnames, l2, function(x, y)
+    estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, ...))
 
   return(list(s = s, m = as.matrix(m_k)))
 }
@@ -332,7 +351,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
 # step 2. Using training data, train an ml model of d on x. Use this model to
   # predict, for the test sample, n = E[Y|X]
 dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
-                                 ml, l1, ...){
+                                 ml, l1, l2,  ...){
   if(ml == "lasso"){
     # step 1:
     # pluck out x and y variables
@@ -375,9 +394,10 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
 
   weights <- rep(1, nrow(fold_train))
 
-  # step 2 calculate m = E[D|X] ------
+  # step 2 calculate m = E[D|X] -------------------------------------
   # loop over each d and concatenate results
-  m_k <- map_dfc(dnames, estimate_m, xnames, weights, fold_train, fold_test, ml, ...)
+  m_k <- map2_dfc(dnames, l2, function(x, y)
+    estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, ...))
 
   return(list(s = s, m = as.matrix(m_k)))
 }
@@ -385,7 +405,7 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
 # =======================================================================
 # Function to calculate m = x_tilde*mu
 # =======================================================================
-estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, ...){
+estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, ...){
   # linear lasso of d on x to select x_tilde
   if(ml == "lasso"){
     # pluck out x and d
@@ -393,7 +413,8 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, ...){
     resp <- as.matrix(fold_train[, dvar])
 
     x_tilde <-
-      coef(cv.glmnet(dep, resp, weights = w, standardize = FALSE, ...)) %>%
+      coef(cv.glmnet(dep, resp, weights = w, standardize = FALSE,
+                     lambda = l2, ...)) %>%
       tidy() %>%
       filter(row %in% xnames) %>%
       pull(row)
