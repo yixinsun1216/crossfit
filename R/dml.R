@@ -260,7 +260,8 @@ dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
     }) %>%
     reduce(`+`) / length(D)
 
-  s2 <- solve(t(J0), tol = 1e-20) %*% s2 %*% solve(J0)
+  s2 <- tryCatch(solve(t(J0), tol = 1e-20) %*% s2 %*% solve(J0),
+                 error = function(e) return(NA))
 
   return(list(theta$par, s2))
 }
@@ -454,6 +455,16 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, ...){
 # As suggested in the DML paper, the "median" covariance matrix is selected
 # using the matrix operator norm, which is the highest svd of a matrix
 get_medians <- function(estimates, n, dml_call) {
+
+  # drop estimates where s2 is NA
+  s2_all <- map_dbl(estimates, ~pluck(., 2))
+  estimates <- estimates[!is.na(s2_all)]
+
+  # if there are an even number of estimates, drop a random 1
+  if(length(estimates) %% 2 == 0){
+    estimates <- estimates[-sample(1:length(estimates), 1)]
+  }
+
   median_theta <-
     estimates %>%
     map(~ pluck(., 1)) %>%
