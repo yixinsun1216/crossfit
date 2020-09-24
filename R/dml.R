@@ -65,7 +65,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble as_tibble enframe
-#' @importFrom purrr pmap reduce map pluck map_dbl map2_dfr map_dfc
+#' @importFrom purrr pmap reduce map pluck map_dbl map2_dfr map_dfc map_lgl
 #' @importFrom stats median optim update formula model.matrix model.frame
 #' @importFrom furrr future_map future_options
 #' @importFrom future plan multiprocess
@@ -160,8 +160,6 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
                family, score, k, l1, l2, ...), ...,
       .options = future_options(packages = c("splines"))) %>%
     get_medians(nrow(d), dml_call)
-
-
 }
 
 dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
@@ -261,7 +259,7 @@ dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
     reduce(`+`) / length(D)
 
   s2 <- tryCatch(solve(t(J0), tol = 1e-20) %*% s2 %*% solve(J0),
-                 error = function(e) return(NA))
+                 error = function(e) return(NULL))
 
   return(list(theta$par, s2))
 }
@@ -456,9 +454,12 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, ...){
 # using the matrix operator norm, which is the highest svd of a matrix
 get_medians <- function(estimates, n, dml_call) {
 
-  # drop estimates where s2 is NA
-  s2_all <- map_dbl(estimates, ~pluck(., 2))
-  estimates <- estimates[!is.na(s2_all)]
+  # drop estimates where s2 is NULL
+  s2_all <- map(estimates, ~pluck(., 2))
+  keep <- !map_lgl(s2_all, is.null)
+  estimates <- estimates[keep]
+
+  if(sum(keep) > 0) message(paste(sum(!keep), "J_0 matrices could not be inverted"))
 
   # if there are an even number of estimates, drop a random 1
   if(length(estimates) %% 2 == 0){
