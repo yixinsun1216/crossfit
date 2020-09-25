@@ -459,7 +459,7 @@ get_medians <- function(estimates, n, dml_call) {
   keep <- !map_lgl(s2_all, is.null)
   estimates <- estimates[keep]
 
-  if(sum(keep) > 0) message(paste(sum(!keep), "J_0 matrices could not be inverted"))
+  if(sum(!keep) > 0) message(paste(sum(!keep), "J_0 matrices could not be inverted"))
 
   # if there are an even number of estimates, drop a random 1
   if(length(estimates) %% 2 == 0){
