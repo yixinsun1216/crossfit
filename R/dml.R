@@ -65,7 +65,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble as_tibble enframe
-#' @importFrom purrr pmap reduce map pluck map_dbl map2_dfr map_dfc
+#' @importFrom purrr pmap reduce map pluck map_dbl map2_dfr map_dfc map_lgl
 #' @importFrom stats median optim update formula model.matrix model.frame
 #' @importFrom furrr future_map future_options
 #' @importFrom future plan multiprocess
@@ -112,6 +112,7 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
   # (b) expand out any non-linear formula for d and sanitize names
   td <- get_rhs_cols(f, d, 1)
   dnames <- names(td)
+\
 
   # (c) expand out any non-linear formula for x and sanitize names
   # expand out to polynomial depending on the user-inputted poly_degree
@@ -163,7 +164,43 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
                .options = future_options(packages = c("splines"))) %>%
     get_medians(nrow(d), dml_call)
 
+  # (d) make a new dataset of transformed y, transformed d and (transformed) x
+  newdata <- bind_cols(ty, td, tx)
 
+  # Calculate lambda to be used in cv.glmnet operation -------------------
+  if(ml == "lasso" & is.null(lambda)){
+    if(score == "finite"){
+      y_reg <- cv.glmnet(as.matrix(cbind(tx, td)), as.matrix(ty),
+                         standardize = FALSE, ...)
+      l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
+    }
+
+    if(score == "concentrate"){
+      y_reg <- cv.glmnet(as.matrix(tx), as.matrix(ty), standardize = FALSE, ...)
+      l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
+    }
+
+    d_reg <-
+      map(td, c) %>%
+      map(function(d) cv.glmnet(as.matrix(tx), d, standardize = FALSE, ...))
+
+    l2 <-
+      d_reg %>%
+      map(function(x) seq(x$lambda.min, x$lambda.1se, length.out = 10))
+
+  } else{
+    l1 <- lambda[[1]]
+    l2 <- lambda[-1]
+  }
+  if(!is.list(l2)) l2 <- list(l2)
+
+  # pass into main dml function that is run n times -------------------
+  seq(1, nn) %>%
+    future_map(function(.x, ...)
+      dml_step(f, newdata, tx, ty, td, model, ml, poly_degree,
+               family, score, k, l1, l2, ...), ...,
+      .options = future_options(packages = c("splines"))) %>%
+    get_medians(nrow(d), dml_call)
 }
 
 dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
@@ -262,7 +299,8 @@ dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
     }) %>%
     reduce(`+`) / length(D)
 
-  s2 <- solve(t(J0), tol = 1e-20) %*% s2 %*% solve(J0)
+  s2 <- tryCatch(solve(t(J0), tol = 1e-20) %*% s2 %*% solve(J0),
+                 error = function(e) return(NULL))
 
   return(list(theta$par, s2))
 }
@@ -272,11 +310,11 @@ dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
 # finite nuisance parameter approach
 # =============================================================================
 # step 1. In training sample, run lasso of y on x to select x_hat.
-  # for lasso, fit regression of y on x_hat and call these coefficients beta_hat
+# for lasso, fit regression of y on x_hat and call these coefficients beta_hat
 # step 2. Using test sample, calculate s = x_hat*beta_hat.
-  # calculate weights to be used for next round of lasso
+# calculate weights to be used for next round of lasso
 # step 3. Using training data, perform weighted linear lasso of d on x to select
-  # x_tilde. For lasso, fit linear regression of d on x_tilde to get mu
+# x_tilde. For lasso, fit linear regression of d on x_tilde to get mu
 # step 4. Calculate m = x_tilde*mu
 
 dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
@@ -347,9 +385,9 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
 # Using concentrating out approach
 # =======================================================================
 # step 1. In training sample, train an ml model of y on x. Use this model to
-  # predict, for the testing sample s = E[Y|X]
+# predict, for the testing sample s = E[Y|X]
 # step 2. Using training data, train an ml model of d on x. Use this model to
-  # predict, for the test sample, n = E[Y|X]
+# predict, for the test sample, n = E[Y|X]
 dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
                                  ml, l1, l2,  ...){
   if(ml == "lasso"){
@@ -456,6 +494,19 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, ...){
 # As suggested in the DML paper, the "median" covariance matrix is selected
 # using the matrix operator norm, which is the highest svd of a matrix
 get_medians <- function(estimates, n, dml_call) {
+
+  # drop estimates where s2 is NULL
+  s2_all <- map(estimates, ~pluck(., 2))
+  keep <- !map_lgl(s2_all, is.null)
+  estimates <- estimates[keep]
+
+  if(sum(!keep) > 0) message(paste(sum(!keep), "J_0 matrices could not be inverted"))
+
+  # if there are an even number of estimates, drop a random 1
+  if(length(estimates) %% 2 == 0){
+    estimates <- estimates[-sample(1:length(estimates), 1)]
+  }
+
   median_theta <-
     estimates %>%
     map(~ pluck(., 1)) %>%
