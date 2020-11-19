@@ -163,43 +163,6 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
                .options = future_options(packages = c("splines"))) %>%
     get_medians(nrow(d), dml_call)
 
-  # (d) make a new dataset of transformed y, transformed d and (transformed) x
-  newdata <- bind_cols(ty, td, tx)
-
-  # Calculate lambda to be used in cv.glmnet operation -------------------
-  if(ml == "lasso" & is.null(lambda)){
-    if(score == "finite"){
-      y_reg <- cv.glmnet(as.matrix(cbind(tx, td)), as.matrix(ty),
-                         standardize = FALSE, ...)
-      l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
-    }
-
-    if(score == "concentrate"){
-      y_reg <- cv.glmnet(as.matrix(tx), as.matrix(ty), standardize = FALSE, ...)
-      l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
-    }
-
-    d_reg <-
-      map(td, c) %>%
-      map(function(d) cv.glmnet(as.matrix(tx), d, standardize = FALSE, ...))
-
-    l2 <-
-      d_reg %>%
-      map(function(x) seq(x$lambda.min, x$lambda.1se, length.out = 10))
-
-  } else{
-    l1 <- lambda[[1]]
-    l2 <- lambda[-1]
-  }
-  if(!is.list(l2)) l2 <- list(l2)
-
-  # pass into main dml function that is run n times -------------------
-  seq(1, nn) %>%
-    future_map(function(.x, ...)
-      dml_step(f, newdata, tx, ty, td, model, ml, poly_degree,
-               family, score, k, l1, l2, ...), ...,
-      .options = future_options(packages = c("splines"))) %>%
-    get_medians(nrow(d), dml_call)
 }
 
 dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
