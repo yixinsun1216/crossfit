@@ -396,6 +396,8 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
 
   # step 2 calculate m = E[D|X] -------------------------------------
   # loop over each d and concatenate results
+  if(is.null(l2)) l2 <- rep(NA, length(dnames))
+
   m_k <- map2_dfc(dnames, l2, function(x, y)
     estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, ...))
 
