@@ -475,7 +475,7 @@ get_medians <- function(estimates, n, dml_call) {
     reduce(rbind)
 
   if(length(estimates) > 1){
-    median_theta <-  apply(estimates, 2, median)
+    median_theta <-  apply(median_theta, 2, median)
   }
 
   names(median_theta) <- names(estimates[[1]][[1]])
