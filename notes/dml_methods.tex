@@ -219,7 +219,7 @@ Note that we now use ML methods to calculate $E[D|X]$ and $E[Y|X]$, which we plu
 	\item For each $k = 1, ... K$, implement the following steps:
   \begin{enumerate}
     \item In a \textbf{training} set $k$, use a linear LASSO to generate a model of  $Y$ on and $X$ to select the covariates, $\hat{X}_k$. Then fit a linear regression of $Y$ on $\hat{X}_k$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
-  	\item In the \textbf{estimation} set $k$, compute $l_k = E[Y|X]$ using the model generated in the previous step.
+  	\item In the \textbf{estimation} set $k$, compute $g_k = E[Y|X]$ using the model generated in the previous step.
   	\item In the \textbf{training} set $k$, compute a linear LASSO of $D_j$ on $X$ to select covariates $\tilde{X}_{k,j}$ for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k,j}$, and denote the estimated coefficients as $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu_k}$.
   	\item In the \textbf{estimation} set, compute $m_k = E[D|X]$, using the model generated from the previous step.
   \end{enumerate}
@@ -249,7 +249,7 @@ Note that we now use ML methods to calculate $E[D|X]$ and $E[Y|X]$, which we plu
 
 	\item For each $k = 1, ... K$, implement the following steps:
   \begin{enumerate}
-    \item In \textbf{training} set $k$, use a regression forest to generate a model of $Y$ on and $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $l_k = E[Y|X]$.
+    \item In \textbf{training} set $k$, use a regression forest to generate a model of $Y$ on and $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $g_k = E[Y|X]$.
     \item In \textbf{training} set $k$, use a regresison forest to generate a model of $D_j$ on $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $m_{k, j} = E[D_j|X]$. Collect to form $m_k = (m'_{k,1}, m'_{k,2}, . . ., m'_{k, J})$
   \end{enumerate}
   \item The rest of the implementation should follow steps 3 and 4 of the lasso instructions in the previous section.

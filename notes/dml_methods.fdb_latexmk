@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex dml_methods"] 1607775568 "dml_methods.aux" "dml_methods.bbl" "dml_methods" 1607775851
+["bibtex dml_methods"] 1607775568 "dml_methods.aux" "dml_methods.bbl" "dml_methods" 1607776216
   "C:/Program Files/MiKTeX 2.9/bibtex/bst/economic/aer.bst" 1222081970 26812 2ae6e48450a8c17a93d98067b7084a7a ""
   "dml.bib" 1607772478 1819 4b65c3e1067fd2637f0ae2703d163bcd ""
-  "dml_methods.aux" 1607775849 2547 b7ca63bc1ac401db23ab58454829b9a4 ""
+  "dml_methods.aux" 1607776215 2547 b7ca63bc1ac401db23ab58454829b9a4 ""
   (generated)
   "dml_methods.bbl"
   "dml_methods.blg"
-["pdflatex"] 1607775848 "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.tex" "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.pdf" "dml_methods" 1607775851
+["pdflatex"] 1607776214 "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.tex" "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.pdf" "dml_methods" 1607776216
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1233951848 1004 54797486969f23fa377b128694d548df ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1233951848 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/cmextra/cmex9.tfm" 1234365220 996 a18840b13b499c08ac2de96a99eda4bc ""
@@ -158,18 +158,18 @@
   "C:/Program Files/MiKTeX 2.9/tex/latex/xcolor/xcolor.sty" 1463131981 57049 34128738f682d033422ca125f82e5d62 ""
   "C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map" 1607432145 86363 16e0c9e750931a8942c8dbf114820c2a ""
   "C:/Users/Yixin Sun/AppData/Local/MiKTeX/2.9/miktex/data/le/pdftex/pdflatex.fmt" 1491789521 3822752 610a22da6befa083a4dcbc3f42c7cae7 ""
-  "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.aux" 1607775849 2547 b7ca63bc1ac401db23ab58454829b9a4 ""
-  "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.tex" 1607775847 19599 c1f465c907c3a6df533d98c23217c079 ""
-  "dml_methods.aux" 1607775849 2547 b7ca63bc1ac401db23ab58454829b9a4 ""
+  "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.aux" 1607776215 2547 b7ca63bc1ac401db23ab58454829b9a4 ""
+  "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.tex" 1607776213 19599 7ccf72fc5a3d9af473e5491e623b178d ""
+  "dml_methods.aux" 1607776215 2547 b7ca63bc1ac401db23ab58454829b9a4 ""
   "dml_methods.bbl" 1607775569 585 5e6a820797082dd7e1f28f283485e9d1 "bibtex dml_methods"
-  "dml_methods.out" 1607775849 984 34eb3f6b0df24d785a25522c72c1f5bf ""
-  "dml_methods.tex" 1607775847 19599 c1f465c907c3a6df533d98c23217c079 ""
-  "dml_methods.toc" 1607775849 1202 0584f866edad7a5832cdf0b2c501547e ""
+  "dml_methods.out" 1607776215 984 34eb3f6b0df24d785a25522c72c1f5bf ""
+  "dml_methods.tex" 1607776213 19599 7ccf72fc5a3d9af473e5491e623b178d ""
+  "dml_methods.toc" 1607776215 1202 0584f866edad7a5832cdf0b2c501547e ""
   (generated)
-  "dml_methods.aux"
-  "dml_methods.out"
-  "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.pdf"
   "dml_methods.toc"
   "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.log"
-  "dml_methods.pdf"
+  "dml_methods.out"
   "dml_methods.log"
+  "dml_methods.aux"
+  "dml_methods.pdf"
+  "c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.pdf"
