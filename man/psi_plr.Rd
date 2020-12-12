@@ -13,9 +13,9 @@ psi_plr(theta, Y, D, m, s)
 
 \item{D}{a vector or data.frame of the treatment variable(s) of interest.}
 
-\item{s}{a vector of E[Y|X=x], where X is a vector of controls.}
+\item{m}{a vector of E[D|X=x] values, where X is a vector of controls.}
 
-\item{Z}{a vector or data.frame of D - E[D|X=x].}
+\item{s}{a vector of E[Y|X=x] values, where X is a vector of controls.}
 }
 \description{
 Moment functions for partial linear model and partial linear poisson model.

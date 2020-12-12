@@ -4,26 +4,43 @@
 \usepackage[margin=2cm]{geometry}
 \usepackage{amsmath,amsfonts}
 \usepackage{color}
+\usepackage{natbib}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true, % make the links colored
     linkcolor=blue, % color TOC links in blue
     urlcolor=red, % color URLs in red
+    citecolor = black,   
     linktoc=all % 'all' will create links for everything in the TOC
 }
 
 \usepackage{tikz}
 \usetikzlibrary{calc}
 \DeclareMathOperator*{\argmax}{argmax}
+
+
 \title{LASSO/Poisson DML implementation}
-\author{Thomas R. Covert, Yixin Sun}
+\author{Thomas R. Covert, Yixin Sun, and Richard Sweeney}
 \begin{document}
 \maketitle
 
 \tableofcontents
 
-\section{Setup from Chernozhukov et al - Finite Nuisance Parameter Approach}
-Let $\theta$ be the thing we care about and $\beta$ be the nuisance parameters (location, time etc).  The data is $W = (Y, D, X)$ where $Y$ is an outcome, $D$ is the vector of stuff we care about and $X$ is the stuff we don't care about.  The true values of $\theta$ and $\beta$, denoted as $\theta_0$ and $\beta_0$, fit the data best, in the sense that
+\section{Introduction}
+This package implements the Double Machine Learning approach from \citet{chernozhukov_doubledebiased_2018}, which constructs estimates for low-dimensional target parameters in the presence of high-dimensional nuisance parameters. We follow the set-up introduced in the paper:
+
+\begin{eqnarray}\label{eq: PL1}
+    &  Y = D\theta_0 + g_0(X) + \zeta,  &  E[\zeta \mid D,X]= 0,\\
+     & D = m_0(X) +  V,   &  E[V \mid X] = 0, \label{eq: PL3}
+   \end{eqnarray}
+   
+where $Y$ is the outcome variable and $D$ is the variable of interest. The vector $X$ consists of other confounding covariates, and $\zeta$ and $V$ are the stochastic errors. The first equation is the equation of interest, and $\theta_0$ is the target parameter. The goal here is to estimate the high-dimensional nuisance parameters using machine learning methods, which allow for causal estimation and valid inference of the target parameters. We implement this using lasso and regression forest methods. 
+
+The key here is constructing the ``right" moment conditions to solve, such that small deviations in the nuisance functions do not invalidate the moment conditions. See paper for theoretical underpinnings of the derived moment condition, which \citet{chernozhukov_doubledebiased_2018} refer to as the \textit{Neyman Orthogonal Score}. The paper provides two ways to construct the Neyman Orthogonal Score, which we refer to as (1) Finite Nuisance Parameter Approach and (2) Concentrating Out Approach. 
+
+
+\section{Finite Nuisance Parameter Approach}
+Let $W = (Y, D, X)$.  The true values of $\theta$ and $\beta$, denoted as $\theta_0$ and $\beta_0$, fit the data best, in the sense that
 \begin{equation*}
 	(\theta_0, \beta_0) = \argmax \underset{\theta, \beta} E_W\left[l(W, \theta, \beta)\right]
 \end{equation*}
@@ -46,7 +63,7 @@ Then we define $\mu$ as $\mu = J_{\theta, \beta} J_{\beta, \beta}^{-1}$.
 
 
 \subsection{The Linear Setting}
-The linear regression, the function $l$ is
+In the linear regression, the function $l$ is
 \begin{gather*}
 	l(W; \theta, \beta) = -\frac{(Y - D\theta - X'\beta)^2}{2}
 \end{gather*}
@@ -162,7 +179,7 @@ The Neyman Orthogonal moment for Poisson regression is then:
 
 
 \section{Concentrating Out Approach}
-Chernozhukov et. al write that the approach for constructing Neyman orthogonal scores is closely related to the ``concentrating-out approach". For all $\theta \in \Theta,$ let $\beta_{\theta}$ be the solution of the following optimization problem:
+\citet{chernozhukov_doubledebiased_2018} write that the approach for constructing Neyman orthogonal scores is closely related to the ``concentrating-out approach". For all $\theta \in \Theta,$ let $\beta_{\theta}$ be the solution of the following optimization problem:
 $$
 \argmax_{\beta \in \mathcal{B}} E[\ell(W ; \theta, \beta)]
 $$
@@ -194,7 +211,7 @@ Letting $g(x) = E[Y|X]$ and $m(x) = E[D|X]$, we get the following Neyman orthogo
 	&=\left(D-m(X)\right) \times\left(Y- g(x) - (D - m(x) )\theta\right)
 \end{align*}
 
-Note that we now use ML methods to calculate $E[D|X]$ and $E[Y|X]$, which we plug into the score function we derived above. This is different from the finite-nuisance parameter approach, which uses ML to calculate the finite-nuisance parameter component, $s = X\beta$. The implication of this is that the ML steps for the concentrating-out approach are fairly uniform across ML methods and model types; as you can see below, what changes is just the score function that we are optimizing over.
+Note that we now use ML methods to calculate $E[D|X]$ and $E[Y|X]$, which we plug into the score function we derived above in a Frisch-Waugh-Lovell style method. This is different from the finite-nuisance parameter approach, which uses ML to calculate the finite-nuisance parameter component, $s = X\beta$. The implication of this is that the ML steps for the concentrating-out approach are fairly uniform across ML methods and model types; as you can see below, what changes is just the score function that we are optimizing over.
 
 \subsubsection{Implementation - LASSO}
 \begin{enumerate}
@@ -202,7 +219,7 @@ Note that we now use ML methods to calculate $E[D|X]$ and $E[Y|X]$, which we plu
 	\item For each $k = 1, ... K$, implement the following steps:
   \begin{enumerate}
     \item In a \textbf{training} set $k$, use a linear LASSO to generate a model of  $Y$ on and $X$ to select the covariates, $\hat{X}_k$. Then fit a linear regression of $Y$ on $\hat{X}_k$, and let $\hat{\beta}_k$ be the estimated coefficients on $\hat{X}_k$.
-  	\item In the \textbf{estimation} set $k$, compute $g_k = E[Y|X]$ using the model generated in the previous step.
+  	\item In the \textbf{estimation} set $k$, compute $l_k = E[Y|X]$ using the model generated in the previous step.
   	\item In the \textbf{training} set $k$, compute a linear LASSO of $D_j$ on $X$ to select covariates $\tilde{X}_{k,j}$ for each variable of interest. Fit a linear regression of $D_j$ on $\tilde{X}_{k,j}$, and denote the estimated coefficients as $\tilde{\mu}_{k,j}$. Collect the $\tilde{\mu}_{k,j}$ into a vector to form $\tilde{\mu_k}$.
   	\item In the \textbf{estimation} set, compute $m_k = E[D|X]$, using the model generated from the previous step.
   \end{enumerate}
@@ -232,7 +249,7 @@ Note that we now use ML methods to calculate $E[D|X]$ and $E[Y|X]$, which we plu
 
 	\item For each $k = 1, ... K$, implement the following steps:
   \begin{enumerate}
-    \item In \textbf{training} set $k$, use a regression forest to generate a model of $Y$ on and $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $g_k = E[Y|X]$.
+    \item In \textbf{training} set $k$, use a regression forest to generate a model of $Y$ on and $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $l_k = E[Y|X]$.
     \item In \textbf{training} set $k$, use a regresison forest to generate a model of $D_j$ on $X$. Use this trained regression forest and apply to data in the \textbf{estimation} set to calculate $m_{k, j} = E[D_j|X]$. Collect to form $m_k = (m'_{k,1}, m'_{k,2}, . . ., m'_{k, J})$
   \end{enumerate}
   \item The rest of the implementation should follow steps 3 and 4 of the lasso instructions in the previous section.
@@ -297,5 +314,8 @@ Steps 1 and 2 are the same as the linear model in the previous section.
 
 \subsubsection{Implementation - Regression Forest}
 Steps 1 and 2 follow the same steps as the instructions in section 2.1.2, while steps 3 and 4 follow the Poisson LASSO in the previous section.
+
+\bibliographystyle{aer}
+\bibliography{dml}
 
 \end{document}

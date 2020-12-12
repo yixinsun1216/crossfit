@@ -1,0 +1,13 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Finite Nuisance Parameter Approach}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{The Linear Setting}{section.2}% 3
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Implementation - LASSO}{subsection.2.1}% 4
+\BOOKMARK [2][-]{subsection.2.2}{The Poisson Setting}{section.2}% 5
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Implementation - Poisson LASSO}{subsection.2.2}% 6
+\BOOKMARK [1][-]{section.3}{Concentrating Out Approach}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{The Linear Setting}{section.3}% 8
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Implementation - LASSO}{subsection.3.1}% 9
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Implementation - Regression Forest}{subsection.3.1}% 10
+\BOOKMARK [2][-]{subsection.3.2}{The Poisson Setting}{section.3}% 11
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Implementation - Poisson}{subsection.3.2}% 12
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Implementation - Regression Forest}{subsection.3.2}% 13

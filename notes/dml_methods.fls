@@ -1,7 +1,7 @@
-PWD C:/Users/Yixin Sun/Documents/Github/crossfit/notes
+PWD c:/Users/Yixin Sun/Documents/Github/crossfit/notes
 INPUT C:/Users/Yixin Sun/AppData/Local/MiKTeX/2.9/miktex/data/le/pdftex/pdflatex.fmt
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.tex
-OUTPUT dml_lasso.log
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.tex
+OUTPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.log
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/base/article.cls
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/base/article.cls
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/base/size11.clo
@@ -43,6 +43,8 @@ INPUT C:/Program Files/MiKTeX 2.9/tex/generic/oberdiek/infwarerr.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/oberdiek/infwarerr.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/oberdiek/ltxcmds.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/oberdiek/ltxcmds.sty
+INPUT C:/Program Files/MiKTeX 2.9/tex/latex/natbib/natbib.sty
+INPUT C:/Program Files/MiKTeX 2.9/tex/latex/natbib/natbib.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/hyperref/hyperref.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/hyperref/hyperref.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/oberdiek/hobsub-hyperref.sty
@@ -165,9 +167,9 @@ INPUT C:/Program Files/MiKTeX 2.9/tex/generic/pgf/frontendlayer/tikz/libraries/t
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.aux
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.aux
-OUTPUT dml_lasso.aux
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.aux
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.aux
+OUTPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.aux
 INPUT C:/Program Files/MiKTeX 2.9/tex/context/base/supp-pdf.mkii
 INPUT C:/Program Files/MiKTeX 2.9/tex/context/base/supp-pdf.mkii
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/oberdiek/epstopdf-base.sty
@@ -178,14 +180,14 @@ INPUT C:/Program Files/MiKTeX 2.9/tex/latex/hyperref/nameref.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/latex/hyperref/nameref.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/oberdiek/gettitlestring.sty
 INPUT C:/Program Files/MiKTeX 2.9/tex/generic/oberdiek/gettitlestring.sty
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
-OUTPUT dml_lasso.pdf
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
-OUTPUT dml_lasso.out
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.out
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.out
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.out
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.out
+OUTPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.pdf
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.out
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.out
+OUTPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.out
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmr17.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmr12.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmr8.tfm
@@ -211,15 +213,15 @@ INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmr12.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmbx12.tfm
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.toc
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.toc
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.toc
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.toc
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmbx10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmmi10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmsy10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmex10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
-OUTPUT dml_lasso.toc
+OUTPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.toc
 INPUT C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmti10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmbx12.tfm
@@ -232,9 +234,11 @@ INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam5.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.aux
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
-INPUT C:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_lasso.out
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.bbl
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.bbl
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.aux
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.out
+INPUT c:/Users/Yixin Sun/Documents/Github/crossfit/notes/dml_methods.out
 INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb

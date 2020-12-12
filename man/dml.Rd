@@ -23,33 +23,47 @@ dml(
 \arguments{
 \item{f}{an object of class formula representing the model to be fitted.}
 
-\item{d}{a dataframe containing the variables in f.}
+\item{d}{a dataframe containing the variables in \code{f}.}
 
-\item{ml}{Machine learning method to be used for estimating nuisance parameters.
-Currently it takes in `lasso`, and `rf` for regression forest. Note `rf`
-is not available for `score = "finite"`. Default is `ml = "lasso"`.}
+\item{model}{model type or list of user created moment functions.
+  The following model types are implementable: \code{linear} for partial linear
+  model, \code{poisson} for a partial linear poisson model". If the argument is
+  a list, the list must have three functions in order to generate theta,
+  the coefficient of interest.
+\enumerate{
+  \item \code{psi}: function that gives the value of the Neyman-Orthogonal moment at a
+  given value of theta
+  \item \code{psi_grad}: function that returns the gradient of psi with respect to
+  theta
+  \item \code{psi_plr_op}: function that gives the variance estimator at a given
+  value of theta.}
+  The default is \code{model = "linear"}.}
 
 \item{n}{Number of times to repeat the sample splitting and take median of
-results over the n samples. Default is `n = 100`.}
+results over the \code{n} samples. Default is \code{n = 101}.}
 
 \item{k}{Number of folds for cross-fitting}
 
-\item{score}{Takes either value `finite` or `concentrate`. `finite` refers to
+\item{score}{Takes either value \code{finite} or \code{concentrate}. \code{finite} refers to
 using the finite nuisance parameter orthogonal score construction, and
-`concentrate` refers to using the concentrating out approach.
-Default is `score = "finite"`}
+\code{concentrate} refers to using the concentrating out approach.
+Default is \code{score = "finite"}}
 
 \item{workers}{Number of workers to use in running the n dml calculations in
-parallel. Default is `workers = 1`, in which case the process is sequential.}
+parallel. Default is \code{workers = 1}, in which case the process is sequential.}
 
-\item{drop_na}{if `TRUE`, then any row with an `NA` value is dropped. Default
-is `false`}
+\item{drop_na}{if \code{TRUE}, then any row with an \code{NA} value is dropped. Default
+is \code{false}}
 
-\item{family}{if `ml = lasso`, this is passed onto `cv.glmnet` to describe
+\item{family}{if \code{ml = "lasso"}, this is passed onto \code{cv.glmnet} to describe
 the response variable type.}
 
 \item{poly_degree}{degree of polynomial for the nuisance parameters,
-to be used when `ml = "lasso"`. Default is `poly_degree = 1`.}
+to be used when \code{ml = "lasso"}. Default is \code{poly_degree = 1}.}
+
+\item{lambda}{user supplied regularization parameter used when \code{ml = "lasso"}.
+The default is \code{NULL}, in which case a lambda value is computed using
+\link[glmnet]{cv.glmnet} .}
 }
 \value{
 \code{dml} returns an object of class "dml" with the following components:
@@ -61,11 +75,14 @@ to be used when `ml = "lasso"`. Default is `poly_degree = 1`.}
 }
 }
 \description{
-Double Machine Learning Estimates
+Implements the Double Machine Learning approach (Chernozhukov et al., 2018),
+which constructs estimates for low-dimensional target parameters in the
+presence of high-dimensional nuisance parameters.
 }
 \examples{
-Effect of temperature and precipitation on corn yield in the presence of
-time and locational effects
+# Effect of temperature and precipitation on corn yield in the presence of
+# time and locational effects
+
 data(corn_yield)
 library(magrittr)
 
