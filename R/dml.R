@@ -57,15 +57,13 @@
 #' data(corn_yield)
 #' library(magrittr)
 #'
-#' yield_dml_rf <-
-#'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
-#'   as.formula() %>%
-#'   dml(corn_yield, "linear", n = 5, ml = "rf")
-#'
-#' yield_dml_lasso <-
+#' dml_yield <-
 #'   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" %>%
 #'   as.formula() %>%
 #'   dml(corn_yield, "linear", n = 5,  ml = "lasso", poly_degree = 3, score = "finite")
+#'
+#' # use the modelsummary package to export regression tables
+#' modelsummary(list("Lasso" = dml_yield), fmt = 5)
 #'
 #' @references V. Chernozhukov, D. Chetverikov, M. Demirer, E. Duflo, C. Hansen,
 #' W. Newey, and J. Robins. Double/debiased machine learning for treatment and
@@ -75,7 +73,7 @@
 #' @importFrom tibble tibble as_tibble enframe
 #' @importFrom purrr pmap reduce map pluck map_dbl map2_dfr map_dfc map_lgl
 #' @importFrom stats median optim update formula model.matrix model.frame
-#' @importFrom furrr future_map future_options
+#' @importFrom furrr future_map furrr_options
 #' @importFrom future plan multiprocess
 #' @importFrom dplyr rename_all select bind_cols filter if_else mutate arrange pull
 #' @importFrom stringr str_replace_all regex str_detect
@@ -168,7 +166,7 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
     future_map(function(.x, ...)
       dml_step(f, newdata, tx, ty, td, model, ml, poly_degree,
                family, score, k, l1, l2, ...), ...,
-               .options = future_options(packages = c("splines"))) %>%
+               .options = furrr_options(packages = c("splines"), seed = TRUE)) %>%
     get_medians(nrow(d), dml_call)
 }
 

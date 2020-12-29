@@ -86,15 +86,13 @@ presence of high-dimensional nuisance parameters.
 data(corn_yield)
 library(magrittr)
 
-yield_dml_rf <-
-  "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
-  as.formula() \%>\%
-  dml(corn_yield, "linear", n = 5, ml = "rf")
-
-yield_dml_lasso <-
+dml_yield <-
   "logcornyield ~ lower + higher + prec_lo + prec_hi | year + fips" \%>\%
   as.formula() \%>\%
   dml(corn_yield, "linear", n = 5,  ml = "lasso", poly_degree = 3, score = "finite")
+
+# use the modelsummary package to export regression tables
+modelsummary(list("Lasso" = dml_yield), fmt = 5)
 
 }
 \references{

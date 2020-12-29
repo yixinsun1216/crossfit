@@ -1,7 +1,8 @@
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble as_tibble enframe
-#' @importFrom broom glance
+#' @importFrom broom glance tidy
 #' @importFrom stats coef vcov fitted
+#' @importFrom dplyr mutate
 #'
 #'
 #'@method coef dml
@@ -18,8 +19,7 @@ fitted.dml <- function(x) rep(0, x$nobs)
 
 #'@method glance dml
 #' @export
-glance.dml <- function(x) tibble("r.squared" = NA_real_,
-                                 "adj.r.squared" = NA_real_)
+glance.dml <- function(x, ...) tibble("n" = x$nobs)
 
 #'@method print dml
 #' @export
@@ -47,6 +47,14 @@ summary.dml <- function(object){
 
   class(dml_sum) <- "summary.dml"
   dml_sum
+}
+
+#' @method tidy dml
+#' @export
+tidy.dml <- function(object, ...){
+  tibble(term = names(object$coefficients),
+         estimate = coef(object),
+         std.error = sqrt(diag(vcov(object))))
 }
 
 #' @method print summary.dml
