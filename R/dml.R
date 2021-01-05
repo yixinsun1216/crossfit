@@ -170,8 +170,7 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
   # pass into main dml function that is run n times -------------------
   seq(1, nn) %>%
     future_map(function(.x)
-      dml_step(f, newdata, tx, ty, td, model, ml, poly_degree,
-               family, score, k, l1, l2, args),
+      dml_step(f, newdata, tx, ty, td, model, ml, poly_degree, family, score, k, l1, l2, args),
                .options = furrr_options(packages = c("splines"), seed = TRUE)) %>%
     get_medians(nrow(d), dml_call)
 }
@@ -352,7 +351,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
   # step 3 + 4 find mu & calculate m = x_tilde*mu -------------------------
   # loop over each d to find mu
   m_k <- map2_dfc(dnames, l2, function(x, y)
-    estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, ...))
+    estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, args))
 
   return(list(s = s, m = as.matrix(m_k)))
 }
@@ -365,7 +364,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
 # step 2. Using training data, train an ml model of d on x. Use this model to
 # predict, for the test sample, n = E[Y|X]
 dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
-                                 ml, l1, l2,  ...){
+                                 ml, l1, l2,  args){
   if(ml == "lasso"){
     # step 1:
     # pluck out x and y variables
@@ -373,7 +372,9 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
     resp <- as.matrix(fold_train[, ynames])
 
     x_hat <-
-      coef(cv.glmnet(dep, resp, lambda = l1, standardize = FALSE, ...)) %>%
+      append(list(dep, resp, lambda = l1, standardize = FALSE), args) %>%
+      do.call(cv.glmnet, .) %>%
+      coef() %>%
       tidy() %>%
       filter(row %in% xnames) %>%
       pull(row)
@@ -400,7 +401,7 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
     f1 <-  paste(xnames, collapse = " + ") %>%
       paste0(ynames, " ~ ", .) %>%
       as.formula
-    x_hat <- regression_forest2(f1, fold_train, ...)
+    x_hat <- do.call(regression_forest2, append(list(f1, fold_train), args))
 
     # Find s = E[Y|X]
     s <- as.matrix(predict_rf2(x_hat, fold_test))
@@ -412,7 +413,7 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
   # loop over each d and concatenate results
   if(is.null(l2)) l2 <- rep(NA, length(dnames))
   m_k <- map2_dfc(dnames, l2, function(x, y)
-    estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, ...))
+    estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, args))
 
   return(list(s = s, m = as.matrix(m_k)))
 }
@@ -420,7 +421,7 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
 # =======================================================================
 # Function to calculate m = x_tilde*mu
 # =======================================================================
-estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, ...){
+estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, args){
   # linear lasso of d on x to select x_tilde
   if(ml == "lasso"){
     # pluck out x and d
@@ -428,8 +429,9 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, ...){
     resp <- as.matrix(fold_train[, dvar])
 
     x_tilde <-
-      coef(cv.glmnet(dep, resp, weights = w, standardize = FALSE,
-                     lambda = l2, ...)) %>%
+      append(list(dep, resp, weights = w, standardize = FALSE, lambda = l2), args) %>%
+      do.call(cv.glmnet, .) %>%
+      coef() %>%
       tidy() %>%
       filter(row %in% xnames) %>%
       pull(row)
@@ -451,7 +453,7 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, ...){
     f_select <- paste(xnames, collapse = " + ") %>%
       paste0(dvar, " ~ ", .) %>%
       as.formula()
-    mu <- regression_forest2(f_select, fold_train, ...)
+    mu <- do.call(regression_forest2, append(list(f_select, fold_train), args))
 
     # find E[D|X]
     m_k <- predict_rf2(mu, fold_test)
