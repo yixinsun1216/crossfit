@@ -88,7 +88,7 @@
 #' @export
 dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
                 score = "concentrate", workers = 1, drop_na = FALSE,
-                family = NULL, poly_degree = 1, lambda = NULL, ...) {
+                family = NULL, poly_degree = 1, lambda = NULL, args = NULL) {
   dml_call <- match.call()
 
   # to make the median well-defined, add 1 to n if the user requests an even
@@ -138,19 +138,25 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
   # Calculate lambda to be used in cv.glmnet operation -------------------
   if(ml == "lasso" & is.null(lambda)){
     if(score == "finite"){
-      y_reg <- cv.glmnet(as.matrix(cbind(tx, td)), as.matrix(ty),
-                         standardize = FALSE, ...)
+      y_reg <-
+        append(list(as.matrix(cbind(tx, td)), as.matrix(ty),standardize = FALSE), args) %>%
+        do.call(cv.glmnet, .)
       l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
     }
 
     if(score == "concentrate"){
-      y_reg <- cv.glmnet(as.matrix(tx), as.matrix(ty), standardize = FALSE, ...)
+      y_reg <-
+        append(list(as.matrix(tx), as.matrix(ty), standardize = FALSE), args) %>%
+        do.call(cv.glmnet, .)
       l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
     }
 
     d_reg <-
       map(td, c) %>%
-      map(function(d) cv.glmnet(as.matrix(tx), d, standardize = FALSE, ...))
+      map(function(d){
+        append(list(as.matrix(tx), d, standardize = FALSE), args) %>%
+          do.call(cv.glmnet, .)
+      } )
 
     l2 <-
       d_reg %>%
@@ -163,15 +169,15 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
 
   # pass into main dml function that is run n times -------------------
   seq(1, nn) %>%
-    future_map(function(.x, ...)
+    future_map(function(.x)
       dml_step(f, newdata, tx, ty, td, model, ml, poly_degree,
-               family, score, k, l1, l2, ...), ...,
+               family, score, k, l1, l2, args),
                .options = furrr_options(packages = c("splines"), seed = TRUE)) %>%
     get_medians(nrow(d), dml_call)
 }
 
 dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
-                     family, score, k, l1, l2,  ...){
+                     family, score, k, l1, l2, args){
   # assign proper score function depending on if the user specifies using the
   # finite nuisance parameter vs concentrating-out approach, and whether the
   # model is linear or poisson
@@ -213,7 +219,7 @@ dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
   if(score == "finite"){
     instruments <-
       map2(folds$train, folds$test, function(x, y)
-        dml_fold(x, y, xnames, ynames, dnames, model, family, ml, l1, l2, ...))
+        dml_fold(x, y, xnames, ynames, dnames, model, family, ml, l1, l2, args))
   }
 
   # For the concentrating out approach, calculate the partial outcome, s = E[Y|X],
@@ -221,7 +227,7 @@ dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
   if(score == "concentrate"){
     instruments <-
       map2(folds$train, folds$test, function(x, y)
-        dml_fold_concentrate(x, y, xnames, ynames, dnames, ml, l1, l2, ...))
+        dml_fold_concentrate(x, y, xnames, ynames, dnames, ml, l1, l2, args))
   }
 
   s <- map(instruments, pluck(1))
@@ -285,7 +291,7 @@ dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
 # step 4. Calculate m = x_tilde*mu
 
 dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
-                     family, ml, l1, l2, ...){
+                     family, ml, l1, l2, args){
   # if using glmnet, make sure family is properly assigned
   # if model is linear, then use binomial for binary variable, and gaussian
   # otherwise
@@ -305,11 +311,14 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
   resp <- as.matrix(fold_train[, ynames])
 
   x_hat <-
-    coef(cv.glmnet(dep, resp, family = family, standardize = FALSE,
-                   lambda = l1, ...)) %>%
+    append(list(dep, resp, family = family, standardize = FALSE, lambda = l1), args) %>%
+    do.call(cv.glmnet, .) %>%
+    coef() %>%
     tidy() %>%
     filter(row %in% xnames) %>%
     pull(row)
+
+  append(list(as.matrix(tx), d, standardize = FALSE), args)
 
   # if no x's are chosen, run regression of y on 1
   if(length(x_hat) == 0){
