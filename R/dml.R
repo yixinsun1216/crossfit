@@ -19,17 +19,17 @@
 #'   \item \code{psi_plr_op}: function that gives the variance estimator at a given
 #'   value of theta.}
 #'   The default is \code{model = "linear"}.
-#' @param ml Machine learning method to be used for estimating nuisance parameters.
+#' @param ml machine learning method to be used for estimating nuisance parameters.
 #'   Currently it takes in \code{lasso}, and \code{rf} for regression forest. Note \code{rf}
 #'   is not available for \code{score = "finite"". Default is \code{ml = "lasso"}.
-#' @param n Number of times to repeat the sample splitting and take median of
+#' @param n number of times to repeat the sample splitting and take median of
 #'   results over the \code{n} samples. Default is \code{n = 101}.
-#' @param k Number of folds for cross-fitting
-#' @param score Takes either value \code{finite} or \code{concentrate}. \code{finite} refers to
+#' @param k number of folds for cross-fitting
+#' @param score takes either value \code{finite} or \code{concentrate}. \code{finite} refers to
 #'   using the finite nuisance parameter orthogonal score construction, and
 #'   \code{concentrate} refers to using the concentrating out approach.
 #'   Default is \code{score = "finite"}
-#' @param workers Number of workers to use in running the n dml calculations in
+#' @param workers number of workers to use in running the n dml calculations in
 #'   parallel. Default is \code{workers = 1}, in which case the process is sequential.
 #' @param drop_na if \code{TRUE}, then any row with an \code{NA} value is dropped. Default
 #'   is \code{false}
@@ -39,7 +39,9 @@
 #'    to be used when \code{ml = "lasso"}. Default is \code{poly_degree = 1}.
 #' @param lambda user supplied regularization parameter used when \code{ml = "lasso"}.
 #'    The default is \code{NULL}, in which case a lambda value is computed using
-#'    \link[glmnet]{cv.glmnet} .
+#'    \link[glmnet]{cv.glmnet}.
+#' @param args list of additional arguments to be passed to \link[glmnet]{cv.glmnet}
+#'    or \link[grf]{regression_forest} (depending on the value for \code{ml}), e.g. list(trace.it = 1)
 #'
 #' @return
 #' \code{dml} returns an object of class "dml" with the following components:
@@ -401,7 +403,7 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
     f1 <-  paste(xnames, collapse = " + ") %>%
       paste0(ynames, " ~ ", .) %>%
       as.formula
-    x_hat <- do.call(regression_forest2, append(list(f1, fold_train), args))
+    x_hat <- regression_forest2(f1, fold_train, args)
 
     # Find s = E[Y|X]
     s <- as.matrix(predict_rf2(x_hat, fold_test))
@@ -453,7 +455,7 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, args){
     f_select <- paste(xnames, collapse = " + ") %>%
       paste0(dvar, " ~ ", .) %>%
       as.formula()
-    mu <- do.call(regression_forest2, append(list(f_select, fold_train), args))
+    mu <- regression_forest2(f_select, fold_train, args)
 
     # find E[D|X]
     m_k <- predict_rf2(mu, fold_test)
