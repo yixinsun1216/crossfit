@@ -17,7 +17,7 @@ dml(
   family = NULL,
   poly_degree = 1,
   lambda = NULL,
-  ...
+  args = NULL
 )
 }
 \arguments{
@@ -39,17 +39,17 @@ dml(
   value of theta.}
   The default is \code{model = "linear"}.}
 
-\item{n}{Number of times to repeat the sample splitting and take median of
+\item{n}{number of times to repeat the sample splitting and take median of
 results over the \code{n} samples. Default is \code{n = 101}.}
 
-\item{k}{Number of folds for cross-fitting}
+\item{k}{number of folds for cross-fitting}
 
-\item{score}{Takes either value \code{finite} or \code{concentrate}. \code{finite} refers to
+\item{score}{takes either value \code{finite} or \code{concentrate}. \code{finite} refers to
 using the finite nuisance parameter orthogonal score construction, and
 \code{concentrate} refers to using the concentrating out approach.
 Default is \code{score = "finite"}}
 
-\item{workers}{Number of workers to use in running the n dml calculations in
+\item{workers}{number of workers to use in running the n dml calculations in
 parallel. Default is \code{workers = 1}, in which case the process is sequential.}
 
 \item{drop_na}{if \code{TRUE}, then any row with an \code{NA} value is dropped. Default
@@ -63,7 +63,10 @@ to be used when \code{ml = "lasso"}. Default is \code{poly_degree = 1}.}
 
 \item{lambda}{user supplied regularization parameter used when \code{ml = "lasso"}.
 The default is \code{NULL}, in which case a lambda value is computed using
-\link[glmnet]{cv.glmnet} .}
+\link[glmnet]{cv.glmnet}.}
+
+\item{args}{list of additional arguments to be passed to \link[glmnet]{cv.glmnet}
+or \link[grf]{regression_forest} (depending on the value for \code{ml}), e.g. list(trace.it = 1)}
 }
 \value{
 \code{dml} returns an object of class "dml" with the following components:

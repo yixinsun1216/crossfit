@@ -19,17 +19,17 @@
 #'   \item \code{psi_plr_op}: function that gives the variance estimator at a given
 #'   value of theta.}
 #'   The default is \code{model = "linear"}.
-#' @param ml Machine learning method to be used for estimating nuisance parameters.
+#' @param ml machine learning method to be used for estimating nuisance parameters.
 #'   Currently it takes in \code{lasso}, and \code{rf} for regression forest. Note \code{rf}
 #'   is not available for \code{score = "finite"". Default is \code{ml = "lasso"}.
-#' @param n Number of times to repeat the sample splitting and take median of
+#' @param n number of times to repeat the sample splitting and take median of
 #'   results over the \code{n} samples. Default is \code{n = 101}.
-#' @param k Number of folds for cross-fitting
-#' @param score Takes either value \code{finite} or \code{concentrate}. \code{finite} refers to
+#' @param k number of folds for cross-fitting
+#' @param score takes either value \code{finite} or \code{concentrate}. \code{finite} refers to
 #'   using the finite nuisance parameter orthogonal score construction, and
 #'   \code{concentrate} refers to using the concentrating out approach.
 #'   Default is \code{score = "finite"}
-#' @param workers Number of workers to use in running the n dml calculations in
+#' @param workers number of workers to use in running the n dml calculations in
 #'   parallel. Default is \code{workers = 1}, in which case the process is sequential.
 #' @param drop_na if \code{TRUE}, then any row with an \code{NA} value is dropped. Default
 #'   is \code{false}
@@ -39,7 +39,9 @@
 #'    to be used when \code{ml = "lasso"}. Default is \code{poly_degree = 1}.
 #' @param lambda user supplied regularization parameter used when \code{ml = "lasso"}.
 #'    The default is \code{NULL}, in which case a lambda value is computed using
-#'    \link[glmnet]{cv.glmnet} .
+#'    \link[glmnet]{cv.glmnet}.
+#' @param args list of additional arguments to be passed to \link[glmnet]{cv.glmnet}
+#'    or \link[grf]{regression_forest} (depending on the value for \code{ml}), e.g. list(trace.it = 1)
 #'
 #' @return
 #' \code{dml} returns an object of class "dml" with the following components:
@@ -88,7 +90,7 @@
 #' @export
 dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
                 score = "concentrate", workers = 1, drop_na = FALSE,
-                family = NULL, poly_degree = 1, lambda = NULL, ...) {
+                family = NULL, poly_degree = 1, lambda = NULL, args = NULL) {
   dml_call <- match.call()
 
   # to make the median well-defined, add 1 to n if the user requests an even
@@ -138,19 +140,25 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
   # Calculate lambda to be used in cv.glmnet operation -------------------
   if(ml == "lasso" & is.null(lambda)){
     if(score == "finite"){
-      y_reg <- cv.glmnet(as.matrix(cbind(tx, td)), as.matrix(ty),
-                         standardize = FALSE, ...)
+      y_reg <-
+        append(list(as.matrix(cbind(tx, td)), as.matrix(ty),standardize = FALSE), args) %>%
+        do.call(cv.glmnet, .)
       l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
     }
 
     if(score == "concentrate"){
-      y_reg <- cv.glmnet(as.matrix(tx), as.matrix(ty), standardize = FALSE, ...)
+      y_reg <-
+        append(list(as.matrix(tx), as.matrix(ty), standardize = FALSE), args) %>%
+        do.call(cv.glmnet, .)
       l1 <- seq(y_reg$lambda.min, y_reg$lambda.1se, length.out = 10)
     }
 
     d_reg <-
       map(td, c) %>%
-      map(function(d) cv.glmnet(as.matrix(tx), d, standardize = FALSE, ...))
+      map(function(d){
+        append(list(as.matrix(tx), d, standardize = FALSE), args) %>%
+          do.call(cv.glmnet, .)
+      } )
 
     l2 <-
       d_reg %>%
@@ -163,15 +171,14 @@ dml <- function(f, d, model = "linear", ml = "lasso", n = 101, k = 5,
 
   # pass into main dml function that is run n times -------------------
   seq(1, nn) %>%
-    future_map(function(.x, ...)
-      dml_step(f, newdata, tx, ty, td, model, ml, poly_degree,
-               family, score, k, l1, l2, ...), ...,
+    future_map(function(.x)
+      dml_step(f, newdata, tx, ty, td, model, ml, poly_degree, family, score, k, l1, l2, args),
                .options = furrr_options(packages = c("splines"), seed = TRUE)) %>%
     get_medians(nrow(d), dml_call)
 }
 
 dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
-                     family, score, k, l1, l2,  ...){
+                     family, score, k, l1, l2, args){
   # assign proper score function depending on if the user specifies using the
   # finite nuisance parameter vs concentrating-out approach, and whether the
   # model is linear or poisson
@@ -213,7 +220,7 @@ dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
   if(score == "finite"){
     instruments <-
       map2(folds$train, folds$test, function(x, y)
-        dml_fold(x, y, xnames, ynames, dnames, model, family, ml, l1, l2, ...))
+        dml_fold(x, y, xnames, ynames, dnames, model, family, ml, l1, l2, args))
   }
 
   # For the concentrating out approach, calculate the partial outcome, s = E[Y|X],
@@ -221,7 +228,7 @@ dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
   if(score == "concentrate"){
     instruments <-
       map2(folds$train, folds$test, function(x, y)
-        dml_fold_concentrate(x, y, xnames, ynames, dnames, ml, l1, l2, ...))
+        dml_fold_concentrate(x, y, xnames, ynames, dnames, ml, l1, l2, args))
   }
 
   s <- map(instruments, pluck(1))
@@ -285,7 +292,7 @@ dml_step <- function(f, newdata, tx, ty, td, model, ml, poly_degree,
 # step 4. Calculate m = x_tilde*mu
 
 dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
-                     family, ml, l1, l2, ...){
+                     family, ml, l1, l2, args){
   # if using glmnet, make sure family is properly assigned
   # if model is linear, then use binomial for binary variable, and gaussian
   # otherwise
@@ -305,11 +312,14 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
   resp <- as.matrix(fold_train[, ynames])
 
   x_hat <-
-    coef(cv.glmnet(dep, resp, family = family, standardize = FALSE,
-                   lambda = l1, ...)) %>%
+    append(list(dep, resp, family = family, standardize = FALSE, lambda = l1), args) %>%
+    do.call(cv.glmnet, .) %>%
+    coef() %>%
     tidy() %>%
     filter(row %in% xnames) %>%
     pull(row)
+
+  append(list(as.matrix(tx), d, standardize = FALSE), args)
 
   # if no x's are chosen, run regression of y on 1
   if(length(x_hat) == 0){
@@ -343,7 +353,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
   # step 3 + 4 find mu & calculate m = x_tilde*mu -------------------------
   # loop over each d to find mu
   m_k <- map2_dfc(dnames, l2, function(x, y)
-    estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, ...))
+    estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, args))
 
   return(list(s = s, m = as.matrix(m_k)))
 }
@@ -356,7 +366,7 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
 # step 2. Using training data, train an ml model of d on x. Use this model to
 # predict, for the test sample, n = E[Y|X]
 dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
-                                 ml, l1, l2,  ...){
+                                 ml, l1, l2,  args){
   if(ml == "lasso"){
     # step 1:
     # pluck out x and y variables
@@ -364,7 +374,9 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
     resp <- as.matrix(fold_train[, ynames])
 
     x_hat <-
-      coef(cv.glmnet(dep, resp, lambda = l1, standardize = FALSE, ...)) %>%
+      append(list(dep, resp, lambda = l1, standardize = FALSE), args) %>%
+      do.call(cv.glmnet, .) %>%
+      coef() %>%
       tidy() %>%
       filter(row %in% xnames) %>%
       pull(row)
@@ -391,7 +403,7 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
     f1 <-  paste(xnames, collapse = " + ") %>%
       paste0(ynames, " ~ ", .) %>%
       as.formula
-    x_hat <- regression_forest2(f1, fold_train, ...)
+    x_hat <- regression_forest2(f1, fold_train, args)
 
     # Find s = E[Y|X]
     s <- as.matrix(predict_rf2(x_hat, fold_test))
@@ -403,7 +415,7 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
   # loop over each d and concatenate results
   if(is.null(l2)) l2 <- rep(NA, length(dnames))
   m_k <- map2_dfc(dnames, l2, function(x, y)
-    estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, ...))
+    estimate_m(dvar = x, l2 = y, xnames, weights, fold_train, fold_test, ml, args))
 
   return(list(s = s, m = as.matrix(m_k)))
 }
@@ -411,7 +423,7 @@ dml_fold_concentrate <- function(fold_train, fold_test, xnames, ynames, dnames,
 # =======================================================================
 # Function to calculate m = x_tilde*mu
 # =======================================================================
-estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, ...){
+estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, args){
   # linear lasso of d on x to select x_tilde
   if(ml == "lasso"){
     # pluck out x and d
@@ -419,8 +431,9 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, ...){
     resp <- as.matrix(fold_train[, dvar])
 
     x_tilde <-
-      coef(cv.glmnet(dep, resp, weights = w, standardize = FALSE,
-                     lambda = l2, ...)) %>%
+      append(list(dep, resp, weights = w, standardize = FALSE, lambda = l2), args) %>%
+      do.call(cv.glmnet, .) %>%
+      coef() %>%
       tidy() %>%
       filter(row %in% xnames) %>%
       pull(row)
@@ -442,7 +455,7 @@ estimate_m <- function(dvar, xnames, w, fold_train, fold_test, ml, l2, ...){
     f_select <- paste(xnames, collapse = " + ") %>%
       paste0(dvar, " ~ ", .) %>%
       as.formula()
-    mu <- regression_forest2(f_select, fold_train, ...)
+    mu <- regression_forest2(f_select, fold_train, args)
 
     # find E[D|X]
     m_k <- predict_rf2(mu, fold_test)
