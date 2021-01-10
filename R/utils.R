@@ -23,7 +23,9 @@ regression_forest2 <- function(f, d, args) {
     update(~ 0 + .) %>%
     model.matrix(d)
 
-  ff <- do.call(regression_forest, append(list(X, Y, num.trees = 1000), args))
+  rf_args <- append(list(X = X, Y = Y, num.trees = 1000), args)
+  rf_args <- rf_args[!duplicated(names(rf_args), fromLast = TRUE)]
+  ff <- do.call(regression_forest, rf_args)
 
   ff[["formula"]] <- f
   class(ff) <- c("regression_forest", "grf")
