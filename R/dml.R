@@ -319,8 +319,6 @@ dml_fold <- function(fold_train, fold_test, xnames, ynames, dnames, model,
     filter(row %in% xnames) %>%
     pull(row)
 
-  append(list(as.matrix(tx), d, standardize = FALSE), args)
-
   # if no x's are chosen, run regression of y on 1
   if(length(x_hat) == 0){
     f2 <-  paste(dnames, collapse = " + ") %>%
