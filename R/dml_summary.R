@@ -19,7 +19,9 @@ fitted.dml <- function(x) rep(0, x$nobs)
 
 #'@method glance dml
 #' @export
-glance.dml <- function(x, ...) tibble("n" = x$nobs)
+glance.dml <- function(x) tibble("n" = x$nobs,
+                                 "r.squared" = NA_real_,
+                                 "adj.r.squared" = NA_real_)
 
 #'@method print dml
 #' @export
