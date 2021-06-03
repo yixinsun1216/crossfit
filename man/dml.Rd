@@ -95,6 +95,7 @@ dml_yield <-
   dml(corn_yield, "linear", n = 5,  ml = "lasso", poly_degree = 3, score = "finite")
 
 # use the modelsummary package to export regression tables
+library(modelsummary)
 modelsummary(list("Lasso" = dml_yield), fmt = 5)
 
 }
